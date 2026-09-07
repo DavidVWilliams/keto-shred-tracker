@@ -41,14 +41,15 @@ const Icons = {
   BookOpen: (p) => <Icon {...p} path='<path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>' />,
   Activity: (p) => <Icon {...p} path='<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>' />,
   Clock: (p) => <Icon {...p} path='<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>' />,
-  Settings: (p) => <Icon {...p} path='<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l-.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06-.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>' />,
+  Settings: (p) => <Icon {...p} path='<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l-.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>' />,
   X: (p) => <Icon {...p} path='<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>' />,
   Plus: (p) => <Icon {...p} path='<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>' />,
   Trash: (p) => <Icon {...p} path='<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>' />,
   Youtube: (p) => <Icon {...p} fill="currentColor" path='<path d="M22.54 6.42a2.78 2.78 0 00-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 00-1.94 2A29 29 0 001 11.75a29 29 0 00.46 5.33 2.78 2.78 0 001.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 001.94-2 29 29 0 00.46-5.33 29 29 0 00-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="white"/>' />,
   ExternalLink: (p) => <Icon {...p} path='<path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>' />,
   Check: (p) => <Icon {...p} path='<polyline points="20 6 9 17 4 12"/>' />,
-  LogOut: (p) => <Icon {...p} path='<path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>' />
+  LogOut: (p) => <Icon {...p} path='<path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>' />,
+  Cloud: (p) => <Icon {...p} path='<path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z"/>' />
 };
 
 const INITIAL_WORKOUTS = [
@@ -362,29 +363,40 @@ const SCHEDULE = [
 
 export default function App() {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   const [activeTab, setActiveTab] = useState('schedule');
   const todayId = new Date().getDay();
   const [selectedDay, setSelectedDay] = useState(todayId);
 
-  // Completion State
-  const [completion, setCompletion] = useState({});
+  // Completion State (Loaded from localStorage immediately)
+  const [completion, setCompletion] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('ks_completion') || '{}'); } catch { return {}; }
+  });
 
   // Fasting Timer State
-  const [fastingState, setFastingState] = useState({ active: false, startTime: null, preset: 36 });
+  const [fastingState, setFastingState] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('ks_fasting') || '{"active":false, "startTime":null, "preset":36}'); } catch { return { active: false, startTime: null, preset: 36 }; }
+  });
 
   // Custom Workouts & Meals Overrides
-  const [customDays, setCustomDays] = useState({});
+  const [customDays, setCustomDays] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('ks_custom_days') || '{}'); } catch { return {}; }
+  });
 
   // Master Global Workout Library State
-  const [workoutLibrary, setWorkoutLibrary] = useState(INITIAL_WORKOUTS);
+  const [workoutLibrary, setWorkoutLibrary] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('ks_workout_library') || JSON.stringify(INITIAL_WORKOUTS)); } catch { return INITIAL_WORKOUTS; }
+  });
 
   // Weight Tracker State
-  const [weightData, setWeightData] = useState({ start: 205, current: 198, goal: 180 });
+  const [weightData, setWeightData] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('ks_weight') || '{"start":205, "current":198, "goal":180}'); } catch { return { start: 205, current: 198, goal: 180 }; }
+  });
 
   // Recipes State
-  const [recipes, setRecipes] = useState(INITIAL_RECIPES);
+  const [recipes, setRecipes] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('ks_recipes') || JSON.stringify(INITIAL_RECIPES)); } catch { return INITIAL_RECIPES; }
+  });
 
   // Toast feedback state
   const [toastMessage, setToastMessage] = useState(null);
@@ -399,11 +411,11 @@ export default function App() {
   const [modalType, setModalType] = useState(null); // 'goals' | 'workout' | 'meal' | 'weight' | 'manageWorkouts' | null
 
   // Inputs for adding items
-  const [selectedWorkoutIdToAdd, setSelectedWorkoutIdToAdd] = useState('');
+  const [selectedWorkoutIdToAdd, setSelectedWorkoutIdToAdd] = useState(workoutLibrary[0]?.id || '');
   const [newLibWorkoutName, setNewLibWorkoutName] = useState('');
   const [newLibWorkoutMins, setNewLibWorkoutMins] = useState(20);
   const [newLibWorkoutUrl, setNewLibWorkoutUrl] = useState('');
-  const [selectedRecipeToAdd, setSelectedRecipeToAdd] = useState('');
+  const [selectedRecipeToAdd, setSelectedRecipeToAdd] = useState(recipes[0]?.id || '');
 
   // --- Firebase Auth & Firestore Sync ---
   useEffect(() => {
@@ -416,50 +428,35 @@ export default function App() {
           
           if (docSnap.exists()) {
             const data = docSnap.data();
-            if (data.completion) setCompletion(data.completion);
-            if (data.fastingState) setFastingState(data.fastingState);
-            if (data.customDays) setCustomDays(data.customDays);
-            if (data.workoutLibrary) setWorkoutLibrary(data.workoutLibrary);
-            if (data.weightData) setWeightData(data.weightData);
-            if (data.recipes) setRecipes(data.recipes);
+            if (data.completion) { setCompletion(data.completion); localStorage.setItem('ks_completion', JSON.stringify(data.completion)); }
+            if (data.fastingState) { setFastingState(data.fastingState); localStorage.setItem('ks_fasting', JSON.stringify(data.fastingState)); }
+            if (data.customDays) { setCustomDays(data.customDays); localStorage.setItem('ks_custom_days', JSON.stringify(data.customDays)); }
+            if (data.workoutLibrary) { setWorkoutLibrary(data.workoutLibrary); localStorage.setItem('ks_workout_library', JSON.stringify(data.workoutLibrary)); }
+            if (data.weightData) { setWeightData(data.weightData); localStorage.setItem('ks_weight', JSON.stringify(data.weightData)); }
+            if (data.recipes) { setRecipes(data.recipes); localStorage.setItem('ks_recipes', JSON.stringify(data.recipes)); }
           } else {
+            // First time login: push current local state to cloud
             const initialData = {
               email: currentUser.email,
-              completion: {},
-              fastingState: { active: false, startTime: null, preset: 36 },
-              customDays: {},
-              workoutLibrary: INITIAL_WORKOUTS,
-              weightData: { start: 205, current: 198, goal: 180 },
-              recipes: INITIAL_RECIPES,
+              completion,
+              fastingState,
+              customDays,
+              workoutLibrary,
+              weightData,
+              recipes,
               initializedAt: new Date().toISOString()
             };
             await setDoc(userDocRef, initialData);
           }
         } catch (err) {
-          console.warn("Cloud sync deferred, falling back to localStorage:", err.message);
-          loadFromLocalStorage();
+          console.warn("Cloud sync error:", err.message);
         }
-      } else {
-        loadFromLocalStorage();
       }
-      setLoading(false);
     });
     return () => unsubscribe();
   }, []);
 
-  const loadFromLocalStorage = () => {
-    try {
-      if (localStorage.getItem('ks_completion')) setCompletion(JSON.parse(localStorage.getItem('ks_completion')));
-      if (localStorage.getItem('ks_fasting')) setFastingState(JSON.parse(localStorage.getItem('ks_fasting')));
-      if (localStorage.getItem('ks_custom_days')) setCustomDays(JSON.parse(localStorage.getItem('ks_custom_days')));
-      if (localStorage.getItem('ks_workout_library')) setWorkoutLibrary(JSON.parse(localStorage.getItem('ks_workout_library')));
-      if (localStorage.getItem('ks_weight')) setWeightData(JSON.parse(localStorage.getItem('ks_weight')));
-      if (localStorage.getItem('ks_recipes')) setRecipes(JSON.parse(localStorage.getItem('ks_recipes')));
-    } catch (e) {}
-  };
-
   const syncToCloudAndLocal = async (updatedState) => {
-    // Update local storage instantly
     try {
       if (updatedState.completion !== undefined) localStorage.setItem('ks_completion', JSON.stringify(updatedState.completion));
       if (updatedState.fastingState !== undefined) localStorage.setItem('ks_fasting', JSON.stringify(updatedState.fastingState));
@@ -490,31 +487,23 @@ export default function App() {
 
   const handleGoogleSignIn = async () => {
     try {
-      setLoading(true);
       await signInWithPopup(auth, googleProvider);
+      setToastMessage('Signed in & profile synced to cloud!');
+      setTimeout(() => setToastMessage(null), 3000);
     } catch (err) {
       console.error("Sign-in error:", err);
-      setLoading(false);
     }
   };
 
   const handleSignOut = async () => {
     try {
       await signOut(auth);
+      setToastMessage('Signed out. Local tracking active.');
+      setTimeout(() => setToastMessage(null), 3000);
     } catch (err) {
       console.error("Sign-out error:", err);
     }
   };
-
-  // Set default selection values after initial load
-  useEffect(() => {
-    if (workoutLibrary.length > 0 && !selectedWorkoutIdToAdd) {
-      setSelectedWorkoutIdToAdd(workoutLibrary[0].id);
-    }
-    if (recipes.length > 0 && !selectedRecipeToAdd) {
-      setSelectedRecipeToAdd(recipes[0].id);
-    }
-  }, [workoutLibrary, recipes]);
 
   // Featured Dish calculation based on date hash
   const todayString = new Date().toDateString();
@@ -706,42 +695,6 @@ export default function App() {
 
   const weightProgress = Math.max(0, Math.min(100, Math.round(((weightData.start - weightData.current) / (weightData.start - weightData.goal)) * 100)));
 
-  // --- Loading Screen ---
-  if (loading) {
-    return (
-      <div className="max-w-md mx-auto min-h-screen bg-white text-slate-800 flex items-center justify-center font-sans border-x border-[#e2e2e2]">
-        <div className="text-center space-y-3">
-          <div className="w-8 h-8 border-4 border-slate-900 border-t-transparent rounded-full animate-spin mx-auto" style={{ borderTopColor: '#82bc41' }}></div>
-          <p className="text-slate-500 text-xs font-bold animate-pulse uppercase tracking-wider">Loading Keto Shred Tracker...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // --- Google Sign-In Gate ---
-  if (!user) {
-    return (
-      <div className="max-w-md mx-auto min-h-screen bg-white text-slate-900 flex flex-col items-center justify-center p-6 font-sans border-x border-[#e2e2e2]">
-        <div className="max-w-sm w-full bg-white border border-[#eaeaea] rounded-3xl p-8 shadow-xl text-center space-y-6">
-          <div>
-            <h1 className="text-xl font-black uppercase tracking-tight text-slate-900 mb-1">Keto Shred Tracker</h1>
-            <p className="text-[11px] font-bold text-slate-500 tracking-wider">Joint-Friendly Fat Loss • 61yo Protocol</p>
-          </div>
-          <p className="text-xs text-slate-600 leading-relaxed">
-            Sign in with your Google account to access your secure high-protein protocols and cloud database.
-          </p>
-          <button
-            onClick={handleGoogleSignIn}
-            className="w-full py-3.5 px-4 text-white font-black text-xs uppercase tracking-wider rounded-xl transition-all shadow-md flex items-center justify-center space-x-2"
-            style={{ backgroundColor: '#82bc41' }}
-          >
-            <span>Sign in with Google</span>
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="max-w-md mx-auto min-h-screen text-slate-800 flex flex-col font-sans pb-12 shadow-xl border-x border-[#e2e2e2] bg-white">
       
@@ -759,6 +712,7 @@ export default function App() {
             <h1 className="text-lg font-black tracking-tight text-slate-900 m-0 uppercase">Keto Shred Tracker</h1>
             <p className="text-[10px] font-bold tracking-wider mt-0.5 text-slate-500">Joint-Friendly Fat Loss • 61yo Protocol</p>
           </div>
+          
           <div className="flex items-center gap-2">
             <button 
               onClick={() => setModalType('weight')}
@@ -769,13 +723,26 @@ export default function App() {
               </span>
               <span className="text-[8px] text-slate-500 font-bold uppercase tracking-wider">Lost</span>
             </button>
-            <button 
-              onClick={handleSignOut}
-              className="p-2 rounded-xl border border-[#e2e2e2] bg-white hover:bg-slate-50 text-slate-600 transition-colors"
-              title="Sign Out"
-            >
-              <Icons.LogOut size={16} />
-            </button>
+
+            {/* Cloud Sync / Login Button */}
+            {!user ? (
+              <button
+                onClick={handleGoogleSignIn}
+                className="px-3 py-1.5 rounded-xl text-xs font-black flex items-center gap-1.5 text-white shadow-xs transition-all hover:opacity-90"
+                style={{ backgroundColor: '#82bc41' }}
+                title="Sign in with Google to save your profile to the cloud"
+              >
+                <Icons.Cloud size={14} /> Cloud Save
+              </button>
+            ) : (
+              <button
+                onClick={handleSignOut}
+                className="p-2 rounded-xl border border-[#e2e2e2] bg-white hover:bg-slate-50 text-slate-600 transition-colors"
+                title={`Signed in as ${user.email}. Click to Sign Out.`}
+              >
+                <Icons.LogOut size={16} />
+              </button>
+            )}
           </div>
         </div>
 
