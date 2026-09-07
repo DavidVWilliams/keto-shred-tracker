@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app, "(default)");
+const db = getFirestore(app); // Correct standard initialization for the default Firestore instance
 const googleProvider = new GoogleAuthProvider();
 
 export default function App() {
@@ -98,7 +98,7 @@ export default function App() {
     );
   }
 
-  // Main Authenticated App View
+  // Main Authenticated Dashboard & Layout Shell
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 p-6 font-sans">
       <header className="max-w-5xl mx-auto flex items-center justify-between pb-6 border-b border-slate-800 mb-8">
