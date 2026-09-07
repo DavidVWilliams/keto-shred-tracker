@@ -50,7 +50,8 @@ const Icons = {
   Check: (p) => <Icon {...p} path='<polyline points="20 6 9 17 4 12"/>' />,
   LogOut: (p) => <Icon {...p} path='<path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>' />,
   Cloud: (p) => <Icon {...p} path='<path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z"/>' />,
-  Sliders: (p) => <Icon {...p} path='<line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/>' />
+  Sliders: (p) => <Icon {...p} path='<line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/>' />,
+  Zap: (p) => <Icon {...p} path='<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>' />
 };
 
 const INITIAL_WORKOUTS = [
@@ -239,7 +240,7 @@ const INITIAL_RECIPES = [
   { 
     id: 'fish-12', name: 'Sesame Crusted Ahi Tuna Steak', category: 'Fish', cals: 530, protein: 56, carbs: 2, fat: 31, 
     ingredients: ['7 oz Ahi tuna steak', '1 tbsp black & white sesame seeds', '1 tbsp avocado oil', 'Tamari'], 
-    instructions: 'Press sesame seeds onto all sides of the Ahi tuna. Sear in avocado oil for 1 min per side so the center remains rare.' 
+    instructions: 'Press sesame seeds onto all sides of the Ahi tuna. balance center rare.' 
   },
   { 
     id: 'poultry-1', name: 'Crispy Chicken & Avocado Wrap', category: 'Poultry', cals: 590, protein: 48, carbs: 4, fat: 40, 
@@ -303,13 +304,68 @@ const INITIAL_RECIPES = [
   }
 ];
 
-// --- 5 Master Ketogenic & Fasting Protocols ---
+// --- 8 Master Fasting Presets Requested ---
+const FASTING_PRESETS = [
+  { id: '16_8', label: '16:8', hours: 16 },
+  { id: '20_4', label: '20:4', hours: 20 },
+  { id: '23_1', label: '23:1', hours: 23 },
+  { id: 'adf', label: 'ADF', hours: 36 },
+  { id: '24h', label: '24H', hours: 24 },
+  { id: '36h', label: '36H', hours: 36 },
+  { id: '48h', label: '48H', hours: 48 },
+  { id: '72h', label: '72H', hours: 72 }
+];
+
+// --- Metabolic Stages of Fasting & Physiology Breakdown ---
+const METABOLIC_PHASES = [
+  {
+    range: '0 – 12 Hours',
+    minHours: 0,
+    maxHours: 12,
+    name: 'Blood Sugar Drop & Digestion Rest',
+    summary: 'Circulating insulin levels drop sharply as digestion completes. Your body burns through circulating glucose and begins depleting stored liver glycogen.',
+    biomarkers: 'Insulin ↓ | Blood Sugar Normalization'
+  },
+  {
+    range: '12 – 18 Hours',
+    minHours: 12,
+    maxHours: 18,
+    name: 'Metabolic Switch & Ketosis Onset',
+    summary: 'Liver glycogen is substantially depleted. The liver accelerates the conversion of stored fat into ketones (acetoacetate & beta-hydroxybutyrate) for cellular fuel.',
+    biomarkers: 'Ketones ↑ | Lipolysis (Fat Burning) Active'
+  },
+  {
+    range: '18 – 24 Hours',
+    minHours: 18,
+    maxHours: 24,
+    name: 'Autophagy Activation',
+    summary: 'Intracellular cleanup protocols ignite. Cells begin breaking down misfolded proteins, dysfunctional mitochondria, and damaged components to recycle amino acids.',
+    biomarkers: 'Autophagy Onset | mTOR Suppression'
+  },
+  {
+    range: '24 – 48 Hours',
+    minHours: 24,
+    maxHours: 48,
+    name: 'Deep Autophagy & Growth Hormone Surge',
+    summary: 'Human Growth Hormone (HGH) surges up to 5x baseline to protect lean muscle tissue. Systemic inflammation markers plunge and visceral fat mobilization peaks.',
+    biomarkers: 'HGH ↑↑↑ | Peak Systemic De-inflammation'
+  },
+  {
+    range: '48 – 72+ Hours',
+    minHours: 48,
+    maxHours: 120,
+    name: 'Immune System Reset & Stem Cell Renewal',
+    summary: 'Old and senescent white blood cells undergo apoptosis. The depletion of circulating immune cells triggers hematopoietic stem cells to generate a pristine, refreshed immune system upon refeeding.',
+    biomarkers: 'Stem Cell Activation | Cellular Rejuvenation'
+  }
+];
+
 const PROTOCOLS = {
   adf: {
     id: 'adf',
     name: 'ADF Protocol',
     shortName: 'ADF (36h)',
-    tagline: 'Alternate Day Fasting • 36h Fasting / Refeed',
+    tagline: 'Alternate Day Fasting • 36h Fasting / Feast Cycle',
     defaultPreset: 36,
     schedule: [
       { id: 1, dayName: 'Monday', dayType: 'standard', cals: 1650, protein: 155, carbs: 20, fat: 120, workouts: [{ id: 'w-mon-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-mon-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-mon-2', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }] },
@@ -394,12 +450,12 @@ export default function App() {
   const todayId = new Date().getDay();
   const [selectedDay, setSelectedDay] = useState(todayId);
 
-  // Active Protocol State ('adf' | '16_8' | 'omad' | '2day_fast' | '3day_fast')
+  // Active Protocol State
   const [activeProtocolKey, setActiveProtocolKey] = useState(() => {
     try { return localStorage.getItem('ks_protocol') || 'adf'; } catch { return 'adf'; }
   });
 
-  // Completion State (Loaded from localStorage immediately)
+  // Completion State
   const [completion, setCompletion] = useState(() => {
     try { return JSON.parse(localStorage.getItem('ks_completion') || '{}'); } catch { return {}; }
   });
@@ -503,7 +559,6 @@ export default function App() {
       if (updatedState.recipes !== undefined) localStorage.setItem('ks_recipes', JSON.stringify(updatedState.recipes));
     } catch (e) {}
 
-    // Background sync to Firestore if logged in
     if (user) {
       try {
         const userDocRef = doc(collection(db, "users"), user.uid);
@@ -523,17 +578,12 @@ export default function App() {
     }
   };
 
-  // Switch Protocol & Dynamically Adjust Schedule + Fasting Presets
   const handleSelectProtocol = (protocolKey) => {
     const newProto = PROTOCOLS[protocolKey];
     if (!newProto) return;
     setActiveProtocolKey(protocolKey);
-    
-    // Automatically adjust the fasting target preset to match the protocol
     const updatedFasting = { ...fastingState, preset: newProto.defaultPreset };
     setFastingState(updatedFasting);
-
-    // Reset day customizations so the new protocol's macros & meals take effect cleanly
     setCustomDays({});
 
     syncToCloudAndLocal({
@@ -567,7 +617,7 @@ export default function App() {
     }
   };
 
-  // Featured Dish calculation based on date hash
+  // Featured Dish calculation
   const todayString = new Date().toDateString();
   let hash = 0;
   for (let i = 0; i < todayString.length; i++) {
@@ -590,6 +640,7 @@ export default function App() {
   useEffect(() => {
     let interval;
     if (fastingState.active && fastingState.startTime) {
+      setFastingElapsed(Date.now() - fastingState.startTime);
       interval = setInterval(() => {
         setFastingElapsed(Date.now() - fastingState.startTime);
       }, 1000);
@@ -607,7 +658,10 @@ export default function App() {
     return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   };
 
-  // Get active day data based on selected protocol with custom overrides
+  // Current Fasting Elapsed Hours (Decimal)
+  const currentElapsedHours = fastingElapsed / (1000 * 60 * 60);
+
+  // Active day data
   const defaultDay = activeSchedule.find(d => d.id === selectedDay) || activeSchedule[0];
   const activeCustom = customDays[selectedDay] || {};
   const currentWorkouts = activeCustom.workouts || defaultDay.workouts || [];
@@ -629,7 +683,6 @@ export default function App() {
     syncToCloudAndLocal({ completion: updatedCompletion });
   };
 
-  // Calculate Consumed Macros for active day
   const consumedMacros = currentMeals.reduce((acc, meal) => {
     if (currentDayCompletion[meal.id]) {
       acc.cals += (meal.cals || 0);
@@ -638,7 +691,6 @@ export default function App() {
     return acc;
   }, { cals: 0, protein: 0 });
 
-  // Calculate Busy Dad Burpee minutes for the whole week
   const weeklyBdpMinutes = activeSchedule.reduce((total, d) => {
     const dayWkts = customDays[d.id]?.workouts || d.workouts || [];
     const dayComp = completion[d.id] || {};
@@ -755,7 +807,7 @@ export default function App() {
     ? recipes 
     : recipes.filter(r => r.category === recipeCategory);
 
-  // Weight Calculations (Supports Lost & Gained)
+  // Weight Calculations
   const weightDiff = weightData.start - weightData.current;
   const isWeightLost = weightDiff >= 0;
   const absWeightDiff = Math.abs(weightDiff).toFixed(1);
@@ -1161,7 +1213,7 @@ export default function App() {
               )}
             </div>
 
-            {/* Featured Joint-Health Dish (Dark Slate Background Restored) */}
+            {/* Featured Joint-Health Dish */}
             <div className="bg-slate-900 text-white rounded-2xl border border-slate-800 p-5 shadow-md">
               <div className="flex justify-between items-start mb-1">
                 <span className="text-[9px] font-black uppercase tracking-widest text-emerald-400">
@@ -1293,94 +1345,196 @@ export default function App() {
           </div>
         )}
 
-        {/* FASTING TAB */}
+        {/* FASTING TAB - FULLY UPGRADED */}
         {activeTab === 'fasting' && (
-          <div className="space-y-3">
+          <div className="space-y-4">
             
-            {/* Quick Switch Protocols */}
-            <div className="bg-white rounded-2xl border border-[#eaeaea] p-3.5 shadow-xs flex items-center justify-between">
-              <div>
-                <span className="text-[9px] font-black uppercase tracking-wider text-slate-500 block">Protocol Preset</span>
-                <span className="text-xs font-black text-slate-900">{currentProtocol.shortName}</span>
+            {/* Main Timer Display Card */}
+            <div className="bg-white rounded-3xl border border-[#eaeaea] p-6 shadow-xs text-center space-y-4">
+              <div className="flex items-center justify-center gap-2">
+                <Icons.Clock className={`w-6 h-6 text-slate-400 ${fastingState.active ? 'animate-pulse' : ''}`} style={fastingState.active ? { color: '#82bc41' } : {}} />
+                <span className="text-[11px] font-black uppercase tracking-widest text-slate-500">
+                  {fastingState.active ? 'Fast In Progress' : 'Fast Not Started'}
+                </span>
               </div>
-              <button
-                onClick={() => setModalType('protocol')}
-                className="text-xs font-bold text-slate-700 hover:text-slate-950 underline"
-              >
-                Change Protocol
-              </button>
-            </div>
-
-            <div className="bg-white rounded-2xl border border-[#eaeaea] p-6 shadow-xs text-center">
-              <Icons.Clock className={`w-10 h-10 mx-auto mb-2 text-slate-400 ${fastingState.active ? 'animate-pulse' : ''}`} style={fastingState.active ? { color: '#82bc41' } : {}} />
               
-              <h2 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">
-                {fastingState.active ? 'Active Fasting Window' : 'Fast Not Started'}
-              </h2>
-              
-              <div className="text-3xl font-black text-slate-900 tracking-tight tabular-nums my-2">
+              {/* Giant Digital Stopwatch */}
+              <div className="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight tabular-nums font-mono py-1">
                 {formatTime(fastingElapsed)}
               </div>
 
-              <div className="text-xs font-bold text-slate-700 mb-5">
-                Target Preset: {fastingState.preset} Hours
+              <div className="flex items-center justify-center gap-2">
+                <span className="text-xs font-bold text-slate-600">
+                  Target Window: <strong className="text-slate-900">{fastingState.preset} Hours</strong>
+                </span>
+                {fastingState.active && (
+                  <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    {Math.min(100, Math.round((currentElapsedHours / fastingState.preset) * 100))}% Completed
+                  </span>
+                )}
               </div>
 
-              {!fastingState.active ? (
-                <div className="space-y-3">
-                  <div className="grid grid-cols-5 gap-1.5">
-                    {[16, 23, 36, 48, 72].map(hrs => (
-                      <button
-                        key={hrs}
-                        onClick={() => {
-                          const updated = { ...fastingState, preset: hrs };
-                          setFastingState(updated);
-                          syncToCloudAndLocal({ fastingState: updated });
-                        }}
-                        className={`py-2 rounded-xl text-xs font-bold border transition-colors ${
-                          fastingState.preset === hrs ? 'text-white border-transparent' : 'bg-white text-slate-700 border-[#eaeaea]'
-                        }`}
-                        style={fastingState.preset === hrs ? { backgroundColor: '#82bc41' } : {}}
-                      >
-                        {hrs}h
-                      </button>
-                    ))}
-                  </div>
+              {/* Progress Bar for Active Fast */}
+              {fastingState.active && (
+                <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full rounded-full transition-all duration-500" 
+                    style={{ 
+                      width: `${Math.min(100, (currentElapsedHours / fastingState.preset) * 100)}%`, 
+                      backgroundColor: '#82bc41' 
+                    }} 
+                  />
+                </div>
+              )}
+
+              {/* 8 Preset Buttons: 16:8, 20:4, 23:1, ADF, 24H, 36H, 48H, 72H */}
+              <div className="pt-2">
+                <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 block mb-2">
+                  Select Fasting Preset
+                </span>
+                <div className="grid grid-cols-4 gap-2">
+                  {FASTING_PRESETS.map(preset => (
+                    <button
+                      key={preset.id}
+                      onClick={() => {
+                        const updated = { ...fastingState, preset: preset.hours };
+                        setFastingState(updated);
+                        syncToCloudAndLocal({ fastingState: updated });
+                      }}
+                      className={`py-2 px-1 rounded-xl text-xs font-black border transition-all ${
+                        fastingState.preset === preset.hours && !fastingState.active
+                          ? 'text-white border-transparent shadow-xs'
+                          : fastingState.preset === preset.hours && fastingState.active
+                          ? 'border-[#82bc41] text-emerald-700 bg-emerald-50 font-black'
+                          : 'bg-white text-slate-700 border-[#eaeaea] hover:bg-slate-50'
+                      }`}
+                      style={fastingState.preset === preset.hours && !fastingState.active ? { backgroundColor: '#82bc41' } : {}}
+                    >
+                      {preset.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Start and Stop Action Buttons */}
+              <div className="pt-2">
+                {!fastingState.active ? (
                   <button 
                     onClick={() => {
                       const updated = { ...fastingState, active: true, startTime: Date.now() };
                       setFastingState(updated);
                       syncToCloudAndLocal({ fastingState: updated });
+                      setToastMessage(`Fast started! Target: ${fastingState.preset}h`);
+                      setTimeout(() => setToastMessage(null), 3000);
                     }}
-                    className="w-full py-3 text-white rounded-xl font-black tracking-wide shadow-xs transition-all"
+                    className="w-full py-3.5 text-white rounded-2xl font-black text-sm tracking-wide shadow-md transition-all hover:opacity-95 flex items-center justify-center gap-2"
                     style={{ backgroundColor: '#82bc41' }}
                   >
-                    START FAST
+                    <Icons.Zap size={16} /> START FAST
                   </button>
-                </div>
-              ) : (
-                <button 
-                  onClick={() => {
-                    const updated = { ...fastingState, active: false, startTime: null };
-                    setFastingState(updated);
-                    syncToCloudAndLocal({ fastingState: updated });
-                  }}
-                  className="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-900 border border-[#eaeaea] rounded-xl font-black tracking-wide transition-all"
-                >
-                  END FAST
-                </button>
-              )}
+                ) : (
+                  <button 
+                    onClick={() => {
+                      const confirmed = window.confirm("Are you sure you want to stop your current fast?");
+                      if (!confirmed) return;
+                      const updated = { ...fastingState, active: false, startTime: null };
+                      setFastingState(updated);
+                      syncToCloudAndLocal({ fastingState: updated });
+                      setToastMessage('Fast ended. Great job!');
+                      setTimeout(() => setToastMessage(null), 3000);
+                    }}
+                    className="w-full py-3.5 bg-rose-600 hover:bg-rose-700 text-white rounded-2xl font-black text-sm tracking-wide shadow-md transition-all flex items-center justify-center gap-2"
+                  >
+                    <Icons.X size={16} /> STOP FAST
+                  </button>
+                )}
+              </div>
             </div>
 
+            {/* Fasting Metabolic Phases & Biological Timeline */}
+            <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-3">
+              <div className="flex items-center justify-between pb-2 border-b border-[#eaeaea]">
+                <div>
+                  <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                    <Icons.Activity size={14} style={{ color: '#82bc41' }} /> 
+                    Fasting Metabolic Timeline
+                  </h3>
+                  <p className="text-[10px] text-slate-500">What happens in your body during each phase</p>
+                </div>
+                {fastingState.active && (
+                  <span className="text-[10px] font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                    {currentElapsedHours.toFixed(1)}h In
+                  </span>
+                )}
+              </div>
+
+              <div className="space-y-3 pt-1">
+                {METABOLIC_PHASES.map((phase, idx) => {
+                  const isCurrentPhase = fastingState.active && currentElapsedHours >= phase.minHours && currentElapsedHours < phase.maxHours;
+                  const isCompletedPhase = fastingState.active && currentElapsedHours >= phase.maxHours;
+
+                  return (
+                    <div 
+                      key={idx} 
+                      className={`p-3.5 rounded-2xl border transition-all ${
+                        isCurrentPhase
+                          ? 'border-[#82bc41] bg-emerald-50/40 shadow-xs ring-1 ring-emerald-500/20'
+                          : isCompletedPhase
+                          ? 'border-emerald-200 bg-white'
+                          : 'border-[#eaeaea] bg-[#fafafa]'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="flex items-center gap-2">
+                          <span 
+                            className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-md ${
+                              isCurrentPhase
+                                ? 'bg-[#82bc41] text-white'
+                                : isCompletedPhase
+                                ? 'bg-emerald-100 text-emerald-800'
+                                : 'bg-slate-200 text-slate-700'
+                            }`}
+                          >
+                            {phase.range}
+                          </span>
+                          <span className="text-xs font-black text-slate-900">{phase.name}</span>
+                        </div>
+                        {isCurrentPhase && (
+                          <span className="text-[9px] font-black text-emerald-600 uppercase tracking-wider animate-pulse">
+                            ● Active Phase
+                          </span>
+                        )}
+                        {isCompletedPhase && (
+                          <span className="text-[10px] font-black text-emerald-600">
+                            ✓ Reached
+                          </span>
+                        )}
+                      </div>
+                      
+                      <p className="text-[11px] text-slate-600 leading-relaxed mt-1">
+                        {phase.summary}
+                      </p>
+
+                      <div className="mt-2 text-[9px] font-bold text-slate-500 bg-white p-1.5 rounded-lg border border-slate-200/60 inline-block">
+                        Biomarkers: <span className="text-slate-800">{phase.biomarkers}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Transition Phase Helper */}
             <div className="bg-white rounded-2xl border border-[#eaeaea] p-4 shadow-xs">
               <div className="flex items-center gap-1.5 mb-1.5">
                 <Icons.Flame className="w-4 h-4" style={{ color: '#82bc41' }} />
-                <span className="text-xs font-black text-slate-900">Transition Phase Helper</span>
+                <span className="text-xs font-black text-slate-900">Refeed Protocol Guide</span>
               </div>
               <p className="text-xs text-slate-600 leading-relaxed">
-                Break prolonged 36h/48h/72h fasts with warm bone broth or easily digestible lean protein 45 minutes prior to whole meals to ensure gut comfort and avoid insulin spikes.
+                Break prolonged 36h/48h/72h fasts with warm bone broth or easily digestible lean protein 45 minutes prior to whole meals to safeguard gut integrity and avoid blood sugar rushes.
               </p>
             </div>
+
           </div>
         )}
 
@@ -1600,7 +1754,7 @@ export default function App() {
                     <span className="text-xs font-bold block text-slate-900">{w.name}</span>
                     <span className="text-[9px] text-slate-500">{w.minutes} minutes</span>
                   </div>
-                  <button onClick={() => handleDeleteGlobalWorkout(libId)} className="text-slate-400 hover:text-red-600 p-1">
+                  <button onClick={() => handleDeleteGlobalWorkout(w.id)} className="text-slate-400 hover:text-red-600 p-1">
                     <Icons.Trash size={13} />
                   </button>
                 </div>
@@ -1706,7 +1860,7 @@ export default function App() {
                     setWeightData(updated);
                     syncToCloudAndLocal({ weightData: updated });
                   }}
-                  className="w-full p-2.5 rounded-xl border border-slate-200 bg-[#fafafa] font-bold text-slate-900 text-xs mt-1 focus:outline-none"
+                  className="w-full p-2.5 rounded-xl border border-slate-200 bg-[#fafafa] font-bold text-slate-900 text-xs mt-1 focus:outline-none" 
                 />
               </div>
               <div>
@@ -1720,7 +1874,7 @@ export default function App() {
                     setWeightData(updated);
                     syncToCloudAndLocal({ weightData: updated });
                   }}
-                  className="w-full p-2.5 rounded-xl border border-slate-200 bg-[#fafafa] font-bold text-slate-900 text-xs mt-1 focus:outline-none"
+                  className="w-full p-2.5 rounded-xl border border-slate-200 bg-[#fafafa] font-bold text-slate-900 text-xs mt-1 focus:outline-none" 
                 />
               </div>
               <div>
@@ -1733,7 +1887,7 @@ export default function App() {
                     setWeightData(updated);
                     syncToCloudAndLocal({ weightData: updated });
                   }}
-                  className="w-full p-2.5 rounded-xl border border-slate-200 bg-[#fafafa] font-bold text-slate-900 text-xs mt-1 focus:outline-none"
+                  className="w-full p-2.5 rounded-xl border border-slate-200 bg-[#fafafa] font-bold text-slate-900 text-xs mt-1 focus:outline-none" 
                 />
               </div>
               <div className="flex gap-2 pt-1">
