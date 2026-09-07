@@ -41,7 +41,7 @@ const Icons = {
   BookOpen: (p) => <Icon {...p} path='<path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>' />,
   Activity: (p) => <Icon {...p} path='<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>' />,
   Clock: (p) => <Icon {...p} path='<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>' />,
-  Settings: (p) => <Icon {...p} path='<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l-.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06-.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>' />,
+  Settings: (p) => <Icon {...p} path='<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l-.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06-.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>' />,
   X: (p) => <Icon {...p} path='<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>' />,
   Plus: (p) => <Icon {...p} path='<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>' />,
   Trash: (p) => <Icon {...p} path='<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>' />,
@@ -56,8 +56,7 @@ const Icons = {
   TrendingUp: (p) => <Icon {...p} path='<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>' />,
   Clipboard: (p) => <Icon {...p} path='<path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>' />,
   RotateCcw: (p) => <Icon {...p} path='<polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/>' />,
-  ShoppingCart: (p) => <Icon {...p} path='<circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>' />,
-  CheckCircle2: (p) => <Icon {...p} path='<path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><polyline points="9 12 11 14 15 10"/>' />
+  ShoppingCart: (p) => <Icon {...p} path='<circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>' />
 };
 
 const INITIAL_WORKOUTS = [
@@ -1174,7 +1173,7 @@ export default function App() {
         <div className="flex items-center justify-between mb-3">
           <div>
             <h1 className="text-lg font-black tracking-tight text-slate-900 m-0 uppercase">Keto Shred Tracker</h1>
-            <p className="text-[10px] font-bold tracking-wider mt-0.5 text-slate-500">Joint-Friendly Fat Loss • 61yo Protocol</p>
+            <p className="text-[10px] font-bold tracking-wider mt-0.5 text-slate-500">Keto, Fitness and Fasting</p>
           </div>
           
           <div className="flex items-center gap-2">
@@ -1615,7 +1614,7 @@ export default function App() {
         {activeTab === 'recipes' && (
           <div className="space-y-4">
             
-            {/* Sub-Navigation: Cookbook | Keto Foods | Planner | Shopping */}
+            {/* Sub-Navigation */}
             <div className="bg-white p-1 rounded-2xl border border-[#eaeaea] shadow-2xs grid grid-cols-4 gap-1">
               {[
                 { id: 'catalog', label: 'Cookbook' },
@@ -1709,12 +1708,11 @@ export default function App() {
               </div>
             )}
 
-            {/* SUB-TAB 2: KETO-FRIENDLY FOODS (NEW FEATURE) */}
+            {/* SUB-TAB 2: KETO-FRIENDLY FOODS */}
             {recipeSubTab === 'foods' && (
               <div className="space-y-3">
                 <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-4">
                   
-                  {/* Header & Target Shopping List Selector */}
                   <div className="space-y-3 pb-3 border-b border-[#eaeaea]">
                     <div className="flex items-center justify-between">
                       <div>
@@ -1726,7 +1724,6 @@ export default function App() {
                       </div>
                     </div>
 
-                    {/* Quick Week Target Toggle */}
                     <div className="bg-[#fafafa] p-1 rounded-2xl border border-[#eaeaea] grid grid-cols-2 gap-1 w-full">
                       <button
                         type="button"
@@ -1753,7 +1750,6 @@ export default function App() {
                     </div>
                   </div>
 
-                  {/* Category Filter Pills */}
                   <div className="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar">
                     {['All', 'Fats & Oils', 'Proteins & Meats', 'Low-Carb Veggies', 'Dairy & Cheeses', 'Electrolytes & Pantry'].map(cat => (
                       <button
@@ -1771,7 +1767,6 @@ export default function App() {
                     ))}
                   </div>
 
-                  {/* List of Keto Staples with Add to Shopping List button */}
                   <div className="space-y-4 pt-1">
                     {KETO_FRIENDLY_FOODS.filter(group => ketoFoodCategoryFilter === 'All' || group.category === ketoFoodCategoryFilter).map((group, gIdx) => (
                       <div key={gIdx} className="space-y-2">
