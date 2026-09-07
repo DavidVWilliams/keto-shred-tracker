@@ -19,21 +19,23 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const googleProvider = new GoogleAuthProvider();
 
+const DEFAULT_SHRED_DATA = {
+  fastingHours: 16,
+  proteinTarget: 180,
+  currentWeight: 203,
+  mealsLogged: [],
+  workoutsCompleted: []
+};
+
 export default function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('dashboard');
   
-  // App Data State (Meals, Fasting, Workouts)
-  const [shredData, setShredData] = useState({
-    fastingHours: 16,
-    proteinTarget: 180,
-    currentWeight: 203,
-    mealsLogged: [],
-    workoutsCompleted: []
-  });
+  // App Data State with guaranteed default fallback
+  const [shredData, setShredData] = useState(DEFAULT_SHRED_DATA);
 
-  // Listen for Auth State & Sync with Firestore (with localStorage fallback)
+  // Listen for Auth State & Sync with Firestore (with bulletproof local fallback)
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
@@ -43,15 +45,11 @@ export default function App() {
           const docSnap = await getDoc(userDocRef);
           
           if (docSnap.exists()) {
-            setShredData(prev => ({ ...prev, ...docSnap.data() }));
+            setShredData(prev => ({ ...DEFAULT_SHRED_DATA, ...docSnap.data() }));
           } else {
             const initialData = { 
               email: currentUser.email,
-              fastingHours: 16,
-              proteinTarget: 180,
-              currentWeight: 203,
-              mealsLogged: [],
-              workoutsCompleted: [],
+              ...DEFAULT_SHRED_DATA,
               initializedAt: new Date().toISOString() 
             };
             await setDoc(userDocRef, initialData);
@@ -62,6 +60,12 @@ export default function App() {
           const localCache = localStorage.getItem(`keto_shred_${currentUser.uid}`);
           if (localCache) {
             setShredData(JSON.parse(localCache));
+          } else {
+            setShredData({
+              email: currentUser.email,
+              ...DEFAULT_SHRED_DATA,
+              initializedAt: new Date().toISOString()
+            });
           }
         }
       } else {
@@ -72,7 +76,7 @@ export default function App() {
     return () => unsubscribe();
   }, []);
 
-  // Save changes locally and attempt cloud sync
+  // Save changes locally and attempt background cloud sync
   const updateShredData = async (newData) => {
     setShredData(newData);
     if (user) {
@@ -135,6 +139,9 @@ export default function App() {
     );
   }
 
+  // Safe data reference to prevent any null rendering errors
+  const currentData = shredData || DEFAULT_SHRED_DATA;
+
   // Main Authenticated Dashboard & Layout Shell
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 p-4 sm:p-6 font-sans">
@@ -169,17 +176,17 @@ export default function App() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-lg">
                 <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">Fasting Window</p>
-                <p className="text-2xl font-bold text-white mt-1">{shredData.fastingHours} Hours</p>
+                <p className="text-2xl font-bold text-white mt-1">{currentData.fastingHours} Hours</p>
                 <p className="text-xs text-emerald-400 mt-1">Intermittent Fasting Active</p>
               </div>
               <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-lg">
                 <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">Protein Target</p>
-                <p className="text-2xl font-bold text-white mt-1">{shredData.proteinTarget}g</p>
+                <p className="text-2xl font-bold text-white mt-1">{currentData.proteinTarget}g</p>
                 <p className="text-xs text-emerald-400 mt-1">High-Protein Protocol</p>
               </div>
               <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-lg">
                 <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">Current Weight</p>
-                <p className="text-2xl font-bold text-white mt-1">{shredData.currentWeight} lbs</p>
+                <p className="text-2xl font-bold text-white mt-1">{currentData.currentWeight} lbs</p>
                 <p className="text-xs text-slate-400 mt-1">Target Tracking</p>
               </div>
             </div>
@@ -192,17 +199,17 @@ export default function App() {
               </p>
               <div className="flex gap-2">
                 <button 
-                  onClick={() => updateShredData({ ...shredData, mealsLogged: [...shredData.mealsLogged, `Meal @ ${new Date().toLocaleTimeString()}`] })}
+                  onClick={() => updateShredData({ ...currentData, mealsLogged: [...currentData.mealsLogged, `Meal @ ${new Date().toLocaleTimeString()}`] })}
                   className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-medium rounded-lg transition-all"
                 >
                   Log Whole Food Meal
                 </button>
               </div>
               <div className="mt-4 space-y-2">
-                {shredData.mealsLogged.length === 0 ? (
+                {currentData.mealsLogged.length === 0 ? (
                   <p className="text-xs text-slate-500 italic">No meals logged yet today.</p>
                 ) : (
-                  shredData.mealsLogged.map((meal, idx) => (
+                  currentData.mealsLogged.map((meal, idx) => (
                     <div key={idx} className="text-xs bg-slate-950 p-2.5 rounded border border-slate-800 text-slate-300">
                       {meal}
                     </div>
@@ -213,21 +220,21 @@ export default function App() {
           </>
         ) : (
           <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl space-y-4">
-            <h2 className="text-lg font-semibold text-white">Conditioning & Conditioning Protocols</h2>
+            <h2 className="text-lg font-semibold text-white">Conditioning & Workouts</h2>
             <p className="text-sm text-slate-400">
               High-volume bodyweight protocols, burpee protocols, pull-up routines, and mobility tracking.
             </p>
             <button 
-              onClick={() => updateShredData({ ...shredData, workoutsCompleted: [...shredData.workoutsCompleted, `Conditioning Session @ ${new Date().toLocaleTimeString()}`] })}
+              onClick={() => updateShredData({ ...currentData, workoutsCompleted: [...currentData.workoutsCompleted, `Conditioning Session @ ${new Date().toLocaleTimeString()}`] })}
               className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-medium rounded-lg transition-all"
             >
               Log Conditioning Session
             </button>
             <div className="space-y-2">
-              {shredData.workoutsCompleted.length === 0 ? (
+              {currentData.workoutsCompleted.length === 0 ? (
                 <p className="text-xs text-slate-500 italic">No workouts logged yet today.</p>
               ) : (
-                shredData.workoutsCompleted.map((wo, idx) => (
+                currentData.workoutsCompleted.map((wo, idx) => (
                   <div key={idx} className="text-xs bg-slate-950 p-2.5 rounded border border-slate-800 text-slate-300">
                     {wo}
                   </div>
