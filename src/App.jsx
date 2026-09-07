@@ -317,7 +317,7 @@ export default function App() {
     try { return JSON.parse(localStorage.getItem('ks_fasting_history') || '[]'); } catch { return []; }
   });
 
-  // Weight History State (For Analytics & Trends)
+  // Weight History State
   const [weightHistory, setWeightHistory] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem('ks_weight_history') || JSON.stringify([
@@ -848,25 +848,25 @@ export default function App() {
           </div>
         </div>
 
-        {/* Tab Navigation - Includes Stats/Journal */}
-        <div className="flex border-b border-[#eaeaea] -mx-5 px-5 gap-4 overflow-x-auto no-scrollbar">
+        {/* Tab Navigation - Fixed 5 Columns, No Scroll, Stats Placed Last */}
+        <div className="grid grid-cols-5 border-b border-[#eaeaea] -mx-5 px-2">
           {[
             { id: 'dashboard', icon: Icons.Activity, label: 'Dash' },
             { id: 'schedule', icon: Icons.Calendar, label: 'Schedule' },
             { id: 'fasting', icon: Icons.Clock, label: 'Fasting' },
-            { id: 'stats', icon: Icons.TrendingUp, label: 'Stats' },
-            { id: 'recipes', icon: Icons.BookOpen, label: 'Recipes' }
+            { id: 'recipes', icon: Icons.BookOpen, label: 'Recipes' },
+            { id: 'stats', icon: Icons.TrendingUp, label: 'Stats' }
           ].map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-1.5 py-2.5 text-xs font-bold transition-all border-b-2 -mb-[1px] whitespace-nowrap ${
+              className={`flex items-center justify-center gap-1 py-2.5 text-[11px] font-bold transition-all border-b-2 -mb-[1px] ${
                 activeTab === tab.id ? 'text-slate-900' : 'text-slate-500 border-transparent hover:text-slate-900'
               }`}
               style={activeTab === tab.id ? { borderColor: '#82bc41' } : {}}
             >
-              <tab.icon size={14} style={activeTab === tab.id ? { color: '#82bc41' } : {}} />
-              {tab.label}
+              <tab.icon size={13} style={activeTab === tab.id ? { color: '#82bc41' } : {}} />
+              <span>{tab.label}</span>
             </button>
           ))}
         </div>
@@ -1245,183 +1245,6 @@ export default function App() {
           </div>
         )}
 
-        {/* PROGRESS & ANALYTICS TAB (NEW) */}
-        {activeTab === 'stats' && (
-          <div className="space-y-4">
-            
-            {/* Top Stat KPI Highlights */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-              <div className="bg-white p-3.5 rounded-2xl border border-[#eaeaea] shadow-xs text-center">
-                <span className="text-[9px] font-black uppercase tracking-wider text-slate-500 block">Total Fasting</span>
-                <span className="text-lg font-black text-slate-900">{totalFastingHours.toFixed(0)}h</span>
-                <span className="text-[9px] text-slate-500 block mt-0.5">{fastingHistory.length} sessions</span>
-              </div>
-              <div className="bg-white p-3.5 rounded-2xl border border-[#eaeaea] shadow-xs text-center">
-                <span className="text-[9px] font-black uppercase tracking-wider text-slate-500 block">Avg Fast</span>
-                <span className="text-lg font-black text-slate-900">{avgFastHours}h</span>
-                <span className="text-[9px] text-emerald-600 font-bold block mt-0.5">{fastSuccessRate}% hit goal</span>
-              </div>
-              <div className="bg-white p-3.5 rounded-2xl border border-[#eaeaea] shadow-xs text-center">
-                <span className="text-[9px] font-black uppercase tracking-wider text-slate-500 block">Net Weight</span>
-                <span className="text-lg font-black text-slate-900" style={{ color: isWeightLost ? '#82bc41' : '#e11d48' }}>
-                  {isWeightLost ? `-${absWeightDiff}` : `+${absWeightDiff}`} lbs
-                </span>
-                <span className="text-[9px] text-slate-500 block mt-0.5">Goal: {weightData.goal} lbs</span>
-              </div>
-              <div className="bg-white p-3.5 rounded-2xl border border-[#eaeaea] shadow-xs text-center">
-                <span className="text-[9px] font-black uppercase tracking-wider text-slate-500 block">Consistency</span>
-                <span className="text-lg font-black text-slate-900">{workoutConsistencyRate}%</span>
-                <span className="text-[9px] text-slate-500 block mt-0.5">{totalCompletedWorkouts} workouts</span>
-              </div>
-            </div>
-
-            {/* Historical Weight Trend Card */}
-            <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-2 border-b border-[#eaeaea]">
-                <div>
-                  <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                    <Icons.TrendingUp size={14} style={{ color: '#82bc41' }} />
-                    Weight Progression Trend
-                  </h3>
-                  <p className="text-[10px] text-slate-500">Historical weigh-ins with delta tracking</p>
-                </div>
-                <button
-                  onClick={() => setModalType('weight')}
-                  className="px-2.5 py-1 text-[10px] font-black text-white rounded-lg shadow-xs"
-                  style={{ backgroundColor: '#82bc41' }}
-                >
-                  + Log Weight
-                </button>
-              </div>
-
-              {/* Visual Bars for Weight History */}
-              <div className="space-y-2">
-                {weightHistory.map((item, idx) => {
-                  const percentOfGoal = Math.min(100, Math.max(15, Math.round(((215 - item.weight) / (215 - weightData.goal)) * 100)));
-                  return (
-                    <div key={item.id || idx} className="space-y-1">
-                      <div className="flex justify-between text-xs font-bold text-slate-700">
-                        <span>{item.date}</span>
-                        <div className="flex items-center gap-2">
-                          <span className="text-slate-900 font-extrabold">{item.weight} lbs</span>
-                          {item.diff !== undefined && item.diff !== 0 && (
-                            <span className={`text-[10px] font-black ${item.diff < 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
-                              {item.diff < 0 ? `${item.diff} lbs` : `+${item.diff} lbs`}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                      <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                        <div 
-                          className="h-full rounded-full transition-all duration-300"
-                          style={{ width: `${percentOfGoal}%`, backgroundColor: '#82bc41' }}
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Fasting Endurance Metrics */}
-            <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-3">
-              <div className="flex items-center justify-between pb-2 border-b border-[#eaeaea]">
-                <div>
-                  <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                    <Icons.Clock size={14} style={{ color: '#82bc41' }} />
-                    Fasting Endurance Stats
-                  </h3>
-                  <p className="text-[10px] text-slate-500">Cumulative metabolic endurance</p>
-                </div>
-                <span className="text-[10px] font-black text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
-                  Longest: {longestFastHours}h
-                </span>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3 pt-1">
-                <div className="bg-[#fafafa] p-3 rounded-2xl border border-[#eaeaea]">
-                  <span className="text-[9px] font-black text-slate-500 uppercase block">Weekly BDP Burpees</span>
-                  <span className="text-base font-black text-slate-900">{weeklyBdpMinutes} / 80 Mins</span>
-                  <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden mt-1.5">
-                    <div 
-                      className="h-full rounded-full" 
-                      style={{ width: `${Math.min(100, (weeklyBdpMinutes / 80) * 100)}%`, backgroundColor: '#82bc41' }} 
-                    />
-                  </div>
-                </div>
-
-                <div className="bg-[#fafafa] p-3 rounded-2xl border border-[#eaeaea]">
-                  <span className="text-[9px] font-black text-slate-500 uppercase block">Fasting Target Rate</span>
-                  <span className="text-base font-black text-slate-900">{fastSuccessRate}% On-Target</span>
-                  <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden mt-1.5">
-                    <div 
-                      className="h-full rounded-full" 
-                      style={{ width: `${fastSuccessRate}%`, backgroundColor: '#82bc41' }} 
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Daily Journal & Notes Section */}
-            <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-3">
-              <div className="flex items-center justify-between pb-2 border-b border-[#eaeaea]">
-                <div>
-                  <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                    <Icons.Clipboard size={14} style={{ color: '#82bc41' }} />
-                    Protocol Journal & Check-ins
-                  </h3>
-                  <p className="text-[10px] text-slate-500">Log joint comfort, energy, ketone levels, or refeed notes</p>
-                </div>
-              </div>
-
-              <form onSubmit={handleAddJournalNote} className="space-y-2">
-                <textarea
-                  value={newJournalText}
-                  onChange={(e) => setNewJournalText(e.target.value)}
-                  placeholder="Record today's notes (e.g., Felt sharp during 20m burpees, joints felt pain-free, broken fast with bone broth)..."
-                  className="w-full p-3 rounded-xl border border-slate-200 bg-[#fafafa] text-xs text-slate-900 font-medium focus:outline-none focus:border-slate-400 min-h-[70px]"
-                />
-                <button
-                  type="submit"
-                  className="w-full py-2.5 text-white font-black text-xs rounded-xl shadow-xs transition-all"
-                  style={{ backgroundColor: '#82bc41' }}
-                >
-                  Save Journal Entry
-                </button>
-              </form>
-
-              <div className="space-y-2 pt-2 max-h-48 overflow-y-auto pr-1">
-                {journalNotes.length === 0 ? (
-                  <p className="text-xs text-slate-400 italic text-center py-2">No journal entries logged yet.</p>
-                ) : (
-                  journalNotes.map(item => (
-                    <div key={item.id} className="p-3 bg-[#fafafa] rounded-2xl border border-[#eaeaea] space-y-1">
-                      <div className="flex justify-between items-center text-[10px] font-black text-slate-500">
-                        <span>{item.date} • {item.time}</span>
-                        <button
-                          onClick={() => {
-                            const updated = journalNotes.filter(j => j.id !== item.id);
-                            setJournalNotes(updated);
-                            syncToCloudAndLocal({ journalNotes: updated });
-                          }}
-                          className="text-slate-400 hover:text-red-500"
-                        >
-                          <Icons.Trash size={12} />
-                        </button>
-                      </div>
-                      <p className="text-xs text-slate-800 font-medium leading-relaxed">
-                        {item.text}
-                      </p>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-
-          </div>
-        )}
-
         {/* RECIPES TAB */}
         {activeTab === 'recipes' && (
           <div className="space-y-3">
@@ -1675,66 +1498,6 @@ export default function App() {
               </div>
             </div>
 
-            {/* Fasting History Log */}
-            {fastingHistory.length > 0 && (
-              <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-3">
-                <div className="flex items-center justify-between pb-2 border-b border-[#eaeaea]">
-                  <div>
-                    <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                      <Icons.Clock size={14} style={{ color: '#82bc41' }} />
-                      Completed Fasting Log
-                    </h3>
-                    <p className="text-[10px] text-slate-500">Saved permanently to your profile</p>
-                  </div>
-                  <span className="text-[10px] font-black text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">
-                    {fastingHistory.length} Fasts
-                  </span>
-                </div>
-
-                <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
-                  {fastingHistory.map(item => (
-                    <div key={item.id} className="flex items-center justify-between p-3 rounded-xl border border-[#eaeaea] bg-[#fafafa]">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs font-black text-slate-900">
-                            {formatDurationDisplay(item.durationMs)}
-                          </span>
-                          <span className="text-[9px] font-bold text-slate-500">
-                            (Target: {item.preset}h)
-                          </span>
-                        </div>
-                        <span className="text-[10px] text-slate-500 block">
-                          {item.completedAtDate} • {item.completedAtTime}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        {item.hitGoal ? (
-                          <span className="text-[9px] font-black text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md">
-                            ✓ Goal Met
-                          </span>
-                        ) : (
-                          <span className="text-[9px] font-bold text-slate-600 bg-slate-200 px-2 py-0.5 rounded-md">
-                            Logged
-                          </span>
-                        )}
-                        <button
-                          onClick={() => {
-                            const updated = fastingHistory.filter(f => f.id !== item.id);
-                            setFastingHistory(updated);
-                            syncToCloudAndLocal({ fastingHistory: updated });
-                          }}
-                          className="text-slate-400 hover:text-red-500 p-1"
-                          title="Delete entry"
-                        >
-                          <Icons.Trash size={12} />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
             {/* Refeed Helper */}
             <div className="bg-white rounded-2xl border border-[#eaeaea] p-4 shadow-xs">
               <div className="flex items-center gap-1.5 mb-1.5">
@@ -1744,6 +1507,183 @@ export default function App() {
               <p className="text-xs text-slate-600 leading-relaxed">
                 Break prolonged 36h/48h/72h fasts with warm bone broth or easily digestible lean protein 45 minutes prior to whole meals to safeguard gut integrity and avoid blood sugar rushes.
               </p>
+            </div>
+
+          </div>
+        )}
+
+        {/* STATS & PROGRESS TAB */}
+        {activeTab === 'stats' && (
+          <div className="space-y-4">
+            
+            {/* Top Stat KPI Highlights */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              <div className="bg-white p-3.5 rounded-2xl border border-[#eaeaea] shadow-xs text-center">
+                <span className="text-[9px] font-black uppercase tracking-wider text-slate-500 block">Total Fasting</span>
+                <span className="text-lg font-black text-slate-900">{totalFastingHours.toFixed(0)}h</span>
+                <span className="text-[9px] text-slate-500 block mt-0.5">{fastingHistory.length} sessions</span>
+              </div>
+              <div className="bg-white p-3.5 rounded-2xl border border-[#eaeaea] shadow-xs text-center">
+                <span className="text-[9px] font-black uppercase tracking-wider text-slate-500 block">Avg Fast</span>
+                <span className="text-lg font-black text-slate-900">{avgFastHours}h</span>
+                <span className="text-[9px] text-emerald-600 font-bold block mt-0.5">{fastSuccessRate}% hit goal</span>
+              </div>
+              <div className="bg-white p-3.5 rounded-2xl border border-[#eaeaea] shadow-xs text-center">
+                <span className="text-[9px] font-black uppercase tracking-wider text-slate-500 block">Net Weight</span>
+                <span className="text-lg font-black text-slate-900" style={{ color: isWeightLost ? '#82bc41' : '#e11d48' }}>
+                  {isWeightLost ? `-${absWeightDiff}` : `+${absWeightDiff}`} lbs
+                </span>
+                <span className="text-[9px] text-slate-500 block mt-0.5">Goal: {weightData.goal} lbs</span>
+              </div>
+              <div className="bg-white p-3.5 rounded-2xl border border-[#eaeaea] shadow-xs text-center">
+                <span className="text-[9px] font-black uppercase tracking-wider text-slate-500 block">Consistency</span>
+                <span className="text-lg font-black text-slate-900">{workoutConsistencyRate}%</span>
+                <span className="text-[9px] text-slate-500 block mt-0.5">{totalCompletedWorkouts} workouts</span>
+              </div>
+            </div>
+
+            {/* Historical Weight Trend Card */}
+            <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-4">
+              <div className="flex items-center justify-between pb-2 border-b border-[#eaeaea]">
+                <div>
+                  <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                    <Icons.TrendingUp size={14} style={{ color: '#82bc41' }} />
+                    Weight Progression Trend
+                  </h3>
+                  <p className="text-[10px] text-slate-500">Historical weigh-ins with delta tracking</p>
+                </div>
+                <button
+                  onClick={() => setModalType('weight')}
+                  className="px-2.5 py-1 text-[10px] font-black text-white rounded-lg shadow-xs"
+                  style={{ backgroundColor: '#82bc41' }}
+                >
+                  + Log Weight
+                </button>
+              </div>
+
+              {/* Visual Bars for Weight History */}
+              <div className="space-y-2">
+                {weightHistory.map((item, idx) => {
+                  const percentOfGoal = Math.min(100, Math.max(15, Math.round(((215 - item.weight) / (215 - weightData.goal)) * 100)));
+                  return (
+                    <div key={item.id || idx} className="space-y-1">
+                      <div className="flex justify-between text-xs font-bold text-slate-700">
+                        <span>{item.date}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-slate-900 font-extrabold">{item.weight} lbs</span>
+                          {item.diff !== undefined && item.diff !== 0 && (
+                            <span className={`text-[10px] font-black ${item.diff < 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                              {item.diff < 0 ? `${item.diff} lbs` : `+${item.diff} lbs`}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full rounded-full transition-all duration-300"
+                          style={{ width: `${percentOfGoal}%`, backgroundColor: '#82bc41' }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Fasting Endurance Metrics */}
+            <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-3">
+              <div className="flex items-center justify-between pb-2 border-b border-[#eaeaea]">
+                <div>
+                  <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                    <Icons.Clock size={14} style={{ color: '#82bc41' }} />
+                    Fasting Endurance Stats
+                  </h3>
+                  <p className="text-[10px] text-slate-500">Cumulative metabolic endurance</p>
+                </div>
+                <span className="text-[10px] font-black text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+                  Longest: {longestFastHours}h
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 pt-1">
+                <div className="bg-[#fafafa] p-3 rounded-2xl border border-[#eaeaea]">
+                  <span className="text-[9px] font-black text-slate-500 uppercase block">Weekly BDP Burpees</span>
+                  <span className="text-base font-black text-slate-900">{weeklyBdpMinutes} / 80 Mins</span>
+                  <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden mt-1.5">
+                    <div 
+                      className="h-full rounded-full" 
+                      style={{ width: `${Math.min(100, (weeklyBdpMinutes / 80) * 100)}%`, backgroundColor: '#82bc41' }} 
+                    />
+                  </div>
+                </div>
+
+                <div className="bg-[#fafafa] p-3 rounded-2xl border border-[#eaeaea]">
+                  <span className="text-[9px] font-black text-slate-500 uppercase block">Fasting Target Rate</span>
+                  <span className="text-base font-black text-slate-900">{fastSuccessRate}% On-Target</span>
+                  <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden mt-1.5">
+                    <div 
+                      className="h-full rounded-full" 
+                      style={{ width: `${fastSuccessRate}%`, backgroundColor: '#82bc41' }} 
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Daily Journal & Notes Section */}
+            <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-3">
+              <div className="flex items-center justify-between pb-2 border-b border-[#eaeaea]">
+                <div>
+                  <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                    <Icons.Clipboard size={14} style={{ color: '#82bc41' }} />
+                    Protocol Journal & Check-ins
+                  </h3>
+                  <p className="text-[10px] text-slate-500">Log joint comfort, energy, ketone levels, or refeed notes</p>
+                </div>
+              </div>
+
+              <form onSubmit={handleAddJournalNote} className="space-y-2">
+                <textarea
+                  value={newJournalText}
+                  onChange={(e) => setNewJournalText(e.target.value)}
+                  placeholder="Record today's notes (e.g., Felt sharp during 20m burpees, joints felt pain-free, broken fast with bone broth)..."
+                  className="w-full p-3 rounded-xl border border-slate-200 bg-[#fafafa] text-xs text-slate-900 font-medium focus:outline-none focus:border-slate-400 min-h-[70px]"
+                />
+                <button
+                  type="submit"
+                  className="w-full py-2.5 text-white font-black text-xs rounded-xl shadow-xs transition-all"
+                  style={{ backgroundColor: '#82bc41' }}
+                >
+                  Save Journal Entry
+                </button>
+              </form>
+
+              <div className="space-y-2 pt-2 max-h-48 overflow-y-auto pr-1">
+                {journalNotes.length === 0 ? (
+                  <p className="text-xs text-slate-400 italic text-center py-2">No journal entries logged yet.</p>
+                ) : (
+                  journalNotes.map(item => (
+                    <div key={item.id} className="p-3 bg-[#fafafa] rounded-2xl border border-[#eaeaea] space-y-1">
+                      <div className="flex justify-between items-center text-[10px] font-black text-slate-500">
+                        <span>{item.date} • {item.time}</span>
+                        <button
+                          onClick={() => {
+                            const updated = journalNotes.filter(j => j.id !== item.id);
+                            setJournalNotes(updated);
+                            syncToCloudAndLocal({ journalNotes: updated });
+                          }}
+                          className="text-slate-400 hover:text-red-500"
+                        >
+                          <Icons.Trash size={12} />
+                        </button>
+                      </div>
+                      <p className="text-xs text-slate-800 font-medium leading-relaxed">
+                        {item.text}
+                      </p>
+                    </div>
+                  ))
+                )}
+              </div>
             </div>
 
           </div>
