@@ -52,7 +52,8 @@ const Icons = {
   Cloud: (p) => <Icon {...p} path='<path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z"/>' />,
   Sliders: (p) => <Icon {...p} path='<line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/>' />,
   Zap: (p) => <Icon {...p} path='<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>' />,
-  Award: (p) => <Icon {...p} path='<circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>' />
+  Award: (p) => <Icon {...p} path='<circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>' />,
+  ArrowRight: (p) => <Icon {...p} path='<line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>' />
 };
 
 const INITIAL_WORKOUTS = [
@@ -317,47 +318,78 @@ const FASTING_PRESETS = [
   { id: '72h', label: '72H', hours: 72 }
 ];
 
-// --- Metabolic Stages of Fasting ---
+// --- 5 Dynamic Metabolic Stages of Fasting ---
 const METABOLIC_PHASES = [
   {
+    id: 'phase_1',
     range: '0 – 12 Hours',
     minHours: 0,
     maxHours: 12,
-    name: 'Blood Sugar Drop & Digestion Rest',
+    name: 'Blood Sugar Stabilization & Glycogen Depletion',
+    shortStatus: 'Digestion Rest & Glycogen Burn',
     summary: 'Circulating insulin levels drop sharply as digestion completes. Your body burns through circulating glucose and begins depleting stored liver glycogen.',
-    biomarkers: 'Insulin ↓ | Blood Sugar Normalization'
+    biomarkers: 'Insulin ↓ | Blood Sugar Normalization',
+    insights: [
+      { maxH: 4, tip: 'Digestion active. Stomach emptying, blood glucose gradually stabilizing.' },
+      { maxH: 8, tip: 'Insulin falling toward baseline. Liver tapping stored glycogen for cellular energy.' },
+      { maxH: 12, tip: 'Liver glycogen ~70% depleted. Mild ghrelin peaks may occur as fat adaptation begins.' }
+    ]
   },
   {
+    id: 'phase_2',
     range: '12 – 18 Hours',
     minHours: 12,
     maxHours: 18,
     name: 'Metabolic Switch & Ketosis Onset',
+    shortStatus: 'Ketone Production & Active Lipolysis',
     summary: 'Liver glycogen is substantially depleted. The liver accelerates the conversion of stored fat into ketones (acetoacetate & beta-hydroxybutyrate) for cellular fuel.',
-    biomarkers: 'Ketones ↑ | Lipolysis (Fat Burning) Active'
+    biomarkers: 'Ketones ↑ | Lipolysis (Fat Burning) Active',
+    insights: [
+      { maxH: 15, tip: 'The metabolic flip switch: Fatty acids mobilize into the bloodstream at high velocity.' },
+      { maxH: 18, tip: 'Blood ketone concentrations reach ~0.5–1.0 mmol/L. Brain switches to ketone metabolism.' }
+    ]
   },
   {
+    id: 'phase_3',
     range: '18 – 24 Hours',
     minHours: 18,
     maxHours: 24,
     name: 'Autophagy Activation',
+    shortStatus: 'Intracellular Cleanup & Recycling',
     summary: 'Intracellular cleanup protocols ignite. Cells begin breaking down misfolded proteins, dysfunctional mitochondria, and damaged components to recycle amino acids.',
-    biomarkers: 'Autophagy Onset | mTOR Suppression'
+    biomarkers: 'Autophagy Onset | mTOR Suppression',
+    insights: [
+      { maxH: 21, tip: 'mTOR pathway is suppressed, unleashing intracellular lysosome recycling.' },
+      { maxH: 24, tip: 'Autophagy active in liver, muscle, and brain tissue. Cellular waste is systematically purged.' }
+    ]
   },
   {
+    id: 'phase_4',
     range: '24 – 48 Hours',
     minHours: 24,
     maxHours: 48,
     name: 'Deep Autophagy & Growth Hormone Surge',
+    shortStatus: 'Peak Autophagy & Muscle Protection',
     summary: 'Human Growth Hormone (HGH) surges up to 5x baseline to protect lean muscle tissue. Systemic inflammation markers plunge and visceral fat mobilization peaks.',
-    biomarkers: 'HGH ↑↑↑ | Peak Systemic De-inflammation'
+    biomarkers: 'HGH ↑↑↑ | Peak Systemic De-inflammation',
+    insights: [
+      { maxH: 36, tip: 'Peak cellular rejuvenation. HGH surge preserves joint collagen and muscular integrity.' },
+      { maxH: 48, tip: 'Deep systemic de-inflammation. BDNF (Brain-Derived Neurotrophic Factor) supports mental acuity.' }
+    ]
   },
   {
+    id: 'phase_5',
     range: '48 – 72+ Hours',
     minHours: 48,
     maxHours: 120,
-    name: 'Immune System Reset & Stem Cell Renewal',
+    name: 'Immune Reset & Stem Cell Renewal',
+    shortStatus: 'Hematopoietic Stem Cell Priming',
     summary: 'Old and senescent white blood cells undergo apoptosis. The depletion of circulating immune cells triggers hematopoietic stem cells to generate a pristine, refreshed immune system upon refeeding.',
-    biomarkers: 'Stem Cell Activation | Cellular Rejuvenation'
+    biomarkers: 'Stem Cell Activation | Cellular Rejuvenation',
+    insights: [
+      { maxH: 60, tip: 'Senescent immune cells dismantled. Stem cell triggers begin activating in bone marrow.' },
+      { maxH: 120, tip: 'Maximum immune renewal primed. Prepare for a gentle, bone-broth centered refeed.' }
+    ]
   }
 ];
 
@@ -501,7 +533,7 @@ export default function App() {
   const [recipeCategory, setRecipeCategory] = useState('All');
 
   // Modals
-  const [modalType, setModalType] = useState(null); // 'goals' | 'workout' | 'meal' | 'weight' | 'manageWorkouts' | 'protocol' | null
+  const [modalType, setModalType] = useState(null);
 
   // Inputs for adding items
   const [selectedWorkoutIdToAdd, setSelectedWorkoutIdToAdd] = useState(workoutLibrary[0]?.id || '');
@@ -668,7 +700,6 @@ export default function App() {
     return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   };
 
-  // Helper to format completed duration nicely
   const formatDurationDisplay = (ms) => {
     const totalMinutes = Math.floor(ms / (1000 * 60));
     const h = Math.floor(totalMinutes / 60);
@@ -679,6 +710,22 @@ export default function App() {
 
   // Current Fasting Elapsed Hours (Decimal)
   const currentElapsedHours = fastingElapsed / (1000 * 60 * 60);
+
+  // Dynamic Metabolic Phase Calculations
+  const currentPhaseIndex = METABOLIC_PHASES.findIndex(
+    p => currentElapsedHours >= p.minHours && currentElapsedHours < p.maxHours
+  );
+  const activePhase = currentPhaseIndex !== -1 
+    ? METABOLIC_PHASES[currentPhaseIndex] 
+    : (currentElapsedHours >= 72 ? METABOLIC_PHASES[METABOLIC_PHASES.length - 1] : METABOLIC_PHASES[0]);
+
+  // Dynamic Tip for Current Hour
+  const activeTip = activePhase.insights.find(ins => currentElapsedHours <= ins.maxH)?.tip 
+    || activePhase.insights[activePhase.insights.length - 1]?.tip;
+
+  // Time remaining to next phase
+  const nextPhase = METABOLIC_PHASES[currentPhaseIndex + 1];
+  const msToNextPhase = nextPhase ? Math.max(0, (nextPhase.minHours * 3600 * 1000) - fastingElapsed) : null;
 
   // Active day data
   const defaultDay = activeSchedule.find(d => d.id === selectedDay) || activeSchedule[0];
@@ -835,7 +882,7 @@ export default function App() {
     ? Math.max(0, Math.min(100, Math.round((weightDiff / totalToLose) * 100)))
     : 0;
 
-  // --- End Fast Handler ---
+  // End Fast Handler
   const handleStopFast = () => {
     const confirmed = window.confirm("Are you ready to stop your fast and record your duration?");
     if (!confirmed) return;
@@ -886,7 +933,7 @@ export default function App() {
         </div>
       )}
 
-      {/* Header Area - Clean Unified Top Bar */}
+      {/* Header Area */}
       <header className="bg-white px-5 pt-4 pb-3 border-b border-[#eaeaea] sticky top-0 z-30">
         <div className="flex items-center justify-between mb-3">
           <div>
@@ -907,7 +954,6 @@ export default function App() {
               </span>
             </button>
 
-            {/* Cloud Sync / Login Button */}
             {!user ? (
               <button
                 onClick={handleGoogleSignIn}
@@ -929,7 +975,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* Tab Navigation - Seamless Bar */}
+        {/* Tab Navigation */}
         <div className="flex border-b border-[#eaeaea] -mx-5 px-5 gap-6">
           {[
             { id: 'dashboard', icon: Icons.Activity, label: 'Dash' },
@@ -955,7 +1001,6 @@ export default function App() {
       {/* Main Content Area */}
       <main className="px-4 py-4 flex-1 space-y-4">
 
-        {/* Cloud Save Prompt Banner for Local Mode Users */}
         {!user && (
           <div className="bg-[#fafafa] border border-[#eaeaea] rounded-2xl p-4 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div className="space-y-0.5">
@@ -977,8 +1022,6 @@ export default function App() {
         {/* SCHEDULE TAB */}
         {activeTab === 'schedule' && (
           <div className="space-y-3">
-            
-            {/* Protocol Switcher Bar */}
             <div className="bg-white rounded-2xl border border-[#eaeaea] p-3.5 shadow-xs flex items-center justify-between">
               <div>
                 <span className="text-[9px] font-black uppercase tracking-wider text-slate-500 block">Active Protocol</span>
@@ -995,7 +1038,6 @@ export default function App() {
             </div>
 
             <div className="bg-white rounded-2xl border border-[#eaeaea] shadow-xs overflow-hidden">
-              {/* 7-Day Horizontal Bar */}
               <div className="grid grid-cols-7 border-b border-[#eaeaea] bg-[#fafafa]">
                 {activeSchedule.map(d => {
                   const isSelected = selectedDay === d.id;
@@ -1028,10 +1070,7 @@ export default function App() {
                 })}
               </div>
 
-              {/* Daily Body Section */}
               <div className="p-5 space-y-6">
-                
-                {/* Day Header & Macros */}
                 <div className="flex justify-between items-center pb-4 border-b border-[#eaeaea]">
                   <div>
                     <h2 className="text-base font-black text-slate-900">{defaultDay.dayName}</h2>
@@ -1054,7 +1093,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Training Routine Subsection */}
                 <div>
                   <div className="flex justify-between items-center mb-3">
                     <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Training Routine</span>
@@ -1123,7 +1161,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Nutrition Subsection */}
                 <div>
                   <div className="flex justify-between items-center mb-3">
                     <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Nutrition & Meals</span>
@@ -1147,7 +1184,6 @@ export default function App() {
                     </div>
                   ) : (
                     <>
-                      {/* Consumed Progress Bar */}
                       <div className="bg-[#fafafa] p-3 rounded-xl border border-[#eaeaea] mb-3">
                         <div className="flex justify-between text-[11px] font-bold text-slate-700 mb-1.5">
                           <span>Consumed: <strong style={{ color: '#82bc41' }}>{consumedMacros.cals}</strong> / {targetCals} kcal</span>
@@ -1212,8 +1248,6 @@ export default function App() {
         {/* DASHBOARD TAB */}
         {activeTab === 'dashboard' && (
           <div className="space-y-3">
-            
-            {/* Protocol Quick Overview */}
             <div className="bg-white rounded-2xl border border-[#eaeaea] p-4 shadow-xs flex items-center justify-between">
               <div>
                 <span className="text-[9px] font-black uppercase tracking-widest text-slate-500 block">Current Regimen</span>
@@ -1228,7 +1262,6 @@ export default function App() {
               </button>
             </div>
 
-            {/* Weight Loss Progress */}
             <div className="bg-white rounded-2xl border border-[#eaeaea] p-5 shadow-xs">
               <div className="flex justify-between items-center mb-3">
                 <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Weight Goal Progress</span>
@@ -1254,7 +1287,6 @@ export default function App() {
               </div>
             </div>
 
-            {/* Busy Dad Burpee Progress */}
             <div className="bg-white rounded-2xl border border-[#eaeaea] p-5 shadow-xs">
               <div className="flex justify-between items-center mb-2">
                 <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Weekly BDP Goal</span>
@@ -1273,7 +1305,6 @@ export default function App() {
               )}
             </div>
 
-            {/* Featured Joint-Health Dish */}
             <div className="bg-slate-900 text-white rounded-2xl border border-slate-800 p-5 shadow-md">
               <div className="flex justify-between items-start mb-1">
                 <span className="text-[9px] font-black uppercase tracking-widest text-emerald-400">
@@ -1329,7 +1360,6 @@ export default function App() {
               </div>
             </div>
 
-            {/* Protocol Rules */}
             <div className="bg-white rounded-2xl border border-[#eaeaea] p-5 shadow-xs">
               <h3 className="text-xs font-black text-slate-900 mb-2 uppercase tracking-wider">Protocol Anchors</h3>
               <ul className="text-xs text-slate-600 space-y-1.5 leading-relaxed">
@@ -1338,15 +1368,12 @@ export default function App() {
                 <li>• Break fasts longer than 24h with bone broth or light protein 45 minutes before heavy food.</li>
               </ul>
             </div>
-
           </div>
         )}
 
         {/* RECIPES TAB */}
         {activeTab === 'recipes' && (
           <div className="space-y-3">
-            
-            {/* Category Filter Pills */}
             <div className="flex gap-1 overflow-x-auto pb-1 no-scrollbar">
               {categories.map(cat => (
                 <button
@@ -1362,7 +1389,6 @@ export default function App() {
               ))}
             </div>
 
-            {/* Recipe List */}
             <div className="space-y-2.5">
               {filteredRecipes.map(recipe => (
                 <div key={recipe.id} className="bg-white rounded-2xl border border-[#eaeaea] p-4 shadow-xs">
@@ -1405,7 +1431,7 @@ export default function App() {
           </div>
         )}
 
-        {/* FASTING TAB - FULLY UPGRADED WITH SUMMARY & PROFILE LOG */}
+        {/* FASTING TAB - DYNAMIC METABOLIC TIMELINE */}
         {activeTab === 'fasting' && (
           <div className="space-y-4">
             
@@ -1434,7 +1460,6 @@ export default function App() {
                 )}
               </div>
 
-              {/* Progress Bar for Active Fast */}
               {fastingState.active && (
                 <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
                   <div 
@@ -1447,7 +1472,7 @@ export default function App() {
                 </div>
               )}
 
-              {/* 8 Fasting Presets */}
+              {/* 8 Presets */}
               <div className="pt-2">
                 <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 block mb-2">
                   Select Fasting Preset
@@ -1476,7 +1501,7 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Start and Stop Action Buttons */}
+              {/* Start and Stop Buttons */}
               <div className="pt-2">
                 {!fastingState.active ? (
                   <button 
@@ -1503,7 +1528,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* Last Completed Fast Highlight Banner (Displayed immediately upon ending) */}
+            {/* Last Completed Fast Banner */}
             {fastingState.lastCompletedFast && !fastingState.active && (
               <div className="bg-emerald-50/60 border border-emerald-200 rounded-2xl p-4 shadow-xs flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -1530,7 +1555,153 @@ export default function App() {
               </div>
             )}
 
-            {/* Fasting History Log in Profile */}
+            {/* DYNAMIC METABOLIC PHASE SPOTLIGHT (When Fasting is Active) */}
+            {fastingState.active && (
+              <div className="bg-slate-900 text-white rounded-3xl p-5 shadow-lg border border-slate-800 space-y-3">
+                <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full animate-ping" style={{ backgroundColor: '#82bc41' }} />
+                    <span className="text-[10px] font-black uppercase tracking-widest text-emerald-400">
+                      Live Cellular Stage • {activePhase.range}
+                    </span>
+                  </div>
+                  <span className="text-xs font-mono font-bold text-slate-400">
+                    {currentElapsedHours.toFixed(1)}h Elapsed
+                  </span>
+                </div>
+
+                <div>
+                  <h4 className="text-sm font-black text-white">{activePhase.name}</h4>
+                  <p className="text-xs text-slate-300 leading-relaxed mt-1">
+                    {activeTip}
+                  </p>
+                </div>
+
+                {/* Milestone Countdown to Next Phase */}
+                {nextPhase && msToNextPhase > 0 && (
+                  <div className="bg-slate-950 p-3 rounded-xl border border-slate-800/80 flex items-center justify-between">
+                    <div className="flex items-center gap-1.5 text-xs text-slate-300">
+                      <Icons.ArrowRight size={14} className="text-emerald-400" />
+                      <span>Next: <strong className="text-white">{nextPhase.shortStatus}</strong></span>
+                    </div>
+                    <span className="text-xs font-black font-mono" style={{ color: '#82bc41' }}>
+                      in {formatDurationDisplay(msToNextPhase)}
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* INTERACTIVE FULL METABOLIC TIMELINE */}
+            <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-3">
+              <div className="flex items-center justify-between pb-2 border-b border-[#eaeaea]">
+                <div>
+                  <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                    <Icons.Activity size={14} style={{ color: '#82bc41' }} /> 
+                    Fasting Metabolic Timeline
+                  </h3>
+                  <p className="text-[10px] text-slate-500">Biological milestones mapped as your fast progresses</p>
+                </div>
+                {fastingState.active && (
+                  <span className="text-[10px] font-black text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                    Phase {currentPhaseIndex + 1} of 5
+                  </span>
+                )}
+              </div>
+
+              <div className="space-y-3 pt-1">
+                {METABOLIC_PHASES.map((phase, idx) => {
+                  const isCurrentPhase = fastingState.active && currentElapsedHours >= phase.minHours && currentElapsedHours < phase.maxHours;
+                  const isCompletedPhase = fastingState.active && currentElapsedHours >= phase.maxHours;
+                  const isUpcoming = !fastingState.active || currentElapsedHours < phase.minHours;
+
+                  // Progress through this specific phase
+                  const phaseProgress = isCompletedPhase 
+                    ? 100 
+                    : isCurrentPhase 
+                    ? Math.max(0, Math.min(100, Math.round(((currentElapsedHours - phase.minHours) / (phase.maxHours - phase.minHours)) * 100)))
+                    : 0;
+
+                  return (
+                    <div 
+                      key={phase.id} 
+                      className={`p-3.5 rounded-2xl border transition-all ${
+                        isCurrentPhase
+                          ? 'border-[#82bc41] bg-emerald-50/40 shadow-xs ring-1 ring-emerald-500/30'
+                          : isCompletedPhase
+                          ? 'border-emerald-200 bg-white'
+                          : 'border-[#eaeaea] bg-[#fafafa]'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-1.5">
+                        <div className="flex items-center gap-2">
+                          <span 
+                            className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-md ${
+                              isCurrentPhase
+                                ? 'bg-[#82bc41] text-white'
+                                : isCompletedPhase
+                                ? 'bg-emerald-100 text-emerald-800'
+                                : 'bg-slate-200 text-slate-600'
+                            }`}
+                          >
+                            {phase.range}
+                          </span>
+                          <span className={`text-xs font-black ${isCurrentPhase ? 'text-slate-900 font-extrabold' : 'text-slate-800'}`}>
+                            {phase.name}
+                          </span>
+                        </div>
+
+                        {isCurrentPhase && (
+                          <span className="text-[9px] font-black text-emerald-600 uppercase tracking-wider flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" /> Active
+                          </span>
+                        )}
+                        {isCompletedPhase && (
+                          <span className="text-[10px] font-black text-emerald-600">
+                            ✓ Complete
+                          </span>
+                        )}
+                        {isUpcoming && fastingState.active && (
+                          <span className="text-[9px] font-bold text-slate-400">
+                            in {Math.max(0, Math.round(phase.minHours - currentElapsedHours))}h
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Phase Specific Progress Bar */}
+                      {fastingState.active && (
+                        <div className="w-full bg-slate-200/80 h-1.5 rounded-full overflow-hidden my-2">
+                          <div 
+                            className="h-full rounded-full transition-all duration-500"
+                            style={{ 
+                              width: `${phaseProgress}%`, 
+                              backgroundColor: isCurrentPhase ? '#82bc41' : '#10b981' 
+                            }} 
+                          />
+                        </div>
+                      )}
+                      
+                      <p className="text-[11px] text-slate-600 leading-relaxed mt-1">
+                        {phase.summary}
+                      </p>
+
+                      <div className="mt-2.5 flex items-center justify-between flex-wrap gap-1.5">
+                        <div className="text-[9px] font-bold text-slate-500 bg-white p-1.5 rounded-lg border border-slate-200/60">
+                          Markers: <span className="text-slate-800">{phase.biomarkers}</span>
+                        </div>
+                        {isCurrentPhase && (
+                          <span className="text-[9px] font-black text-emerald-700">
+                            {phaseProgress}% of this stage
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Fasting History Log */}
             {fastingHistory.length > 0 && (
               <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-3">
                 <div className="flex items-center justify-between pb-2 border-b border-[#eaeaea]">
@@ -1542,7 +1713,7 @@ export default function App() {
                     <p className="text-[10px] text-slate-500">Saved permanently to your profile</p>
                   </div>
                   <span className="text-[10px] font-black text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">
-                    {fastingHistory.length} Fasts Recorded
+                    {fastingHistory.length} Fasts
                   </span>
                 </div>
 
@@ -1590,80 +1761,7 @@ export default function App() {
               </div>
             )}
 
-            {/* Fasting Metabolic Phases & Biological Timeline */}
-            <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-3">
-              <div className="flex items-center justify-between pb-2 border-b border-[#eaeaea]">
-                <div>
-                  <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                    <Icons.Activity size={14} style={{ color: '#82bc41' }} /> 
-                    Fasting Metabolic Timeline
-                  </h3>
-                  <p className="text-[10px] text-slate-500">What happens in your body during each phase</p>
-                </div>
-                {fastingState.active && (
-                  <span className="text-[10px] font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                    {currentElapsedHours.toFixed(1)}h In
-                  </span>
-                )}
-              </div>
-
-              <div className="space-y-3 pt-1">
-                {METABOLIC_PHASES.map((phase, idx) => {
-                  const isCurrentPhase = fastingState.active && currentElapsedHours >= phase.minHours && currentElapsedHours < phase.maxHours;
-                  const isCompletedPhase = fastingState.active && currentElapsedHours >= phase.maxHours;
-
-                  return (
-                    <div 
-                      key={idx} 
-                      className={`p-3.5 rounded-2xl border transition-all ${
-                        isCurrentPhase
-                          ? 'border-[#82bc41] bg-emerald-50/40 shadow-xs ring-1 ring-emerald-500/20'
-                          : isCompletedPhase
-                          ? 'border-emerald-200 bg-white'
-                          : 'border-[#eaeaea] bg-[#fafafa]'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between mb-1">
-                        <div className="flex items-center gap-2">
-                          <span 
-                            className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-md ${
-                              isCurrentPhase
-                                ? 'bg-[#82bc41] text-white'
-                                : isCompletedPhase
-                                ? 'bg-emerald-100 text-emerald-800'
-                                : 'bg-slate-200 text-slate-700'
-                            }`}
-                          >
-                            {phase.range}
-                          </span>
-                          <span className="text-xs font-black text-slate-900">{phase.name}</span>
-                        </div>
-                        {isCurrentPhase && (
-                          <span className="text-[9px] font-black text-emerald-600 uppercase tracking-wider animate-pulse">
-                            ● Active Phase
-                          </span>
-                        )}
-                        {isCompletedPhase && (
-                          <span className="text-[10px] font-black text-emerald-600">
-                            ✓ Reached
-                          </span>
-                        )}
-                      </div>
-                      
-                      <p className="text-[11px] text-slate-600 leading-relaxed mt-1">
-                        {phase.summary}
-                      </p>
-
-                      <div className="mt-2 text-[9px] font-bold text-slate-500 bg-white p-1.5 rounded-lg border border-slate-200/60 inline-block">
-                        Biomarkers: <span className="text-slate-800">{phase.biomarkers}</span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Transition Phase Helper */}
+            {/* Refeed Helper */}
             <div className="bg-white rounded-2xl border border-[#eaeaea] p-4 shadow-xs">
               <div className="flex items-center gap-1.5 mb-1.5">
                 <Icons.Flame className="w-4 h-4" style={{ color: '#82bc41' }} />
