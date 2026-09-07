@@ -41,7 +41,7 @@ const Icons = {
   BookOpen: (p) => <Icon {...p} path='<path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>' />,
   Activity: (p) => <Icon {...p} path='<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>' />,
   Clock: (p) => <Icon {...p} path='<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>' />,
-  Settings: (p) => <Icon {...p} path='<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l-.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06-.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>' />,
+  Settings: (p) => <Icon {...p} path='<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l-.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>' />,
   X: (p) => <Icon {...p} path='<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>' />,
   Plus: (p) => <Icon {...p} path='<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>' />,
   Trash: (p) => <Icon {...p} path='<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>' />,
@@ -692,7 +692,14 @@ export default function App() {
     ? recipes 
     : recipes.filter(r => r.category === recipeCategory);
 
-  const weightProgress = Math.max(0, Math.min(100, Math.round(((weightData.start - weightData.current) / (weightData.start - weightData.goal)) * 100)));
+  // Weight Calculations (Supports Lost & Gained)
+  const weightDiff = weightData.start - weightData.current;
+  const isWeightLost = weightDiff >= 0;
+  const absWeightDiff = Math.abs(weightDiff).toFixed(1);
+  const totalToLose = weightData.start - weightData.goal;
+  const weightProgress = totalToLose > 0 
+    ? Math.max(0, Math.min(100, Math.round((weightDiff / totalToLose) * 100)))
+    : 0;
 
   return (
     <div className="max-w-md mx-auto min-h-screen text-slate-800 flex flex-col font-sans pb-12 shadow-xl border-x border-[#e2e2e2] bg-white">
@@ -718,9 +725,11 @@ export default function App() {
               className="text-right px-3 py-1.5 rounded-xl border border-[#e2e2e2] bg-white transition-all hover:bg-slate-50 shadow-xs"
             >
               <span className="block text-sm font-black leading-none" style={{ color: '#82bc41' }}>
-                {(weightData.start - weightData.current).toFixed(1)} lbs
+                {absWeightDiff} lbs
               </span>
-              <span className="text-[8px] text-slate-500 font-bold uppercase tracking-wider">Lost</span>
+              <span className="text-[8px] text-slate-500 font-bold uppercase tracking-wider">
+                {isWeightLost ? 'Lost' : 'Gained'}
+              </span>
             </button>
 
             {/* Cloud Sync / Login Button */}
@@ -1014,7 +1023,7 @@ export default function App() {
             {/* Weight Loss Progress */}
             <div className="bg-white rounded-2xl border border-[#eaeaea] p-5 shadow-xs">
               <div className="flex justify-between items-center mb-3">
-                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Weight Loss Goal</span>
+                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Weight Goal Progress</span>
                 <button onClick={() => setModalType('weight')} className="text-[10px] font-bold hover:underline" style={{ color: '#82bc41' }}>Update</button>
               </div>
               <div className="flex items-baseline justify-between mb-2">
@@ -1031,7 +1040,9 @@ export default function App() {
               </div>
               <div className="flex justify-between text-[10px] font-bold text-slate-500">
                 <span>Start: {weightData.start} lbs</span>
-                <span style={{ color: '#82bc41' }}>{weightProgress}% completed</span>
+                <span style={{ color: isWeightLost ? '#82bc41' : '#e11d48' }}>
+                  {isWeightLost ? `${weightProgress}% completed (${absWeightDiff} lbs lost)` : `${absWeightDiff} lbs gained`}
+                </span>
               </div>
             </div>
 
@@ -1566,13 +1577,30 @@ export default function App() {
                   className="w-full p-2.5 rounded-xl border border-slate-200 bg-[#fafafa] font-bold text-slate-900 text-xs mt-1 focus:outline-none"
                 />
               </div>
-              <button 
-                onClick={() => setModalType(null)}
-                className="w-full py-2.5 text-white font-bold rounded-xl text-xs tracking-wide shadow-xs mt-1"
-                style={{ backgroundColor: '#82bc41' }}
-              >
-                Save Weight Profile
-              </button>
+              <div className="flex gap-2 pt-1">
+                <button 
+                  type="button"
+                  onClick={() => {
+                    const updated = { start: 205, current: 205, goal: 180 };
+                    setWeightData(updated);
+                    syncToCloudAndLocal({ weightData: updated });
+                    setToastMessage('Weight tracker reset.');
+                    setTimeout(() => setToastMessage(null), 3000);
+                    setModalType(null);
+                  }}
+                  className="py-2.5 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition-all border border-slate-200"
+                >
+                  Reset
+                </button>
+                <button 
+                  type="button"
+                  onClick={() => setModalType(null)}
+                  className="flex-1 py-2.5 text-white font-bold rounded-xl text-xs tracking-wide shadow-xs"
+                  style={{ backgroundColor: '#82bc41' }}
+                >
+                  Save Weight Profile
+                </button>
+              </div>
             </div>
           </div>
         </div>
