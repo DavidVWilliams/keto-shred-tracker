@@ -51,7 +51,8 @@ const Icons = {
   LogOut: (p) => <Icon {...p} path='<path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>' />,
   Cloud: (p) => <Icon {...p} path='<path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z"/>' />,
   Sliders: (p) => <Icon {...p} path='<line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/>' />,
-  Zap: (p) => <Icon {...p} path='<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>' />
+  Zap: (p) => <Icon {...p} path='<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>' />,
+  Award: (p) => <Icon {...p} path='<circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>' />
 };
 
 const INITIAL_WORKOUTS = [
@@ -240,7 +241,7 @@ const INITIAL_RECIPES = [
   { 
     id: 'fish-12', name: 'Sesame Crusted Ahi Tuna Steak', category: 'Fish', cals: 530, protein: 56, carbs: 2, fat: 31, 
     ingredients: ['7 oz Ahi tuna steak', '1 tbsp black & white sesame seeds', '1 tbsp avocado oil', 'Tamari'], 
-    instructions: 'Press sesame seeds onto all sides of the Ahi tuna. balance center rare.' 
+    instructions: 'Press sesame seeds onto all sides of the Ahi tuna. Balance center rare.' 
   },
   { 
     id: 'poultry-1', name: 'Crispy Chicken & Avocado Wrap', category: 'Poultry', cals: 590, protein: 48, carbs: 4, fat: 40, 
@@ -304,7 +305,7 @@ const INITIAL_RECIPES = [
   }
 ];
 
-// --- 8 Master Fasting Presets Requested ---
+// --- 8 Fasting Presets ---
 const FASTING_PRESETS = [
   { id: '16_8', label: '16:8', hours: 16 },
   { id: '20_4', label: '20:4', hours: 20 },
@@ -316,7 +317,7 @@ const FASTING_PRESETS = [
   { id: '72h', label: '72H', hours: 72 }
 ];
 
-// --- Metabolic Stages of Fasting & Physiology Breakdown ---
+// --- Metabolic Stages of Fasting ---
 const METABOLIC_PHASES = [
   {
     range: '0 – 12 Hours',
@@ -462,7 +463,12 @@ export default function App() {
 
   // Fasting Timer State
   const [fastingState, setFastingState] = useState(() => {
-    try { return JSON.parse(localStorage.getItem('ks_fasting') || '{"active":false, "startTime":null, "preset":36}'); } catch { return { active: false, startTime: null, preset: 36 }; }
+    try { return JSON.parse(localStorage.getItem('ks_fasting') || '{"active":false, "startTime":null, "preset":36, "lastCompletedFast":null}'); } catch { return { active: false, startTime: null, preset: 36, lastCompletedFast: null }; }
+  });
+
+  // Fasting History Log State (Saved in user profile)
+  const [fastingHistory, setFastingHistory] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('ks_fasting_history') || '[]'); } catch { return []; }
   });
 
   // Custom Workouts & Meals Overrides
@@ -522,6 +528,7 @@ export default function App() {
             if (data.protocol) { setActiveProtocolKey(data.protocol); localStorage.setItem('ks_protocol', data.protocol); }
             if (data.completion) { setCompletion(data.completion); localStorage.setItem('ks_completion', JSON.stringify(data.completion)); }
             if (data.fastingState) { setFastingState(data.fastingState); localStorage.setItem('ks_fasting', JSON.stringify(data.fastingState)); }
+            if (data.fastingHistory) { setFastingHistory(data.fastingHistory); localStorage.setItem('ks_fasting_history', JSON.stringify(data.fastingHistory)); }
             if (data.customDays) { setCustomDays(data.customDays); localStorage.setItem('ks_custom_days', JSON.stringify(data.customDays)); }
             if (data.workoutLibrary) { setWorkoutLibrary(data.workoutLibrary); localStorage.setItem('ks_workout_library', JSON.stringify(data.workoutLibrary)); }
             if (data.weightData) { setWeightData(data.weightData); localStorage.setItem('ks_weight', JSON.stringify(data.weightData)); }
@@ -532,6 +539,7 @@ export default function App() {
               protocol: activeProtocolKey,
               completion,
               fastingState,
+              fastingHistory,
               customDays,
               workoutLibrary,
               weightData,
@@ -553,6 +561,7 @@ export default function App() {
       if (updatedState.protocol !== undefined) localStorage.setItem('ks_protocol', updatedState.protocol);
       if (updatedState.completion !== undefined) localStorage.setItem('ks_completion', JSON.stringify(updatedState.completion));
       if (updatedState.fastingState !== undefined) localStorage.setItem('ks_fasting', JSON.stringify(updatedState.fastingState));
+      if (updatedState.fastingHistory !== undefined) localStorage.setItem('ks_fasting_history', JSON.stringify(updatedState.fastingHistory));
       if (updatedState.customDays !== undefined) localStorage.setItem('ks_custom_days', JSON.stringify(updatedState.customDays));
       if (updatedState.workoutLibrary !== undefined) localStorage.setItem('ks_workout_library', JSON.stringify(updatedState.workoutLibrary));
       if (updatedState.weightData !== undefined) localStorage.setItem('ks_weight', JSON.stringify(updatedState.weightData));
@@ -566,6 +575,7 @@ export default function App() {
           protocol: updatedState.protocol !== undefined ? updatedState.protocol : activeProtocolKey,
           completion: updatedState.completion !== undefined ? updatedState.completion : completion,
           fastingState: updatedState.fastingState !== undefined ? updatedState.fastingState : fastingState,
+          fastingHistory: updatedState.fastingHistory !== undefined ? updatedState.fastingHistory : fastingHistory,
           customDays: updatedState.customDays !== undefined ? updatedState.customDays : customDays,
           workoutLibrary: updatedState.workoutLibrary !== undefined ? updatedState.workoutLibrary : workoutLibrary,
           weightData: updatedState.weightData !== undefined ? updatedState.weightData : weightData,
@@ -656,6 +666,15 @@ export default function App() {
     const m = Math.floor((totalSeconds % 3600) / 60);
     const s = totalSeconds % 60;
     return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  };
+
+  // Helper to format completed duration nicely
+  const formatDurationDisplay = (ms) => {
+    const totalMinutes = Math.floor(ms / (1000 * 60));
+    const h = Math.floor(totalMinutes / 60);
+    const m = totalMinutes % 60;
+    if (h === 0) return `${m} minutes`;
+    return `${h} hr${h > 1 ? 's' : ''} ${m > 0 ? `${m} min${m > 1 ? 's' : ''}` : ''}`;
   };
 
   // Current Fasting Elapsed Hours (Decimal)
@@ -815,6 +834,47 @@ export default function App() {
   const weightProgress = totalToLose > 0 
     ? Math.max(0, Math.min(100, Math.round((weightDiff / totalToLose) * 100)))
     : 0;
+
+  // --- End Fast Handler ---
+  const handleStopFast = () => {
+    const confirmed = window.confirm("Are you ready to stop your fast and record your duration?");
+    if (!confirmed) return;
+
+    const durationMs = Date.now() - fastingState.startTime;
+    const durationHours = durationMs / (1000 * 60 * 60);
+
+    const completedRecord = {
+      id: `fast-${Date.now()}`,
+      startTime: fastingState.startTime,
+      endTime: Date.now(),
+      durationMs: durationMs,
+      durationHours: Number(durationHours.toFixed(2)),
+      preset: fastingState.preset,
+      completedAtDate: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+      completedAtTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      hitGoal: durationHours >= fastingState.preset
+    };
+
+    const updatedFastingState = {
+      ...fastingState,
+      active: false,
+      startTime: null,
+      lastCompletedFast: completedRecord
+    };
+
+    const updatedHistory = [completedRecord, ...fastingHistory];
+
+    setFastingState(updatedFastingState);
+    setFastingHistory(updatedHistory);
+
+    syncToCloudAndLocal({
+      fastingState: updatedFastingState,
+      fastingHistory: updatedHistory
+    });
+
+    setToastMessage(`Fast ended! Logged ${formatDurationDisplay(durationMs)}.`);
+    setTimeout(() => setToastMessage(null), 3500);
+  };
 
   return (
     <div className="max-w-md mx-auto min-h-screen text-slate-800 flex flex-col font-sans pb-12 shadow-xl border-x border-[#e2e2e2] bg-white">
@@ -1345,7 +1405,7 @@ export default function App() {
           </div>
         )}
 
-        {/* FASTING TAB - FULLY UPGRADED */}
+        {/* FASTING TAB - FULLY UPGRADED WITH SUMMARY & PROFILE LOG */}
         {activeTab === 'fasting' && (
           <div className="space-y-4">
             
@@ -1358,7 +1418,7 @@ export default function App() {
                 </span>
               </div>
               
-              {/* Giant Digital Stopwatch */}
+              {/* Digital Stopwatch */}
               <div className="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight tabular-nums font-mono py-1">
                 {formatTime(fastingElapsed)}
               </div>
@@ -1387,7 +1447,7 @@ export default function App() {
                 </div>
               )}
 
-              {/* 8 Preset Buttons: 16:8, 20:4, 23:1, ADF, 24H, 36H, 48H, 72H */}
+              {/* 8 Fasting Presets */}
               <div className="pt-2">
                 <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 block mb-2">
                   Select Fasting Preset
@@ -1434,15 +1494,7 @@ export default function App() {
                   </button>
                 ) : (
                   <button 
-                    onClick={() => {
-                      const confirmed = window.confirm("Are you sure you want to stop your current fast?");
-                      if (!confirmed) return;
-                      const updated = { ...fastingState, active: false, startTime: null };
-                      setFastingState(updated);
-                      syncToCloudAndLocal({ fastingState: updated });
-                      setToastMessage('Fast ended. Great job!');
-                      setTimeout(() => setToastMessage(null), 3000);
-                    }}
+                    onClick={handleStopFast}
                     className="w-full py-3.5 bg-rose-600 hover:bg-rose-700 text-white rounded-2xl font-black text-sm tracking-wide shadow-md transition-all flex items-center justify-center gap-2"
                   >
                     <Icons.X size={16} /> STOP FAST
@@ -1450,6 +1502,93 @@ export default function App() {
                 )}
               </div>
             </div>
+
+            {/* Last Completed Fast Highlight Banner (Displayed immediately upon ending) */}
+            {fastingState.lastCompletedFast && !fastingState.active && (
+              <div className="bg-emerald-50/60 border border-emerald-200 rounded-2xl p-4 shadow-xs flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white shrink-0" style={{ backgroundColor: '#82bc41' }}>
+                    <Icons.Award size={18} />
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-black uppercase tracking-wider text-emerald-800 block">
+                      Last Fast Completed
+                    </span>
+                    <span className="text-base font-black text-slate-900">
+                      {formatDurationDisplay(fastingState.lastCompletedFast.durationMs)}
+                    </span>
+                    <span className="text-[10px] text-slate-600 block mt-0.5">
+                      Target was {fastingState.lastCompletedFast.preset}h • {fastingState.lastCompletedFast.completedAtDate} at {fastingState.lastCompletedFast.completedAtTime}
+                    </span>
+                  </div>
+                </div>
+                {fastingState.lastCompletedFast.hitGoal && (
+                  <span className="text-[10px] font-black px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-800 border border-emerald-300 shrink-0">
+                    Goal Reached!
+                  </span>
+                )}
+              </div>
+            )}
+
+            {/* Fasting History Log in Profile */}
+            {fastingHistory.length > 0 && (
+              <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-3">
+                <div className="flex items-center justify-between pb-2 border-b border-[#eaeaea]">
+                  <div>
+                    <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                      <Icons.Clock size={14} style={{ color: '#82bc41' }} />
+                      Completed Fasting Log
+                    </h3>
+                    <p className="text-[10px] text-slate-500">Saved permanently to your profile</p>
+                  </div>
+                  <span className="text-[10px] font-black text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">
+                    {fastingHistory.length} Fasts Recorded
+                  </span>
+                </div>
+
+                <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
+                  {fastingHistory.map(item => (
+                    <div key={item.id} className="flex items-center justify-between p-3 rounded-xl border border-[#eaeaea] bg-[#fafafa]">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-black text-slate-900">
+                            {formatDurationDisplay(item.durationMs)}
+                          </span>
+                          <span className="text-[9px] font-bold text-slate-500">
+                            (Target: {item.preset}h)
+                          </span>
+                        </div>
+                        <span className="text-[10px] text-slate-500 block">
+                          {item.completedAtDate} • {item.completedAtTime}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {item.hitGoal ? (
+                          <span className="text-[9px] font-black text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md">
+                            ✓ Goal Met
+                          </span>
+                        ) : (
+                          <span className="text-[9px] font-bold text-slate-600 bg-slate-200 px-2 py-0.5 rounded-md">
+                            Logged
+                          </span>
+                        )}
+                        <button
+                          onClick={() => {
+                            const updated = fastingHistory.filter(f => f.id !== item.id);
+                            setFastingHistory(updated);
+                            syncToCloudAndLocal({ fastingHistory: updated });
+                          }}
+                          className="text-slate-400 hover:text-red-500 p-1"
+                          title="Delete entry"
+                        >
+                          <Icons.Trash size={12} />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Fasting Metabolic Phases & Biological Timeline */}
             <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-3">
