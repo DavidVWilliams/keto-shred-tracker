@@ -56,7 +56,8 @@ const Icons = {
   TrendingUp: (p) => <Icon {...p} path='<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>' />,
   Clipboard: (p) => <Icon {...p} path='<path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>' />,
   RotateCcw: (p) => <Icon {...p} path='<polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/>' />,
-  ShoppingCart: (p) => <Icon {...p} path='<circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>' />
+  ShoppingCart: (p) => <Icon {...p} path='<circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>' />,
+  CheckCircle2: (p) => <Icon {...p} path='<path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><polyline points="9 12 11 14 15 10"/>' />
 };
 
 const INITIAL_WORKOUTS = [
@@ -115,6 +116,72 @@ const INITIAL_RECIPES = [
   { id: 'poultry-10', name: 'Pesto Chicken Bake with Mozzarella', category: 'Poultry', cals: 620, protein: 54, carbs: 2, fat: 44, ingredients: ['2 chicken breasts', '2 tbsp basil pesto', '2 oz fresh mozzarella slices'], instructions: 'Top chicken breasts with pesto and fresh mozzarella. Bake at 375°F for 25 minutes until cheese is bubbly and golden.' },
   { id: 'poultry-11', name: 'Creamy Spinach Stuffed Chicken', category: 'Poultry', cals: 590, protein: 53, carbs: 3, fat: 40, ingredients: ['1 large chicken breast (pocket sliced)', '2 oz cream cheese', '1/2 cup cooked spinach', 'Garlic powder'], instructions: 'Stuff a pocket in chicken breast with cream cheese and cooked spinach. Secure with toothpicks and bake until tender.' },
   { id: 'poultry-12', name: 'Chicken Thigh & Avocado Salad', category: 'Poultry', cals: 570, protein: 49, carbs: 4, fat: 39, ingredients: ['2 grilled chicken thighs (sliced)', '2 cups mixed greens', '1/2 sliced avocado', 'Olive oil & lime dressing'], instructions: 'Lay warm grilled chicken thigh slices over a bed of mixed greens and fresh avocado. Dress with olive oil and lime.' }
+];
+
+// --- Curated Keto-Friendly Foods Database ---
+const KETO_FRIENDLY_FOODS = [
+  {
+    category: "Fats & Oils",
+    items: [
+      { name: "Grass-Fed Butter", desc: "Healthy saturated fats, perfect for cooking & scrambles" },
+      { name: "Extra Virgin Olive Oil", desc: "Monounsaturated fat, ideal for cold salads & dressings" },
+      { name: "Avocado Oil", desc: "High smoke point for high-heat searing and pan-frying" },
+      { name: "Pure Ghee (Clarified Butter)", desc: "Zero lactose, casein-free high smoke point fat" },
+      { name: "Pure MCT Oil", desc: "Rapidly converts into ketone bodies for quick energy" },
+      { name: "Organic Coconut Oil", desc: "Clean medium-chain fatty acids for cooking" }
+    ]
+  },
+  {
+    category: "Proteins & Meats",
+    items: [
+      { name: "Pasture-Raised Eggs", desc: "Choline-rich complete protein and healthy fats" },
+      { name: "80/20 Ground Beef", desc: "Optimal keto fat-to-protein ratio" },
+      { name: "Ribeye Steak", desc: "Premium nutrient-dense marbling for refeeds" },
+      { name: "Sirloin Steak", desc: "Lean, clean high-protein staple" },
+      { name: "Wild Alaskan Salmon", desc: "Loaded with joint-friendly anti-inflammatory Omega-3s" },
+      { name: "Wild Canned Tuna in Olive Oil", desc: "Zero-carb, shelf-stable high protein staple" },
+      { name: "Packed Sardines in Olive Oil", desc: "Calcium, Vitamin D, and essential fatty acids" },
+      { name: "Boneless Chicken Thighs", desc: "Rich flavor and healthy monounsaturated fat" },
+      { name: "Thick-Cut Nitrate-Free Bacon", desc: "Zero carb crunch and savory fat source" }
+    ]
+  },
+  {
+    category: "Low-Carb Veggies",
+    items: [
+      { name: "Fresh Baby Spinach", desc: "Magnesium & potassium powerhouse, virtually zero net carbs" },
+      { name: "Green Cabbage", desc: "Crunchy fiber, gut health, and great in skillets" },
+      { name: "Fresh Asparagus Spears", desc: "Prebiotic fiber, folate, and joint support" },
+      { name: "Hass Avocados", desc: "High in potassium, fiber, and heart-healthy oleic acid" },
+      { name: "Broccoli Crowns", desc: "Sulforaphane, Vitamin C, and clean fiber" },
+      { name: "Cauliflower Florets", desc: "Versatile rice & mash replacement with minimal carbs" },
+      { name: "Zucchini", desc: "Hydrating, versatile for noodle substitutes" },
+      { name: "Sliced Button Mushrooms", desc: "Rich in selenium and savory umami flavors" }
+    ]
+  },
+  {
+    category: "Dairy & Cheeses",
+    items: [
+      { name: "Sharp Cheddar Cheese", desc: "Zero carb aged cheese with bold flavor" },
+      { name: "Full-Fat Cream Cheese", desc: "Creamy fat builder for fluffy scrambles" },
+      { name: "Crumbled Feta Cheese", desc: "Tangy sheep/goat milk cheese, easy on digestion" },
+      { name: "Swiss Cheese", desc: "High calcium, melty low-carb classic" },
+      { name: "Fresh Mozzarella", desc: "High protein, creamy whole-milk cheese" },
+      { name: "Grated Parmesan Cheese", desc: "Savory crusting and sodium source" },
+      { name: "Heavy Whipping Cream", desc: "Zero carb fat source for pan sauces" }
+    ]
+  },
+  {
+    category: "Electrolytes & Pantry",
+    items: [
+      { name: "Grass-Fed Beef Bone Broth", desc: "Collagen, gelatin, and electrolytes for fast-breaking" },
+      { name: "Chicken Bone Broth", desc: "Gentle gut-healing hydration" },
+      { name: "Pink Himalayan Sea Salt", desc: "Essential sodium replenishment during deep ketosis" },
+      { name: "Zero-Sugar Electrolyte Packets", desc: "Prevents keto fatigue, leg cramps, and headaches" },
+      { name: "Organic Black Coffee Beans", desc: "Appetite suppressant & autophagy stimulant" },
+      { name: "Dijon Mustard", desc: "Zero sugar flavor booster for meats and dressings" },
+      { name: "Basil Pesto", desc: "Pine nut & olive oil savory topping" }
+    ]
+  }
 ];
 
 const FASTING_PRESETS = [
@@ -356,7 +423,7 @@ export default function App() {
   });
 
   // --- Recipe Sub-Tabs & Meal Planning / Shopping State ---
-  const [recipeSubTab, setRecipeSubTab] = useState('catalog'); // 'catalog' | 'planner' | 'shopping'
+  const [recipeSubTab, setRecipeSubTab] = useState('catalog'); // 'catalog' | 'foods' | 'planner' | 'shopping'
   const [selectedPlanDay, setSelectedPlanDay] = useState('Monday');
   const [nextWeekPlan, setNextWeekPlan] = useState(() => {
     try {
@@ -386,8 +453,11 @@ export default function App() {
 
   // Selected Recipe for Direct "Plan Meal" Action
   const [selectedRecipeForPlan, setSelectedRecipeForPlan] = useState(null);
-  const [planTargetWeek, setPlanTargetWeek] = useState('upcoming'); // 'current' | 'upcoming'
+  const [planTargetWeek, setPlanTargetWeek] = useState('upcoming');
   const [planTargetDay, setPlanTargetDay] = useState('Monday');
+
+  // Keto Foods Category Filter
+  const [ketoFoodCategoryFilter, setKetoFoodCategoryFilter] = useState('All');
 
   // Toast feedback state
   const [toastMessage, setToastMessage] = useState(null);
@@ -828,7 +898,6 @@ export default function App() {
     if (!selectedRecipeForPlan) return;
 
     if (planTargetWeek === 'current') {
-      // Add directly to current week schedule
       const targetDayObj = activeSchedule.find(d => d.dayName.toLowerCase() === planTargetDay.toLowerCase()) || activeSchedule[0];
       const targetDayId = targetDayObj.id;
       const currentDayMeals = customDays[targetDayId]?.meals || targetDayObj.meals || [];
@@ -848,7 +917,6 @@ export default function App() {
       syncToCloudAndLocal({ customDays: updatedCustomDays });
       setToastMessage(`Added to Current Week (${planTargetDay})!`);
     } else {
-      // Add to Next Week Planner
       const newPlannedMeal = {
         id: `plan-${Date.now()}`,
         recipeId: selectedRecipeForPlan.id,
@@ -872,6 +940,39 @@ export default function App() {
     setModalType(null);
     setSelectedRecipeForPlan(null);
     setTimeout(() => setToastMessage(null), 3000);
+  };
+
+  // --- Add Keto Staple Directly to Shopping List ---
+  const handleAddStapleToShoppingList = (foodName) => {
+    const targetWeek = activeShoppingWeek;
+    const currentList = customGroceries[targetWeek] || [];
+    
+    // Check if already in list
+    const alreadyExists = currentList.some(item => item.name.toLowerCase() === foodName.toLowerCase());
+    if (alreadyExists) {
+      setToastMessage(`${foodName} is already on your ${targetWeek === 'current' ? 'Current' : 'Upcoming'} list!`);
+      setTimeout(() => setToastMessage(null), 2500);
+      return;
+    }
+
+    const newItem = {
+      id: `staple-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+      name: foodName,
+      custom: true
+    };
+    const updated = {
+      ...customGroceries,
+      [targetWeek]: [newItem, ...currentList]
+    };
+    setCustomGroceries(updated);
+    syncToCloudAndLocal({ customGroceries: updated });
+    setToastMessage(`Added ${foodName} to ${targetWeek === 'current' ? 'Current' : 'Upcoming'} list!`);
+    setTimeout(() => setToastMessage(null), 2500);
+  };
+
+  const isStapleInShoppingList = (foodName) => {
+    const currentList = customGroceries[activeShoppingWeek] || [];
+    return currentList.some(item => item.name.toLowerCase() === foodName.toLowerCase());
   };
 
   // --- Shopping List Handlers & Aggregator ---
@@ -1510,21 +1611,22 @@ export default function App() {
           </div>
         )}
 
-        {/* RECIPES, NEXT WEEK PLANNER & SHOPPING LIST TAB */}
+        {/* RECIPES, KETO FOODS, NEXT WEEK PLANNER & SHOPPING LIST TAB */}
         {activeTab === 'recipes' && (
           <div className="space-y-4">
             
-            {/* Sub-Navigation: Cookbook | Next Week Plan | Shopping List */}
-            <div className="bg-white p-1 rounded-2xl border border-[#eaeaea] shadow-2xs grid grid-cols-3 gap-1">
+            {/* Sub-Navigation: Cookbook | Keto Foods | Planner | Shopping */}
+            <div className="bg-white p-1 rounded-2xl border border-[#eaeaea] shadow-2xs grid grid-cols-4 gap-1">
               {[
                 { id: 'catalog', label: 'Cookbook' },
-                { id: 'planner', label: 'Next Week Plan' },
-                { id: 'shopping', label: 'Shopping List' }
+                { id: 'foods', label: 'Keto Foods' },
+                { id: 'planner', label: 'Planner' },
+                { id: 'shopping', label: 'Shopping' }
               ].map(sub => (
                 <button
                   key={sub.id}
                   onClick={() => setRecipeSubTab(sub.id)}
-                  className={`py-2 text-[11px] font-black rounded-xl transition-all text-center ${
+                  className={`py-2 text-[10px] sm:text-[11px] font-black rounded-xl transition-all text-center ${
                     recipeSubTab === sub.id
                       ? 'text-white shadow-xs'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
@@ -1565,7 +1667,6 @@ export default function App() {
                           <h3 className="text-xs font-black text-slate-900">{recipe.name}</h3>
                         </div>
                         
-                        {/* Recipe Action Buttons with NEW + Plan feature */}
                         <div className="flex items-center gap-1.5">
                           <button 
                             onClick={() => {
@@ -1608,7 +1709,130 @@ export default function App() {
               </div>
             )}
 
-            {/* SUB-TAB 2: NEXT WEEK MEAL PLANNER */}
+            {/* SUB-TAB 2: KETO-FRIENDLY FOODS (NEW FEATURE) */}
+            {recipeSubTab === 'foods' && (
+              <div className="space-y-3">
+                <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-4">
+                  
+                  {/* Header & Target Shopping List Selector */}
+                  <div className="space-y-3 pb-3 border-b border-[#eaeaea]">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                          <Icons.Flame size={14} style={{ color: '#82bc41' }} />
+                          Keto-Friendly Whole Foods
+                        </h3>
+                        <p className="text-[10px] text-slate-500">Essential staples ready to add directly to your shopping cart</p>
+                      </div>
+                    </div>
+
+                    {/* Quick Week Target Toggle */}
+                    <div className="bg-[#fafafa] p-1 rounded-2xl border border-[#eaeaea] grid grid-cols-2 gap-1 w-full">
+                      <button
+                        type="button"
+                        onClick={() => setActiveShoppingWeek('current')}
+                        className={`py-1.5 text-center rounded-xl text-[11px] font-black transition-all ${
+                          activeShoppingWeek === 'current'
+                            ? 'bg-slate-900 text-white shadow-xs'
+                            : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        Adding to: Current Week
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setActiveShoppingWeek('upcoming')}
+                        className={`py-1.5 text-center rounded-xl text-[11px] font-black transition-all ${
+                          activeShoppingWeek === 'upcoming'
+                            ? 'bg-slate-900 text-white shadow-xs'
+                            : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        Adding to: Upcoming Week
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Category Filter Pills */}
+                  <div className="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+                    {['All', 'Fats & Oils', 'Proteins & Meats', 'Low-Carb Veggies', 'Dairy & Cheeses', 'Electrolytes & Pantry'].map(cat => (
+                      <button
+                        key={cat}
+                        onClick={() => setKetoFoodCategoryFilter(cat)}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 border ${
+                          ketoFoodCategoryFilter === cat
+                            ? 'text-white border-transparent shadow-xs'
+                            : 'bg-white text-slate-700 border-[#eaeaea] hover:bg-slate-50'
+                        }`}
+                        style={ketoFoodCategoryFilter === cat ? { backgroundColor: '#82bc41' } : {}}
+                      >
+                        {cat === 'All' ? 'All Staples' : cat.split(' ')[0]}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* List of Keto Staples with Add to Shopping List button */}
+                  <div className="space-y-4 pt-1">
+                    {KETO_FRIENDLY_FOODS.filter(group => ketoFoodCategoryFilter === 'All' || group.category === ketoFoodCategoryFilter).map((group, gIdx) => (
+                      <div key={gIdx} className="space-y-2">
+                        <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block px-1">
+                          {group.category}
+                        </span>
+
+                        <div className="space-y-2">
+                          {group.items.map((food, fIdx) => {
+                            const isAdded = isStapleInShoppingList(food.name);
+                            return (
+                              <div
+                                key={fIdx}
+                                className={`p-3 rounded-2xl border transition-all flex items-center justify-between gap-3 ${
+                                  isAdded
+                                    ? 'bg-emerald-50/40 border-emerald-200'
+                                    : 'bg-[#fafafa] border-[#eaeaea] hover:bg-white'
+                                }`}
+                              >
+                                <div>
+                                  <span className="text-xs font-black text-slate-900 block">
+                                    {food.name}
+                                  </span>
+                                  <span className="text-[10px] text-slate-500 font-medium block">
+                                    {food.desc}
+                                  </span>
+                                </div>
+
+                                <button
+                                  type="button"
+                                  onClick={() => handleAddStapleToShoppingList(food.name)}
+                                  className={`px-3 py-1.5 rounded-xl text-xs font-black shrink-0 transition-all flex items-center gap-1 shadow-2xs ${
+                                    isAdded
+                                      ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                                      : 'text-white hover:opacity-90'
+                                  }`}
+                                  style={!isAdded ? { backgroundColor: '#82bc41' } : {}}
+                                >
+                                  {isAdded ? (
+                                    <>
+                                      <Icons.Check size={12} /> Added
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Icons.Plus size={12} /> List
+                                    </>
+                                  )}
+                                </button>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                </div>
+              </div>
+            )}
+
+            {/* SUB-TAB 3: NEXT WEEK MEAL PLANNER */}
             {recipeSubTab === 'planner' && (
               <div className="space-y-3">
                 <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-3">
@@ -1693,12 +1917,11 @@ export default function App() {
               </div>
             )}
 
-            {/* SUB-TAB 3: INTEGRATED GROCERY & SHOPPING LIST (OVERFLOW FIXED) */}
+            {/* SUB-TAB 4: INTEGRATED GROCERY & SHOPPING LIST */}
             {recipeSubTab === 'shopping' && (
               <div className="space-y-4">
                 <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-4">
                   
-                  {/* Shopping Header & Robust Full-Width Week Switcher */}
                   <div className="space-y-3 pb-3 border-b border-[#eaeaea]">
                     <div>
                       <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
@@ -1708,7 +1931,6 @@ export default function App() {
                       <p className="text-[10px] text-slate-500">Auto-compiled from your active ketogenic schedule & plan</p>
                     </div>
 
-                    {/* Zero-Overflow Full-Width Segmented Button */}
                     <div className="bg-[#fafafa] p-1 rounded-2xl border border-[#eaeaea] grid grid-cols-2 gap-1 w-full">
                       <button
                         type="button"
@@ -1735,7 +1957,6 @@ export default function App() {
                     </div>
                   </div>
 
-                  {/* Add Custom Grocery Item Bar */}
                   <form onSubmit={handleAddCustomGrocery} className="flex gap-2">
                     <input
                       type="text"
@@ -1753,7 +1974,6 @@ export default function App() {
                     </button>
                   </form>
 
-                  {/* List Summary & Actions */}
                   <div className="flex justify-between items-center text-xs pt-1">
                     <span className="text-[10px] font-black text-slate-500 uppercase tracking-wider">
                       {currentShoppingItems.length} Total Items ({checkedShoppingCount} in basket)
@@ -1768,12 +1988,10 @@ export default function App() {
                     )}
                   </div>
 
-                  {/* Checklist of Aggregated Ingredients + Custom Items */}
                   <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
                     {currentShoppingItems.length === 0 ? (
                       <div className="p-8 text-center text-xs text-slate-400 bg-[#fafafa] rounded-2xl border border-dashed border-[#eaeaea]">
-                        No items in this list yet. Assign meals to your{' '}
-                        {activeShoppingWeek === 'current' ? 'schedule' : 'Next Week Planner'} or add custom items above.
+                        No items in this list yet. Check out the <strong>Keto Foods</strong> tab or assign meals in Planner.
                       </div>
                     ) : (
                       currentShoppingItems.map((item, idx) => {
@@ -2291,7 +2509,6 @@ export default function App() {
             </div>
 
             <div className="space-y-3">
-              {/* Select Target Week */}
               <div>
                 <label className="text-[10px] font-bold text-slate-500 uppercase block mb-1">Target Week</label>
                 <div className="grid grid-cols-2 gap-1.5 bg-[#fafafa] p-1 rounded-xl border border-[#eaeaea]">
@@ -2320,7 +2537,6 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Select Day */}
               <div>
                 <label className="text-[10px] font-bold text-slate-500 uppercase block mb-1">Select Day</label>
                 <select
