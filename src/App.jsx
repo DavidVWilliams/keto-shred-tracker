@@ -54,7 +54,8 @@ const Icons = {
   Zap: (p) => <Icon {...p} path='<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>' />,
   Award: (p) => <Icon {...p} path='<circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>' />,
   TrendingUp: (p) => <Icon {...p} path='<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>' />,
-  Clipboard: (p) => <Icon {...p} path='<path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>' />
+  Clipboard: (p) => <Icon {...p} path='<path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>' />,
+  RotateCcw: (p) => <Icon {...p} path='<polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/>' />
 };
 
 const INITIAL_WORKOUTS = [
@@ -317,15 +318,18 @@ export default function App() {
     try { return JSON.parse(localStorage.getItem('ks_fasting_history') || '[]'); } catch { return []; }
   });
 
-  // Weight History State
+  // Weight Tracker State (Unified Profile)
+  const [weightData, setWeightData] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('ks_weight') || '{"start":205, "current":198, "goal":180}'); } catch { return { start: 205, current: 198, goal: 180 }; }
+  });
+
+  // Weight History State (Cleaned - no hardcoded mock numbers)
   const [weightHistory, setWeightHistory] = useState(() => {
     try {
-      return JSON.parse(localStorage.getItem('ks_weight_history') || JSON.stringify([
-        { id: 'wh-init-1', date: 'Start', weight: 205, diff: 0 },
-        { id: 'wh-init-2', date: 'Current', weight: 198, diff: -7.0 }
-      ]));
+      const saved = localStorage.getItem('ks_weight_history');
+      return saved ? JSON.parse(saved) : [];
     } catch {
-      return [{ id: 'wh-init-1', date: 'Start', weight: 205, diff: 0 }];
+      return [];
     }
   });
 
@@ -343,11 +347,6 @@ export default function App() {
   // Master Global Workout Library State
   const [workoutLibrary, setWorkoutLibrary] = useState(() => {
     try { return JSON.parse(localStorage.getItem('ks_workout_library') || JSON.stringify(INITIAL_WORKOUTS)); } catch { return INITIAL_WORKOUTS; }
-  });
-
-  // Weight Tracker State
-  const [weightData, setWeightData] = useState(() => {
-    try { return JSON.parse(localStorage.getItem('ks_weight') || '{"start":205, "current":198, "goal":180}'); } catch { return { start: 205, current: 198, goal: 180 }; }
   });
 
   // Recipes State
@@ -544,10 +543,9 @@ export default function App() {
     return `${h} hr${h > 1 ? 's' : ''} ${m > 0 ? `${m} min${m > 1 ? 's' : ''}` : ''}`;
   };
 
-  // Current Fasting Elapsed Hours
   const currentElapsedHours = fastingElapsed / (1000 * 60 * 60);
 
-  // Dynamic Metabolic Phase Calculations (Only 1 Phase Active)
+  // Dynamic Metabolic Phase Calculations
   let currentPhaseIndex = METABOLIC_PHASES.findIndex(
     p => currentElapsedHours >= p.minHours && currentElapsedHours < p.maxHours
   );
@@ -746,7 +744,7 @@ export default function App() {
     ? recipes 
     : recipes.filter(r => r.category === recipeCategory);
 
-  // Weight Calculations
+  // Dynamic Weight Delta & Progress Calculations (Unified across Dash & Stats)
   const weightDiff = weightData.start - weightData.current;
   const isWeightLost = weightDiff >= 0;
   const absWeightDiff = Math.abs(weightDiff).toFixed(1);
@@ -754,6 +752,33 @@ export default function App() {
   const weightProgress = totalToLose > 0 
     ? Math.max(0, Math.min(100, Math.round((weightDiff / totalToLose) * 100)))
     : 0;
+
+  // Reset Weight Baseline Handler (Used in Stats tab & Modal)
+  const handleResetWeightProgress = () => {
+    const confirmed = window.confirm(
+      `Reset weight progress?\n\nThis will set your starting weight baseline to your current weight (${weightData.current} lbs) and clear old progression trends.`
+    );
+    if (!confirmed) return;
+
+    const updatedWeight = {
+      ...weightData,
+      start: weightData.current
+    };
+    const updatedHistory = [
+      {
+        id: `wh-${Date.now()}`,
+        date: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+        weight: weightData.current,
+        diff: 0
+      }
+    ];
+
+    setWeightData(updatedWeight);
+    setWeightHistory(updatedHistory);
+    syncToCloudAndLocal({ weightData: updatedWeight, weightHistory: updatedHistory });
+    setToastMessage(`Baseline reset to ${weightData.current} lbs.`);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
 
   // End Fast Handler
   const handleStopFast = () => {
@@ -1136,6 +1161,7 @@ export default function App() {
               </button>
             </div>
 
+            {/* Weight Goal Progress Card */}
             <div className="bg-white rounded-2xl border border-[#eaeaea] p-5 shadow-xs">
               <div className="flex justify-between items-center mb-3">
                 <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Weight Goal Progress</span>
@@ -1161,6 +1187,7 @@ export default function App() {
               </div>
             </div>
 
+            {/* Weekly BDP Burpee Progress */}
             <div className="bg-white rounded-2xl border border-[#eaeaea] p-5 shadow-xs">
               <div className="flex justify-between items-center mb-2">
                 <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Weekly BDP Goal</span>
@@ -1168,7 +1195,7 @@ export default function App() {
               </div>
               <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden mb-2">
                 <div 
-                  className="h-full rounded-full transition-all duration-500"
+                  className="h-full rounded-full transition-all duration-500" 
                   style={{ width: `${Math.min(100, (weeklyBdpMinutes / 80) * 100)}%`, backgroundColor: '#82bc41' }} 
                 />
               </div>
@@ -1179,6 +1206,7 @@ export default function App() {
               )}
             </div>
 
+            {/* Featured Joint-Health Dish */}
             <div className="bg-slate-900 text-white rounded-2xl border border-slate-800 p-5 shadow-md">
               <div className="flex justify-between items-start mb-1">
                 <span className="text-[9px] font-black uppercase tracking-widest text-emerald-400">
@@ -1542,7 +1570,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* Historical Weight Trend Card */}
+            {/* Historical Weight Trend Card - Unified with Dashboard Data */}
             <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-2 border-b border-[#eaeaea]">
                 <div>
@@ -1550,43 +1578,94 @@ export default function App() {
                     <Icons.TrendingUp size={14} style={{ color: '#82bc41' }} />
                     Weight Progression Trend
                   </h3>
-                  <p className="text-[10px] text-slate-500">Historical weigh-ins with delta tracking</p>
+                  <p className="text-[10px] text-slate-500">Live baseline synchronized with your profile</p>
                 </div>
-                <button
-                  onClick={() => setModalType('weight')}
-                  className="px-2.5 py-1 text-[10px] font-black text-white rounded-lg shadow-xs"
-                  style={{ backgroundColor: '#82bc41' }}
-                >
-                  + Log Weight
-                </button>
+                <div className="flex items-center gap-1.5">
+                  <button
+                    onClick={handleResetWeightProgress}
+                    className="px-2.5 py-1 text-[10px] font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg transition-all flex items-center gap-1"
+                    title="Reset starting baseline to current weight"
+                  >
+                    <Icons.RotateCcw size={11} /> Reset
+                  </button>
+                  <button
+                    onClick={() => setModalType('weight')}
+                    className="px-2.5 py-1 text-[10px] font-black text-white rounded-lg shadow-xs"
+                    style={{ backgroundColor: '#82bc41' }}
+                  >
+                    + Log Weight
+                  </button>
+                </div>
               </div>
 
-              {/* Visual Bars for Weight History */}
-              <div className="space-y-2">
-                {weightHistory.map((item, idx) => {
-                  const percentOfGoal = Math.min(100, Math.max(15, Math.round(((215 - item.weight) / (215 - weightData.goal)) * 100)));
-                  return (
-                    <div key={item.id || idx} className="space-y-1">
-                      <div className="flex justify-between text-xs font-bold text-slate-700">
-                        <span>{item.date}</span>
-                        <div className="flex items-center gap-2">
-                          <span className="text-slate-900 font-extrabold">{item.weight} lbs</span>
-                          {item.diff !== undefined && item.diff !== 0 && (
-                            <span className={`text-[10px] font-black ${item.diff < 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
-                              {item.diff < 0 ? `${item.diff} lbs` : `+${item.diff} lbs`}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                      <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                        <div 
-                          className="h-full rounded-full transition-all duration-300"
-                          style={{ width: `${percentOfGoal}%`, backgroundColor: '#82bc41' }}
-                        />
-                      </div>
+              {/* Dynamic Baseline Bars (Directly Connected to weightData) */}
+              <div className="space-y-3 pt-1">
+                {/* Starting Baseline */}
+                <div className="space-y-1">
+                  <div className="flex justify-between text-xs font-bold text-slate-700">
+                    <span className="text-slate-500">Starting Baseline</span>
+                    <span className="text-slate-900 font-extrabold">{weightData.start} lbs</span>
+                  </div>
+                  <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                    <div className="h-full rounded-full bg-slate-400 w-full" />
+                  </div>
+                </div>
+
+                {/* Current Weight with Net Delta */}
+                <div className="space-y-1">
+                  <div className="flex justify-between text-xs font-bold text-slate-700">
+                    <span className="text-slate-900 font-black">Current Weight</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-slate-900 font-black text-sm">{weightData.current} lbs</span>
+                      <span 
+                        className={`text-[10px] font-black px-1.5 py-0.5 rounded ${
+                          isWeightLost ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'
+                        }`}
+                      >
+                        {isWeightLost ? `-${absWeightDiff} lbs` : `+${absWeightDiff} lbs`}
+                      </span>
                     </div>
-                  );
-                })}
+                  </div>
+                  <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full rounded-full transition-all duration-500"
+                      style={{ 
+                        width: `${Math.min(100, Math.max(15, weightProgress || 100))}%`, 
+                        backgroundColor: '#82bc41' 
+                      }}
+                    />
+                  </div>
+                  <div className="flex justify-between text-[10px] font-bold text-slate-500 pt-0.5">
+                    <span>Goal: {weightData.goal} lbs</span>
+                    <span style={{ color: isWeightLost ? '#82bc41' : '#e11d48' }}>
+                      {weightProgress}% of goal reached
+                    </span>
+                  </div>
+                </div>
+
+                {/* Historical Weigh-in Log (If Available) */}
+                {weightHistory.length > 0 && (
+                  <div className="pt-3 border-t border-[#eaeaea] space-y-2">
+                    <span className="text-[9px] font-black uppercase tracking-wider text-slate-400 block">
+                      Past Weigh-in History
+                    </span>
+                    <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
+                      {weightHistory.map((item, idx) => (
+                        <div key={item.id || idx} className="flex items-center justify-between text-xs bg-[#fafafa] p-2 rounded-xl border border-[#eaeaea]">
+                          <span className="text-slate-600 font-bold">{item.date}</span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-slate-900 font-black">{item.weight} lbs</span>
+                            {item.diff !== undefined && item.diff !== 0 && (
+                              <span className={`text-[10px] font-black ${item.diff < 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                                {item.diff < 0 ? `${item.diff} lbs` : `+${item.diff} lbs`}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -2034,7 +2113,7 @@ export default function App() {
                       weight: newCurrent,
                       diff: diff
                     };
-                    const updatedHistory = [newEntry, ...weightHistory.slice(0, 9)];
+                    const updatedHistory = [newEntry, ...weightHistory.filter(h => h.id !== newEntry.id).slice(0, 9)];
                     setWeightHistory(updatedHistory);
 
                     syncToCloudAndLocal({ weightData: updated, weightHistory: updatedHistory });
@@ -2059,10 +2138,22 @@ export default function App() {
                 <button 
                   type="button"
                   onClick={() => {
-                    const updated = { start: 205, current: 205, goal: 180 };
-                    setWeightData(updated);
-                    syncToCloudAndLocal({ weightData: updated });
-                    setToastMessage('Weight tracker reset.');
+                    const resetWeight = {
+                      ...weightData,
+                      start: weightData.current
+                    };
+                    const resetHistory = [
+                      {
+                        id: `wh-${Date.now()}`,
+                        date: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+                        weight: weightData.current,
+                        diff: 0
+                      }
+                    ];
+                    setWeightData(resetWeight);
+                    setWeightHistory(resetHistory);
+                    syncToCloudAndLocal({ weightData: resetWeight, weightHistory: resetHistory });
+                    setToastMessage(`Baseline reset to ${weightData.current} lbs.`);
                     setTimeout(() => setToastMessage(null), 3000);
                     setModalType(null);
                   }}
