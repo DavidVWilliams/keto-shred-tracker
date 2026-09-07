@@ -41,7 +41,7 @@ const Icons = {
   BookOpen: (p) => <Icon {...p} path='<path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>' />,
   Activity: (p) => <Icon {...p} path='<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>' />,
   Clock: (p) => <Icon {...p} path='<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>' />,
-  Settings: (p) => <Icon {...p} path='<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l-.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>' />,
+  Settings: (p) => <Icon {...p} path='<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l-.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06-.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>' />,
   X: (p) => <Icon {...p} path='<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>' />,
   Plus: (p) => <Icon {...p} path='<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>' />,
   Trash: (p) => <Icon {...p} path='<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>' />,
@@ -49,7 +49,8 @@ const Icons = {
   ExternalLink: (p) => <Icon {...p} path='<path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>' />,
   Check: (p) => <Icon {...p} path='<polyline points="20 6 9 17 4 12"/>' />,
   LogOut: (p) => <Icon {...p} path='<path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>' />,
-  Cloud: (p) => <Icon {...p} path='<path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z"/>' />
+  Cloud: (p) => <Icon {...p} path='<path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z"/>' />,
+  Sliders: (p) => <Icon {...p} path='<line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/>' />
 };
 
 const INITIAL_WORKOUTS = [
@@ -302,64 +303,89 @@ const INITIAL_RECIPES = [
   }
 ];
 
-const SCHEDULE = [
-  { 
-    id: 1, dayName: 'Monday', dayType: 'standard', cals: 1650, protein: 155, carbs: 20, fat: 120,
-    workouts: [{ id: 'w-mon-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }],
-    meals: [
-      { id: 'm-mon-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 },
-      { id: 'm-mon-2', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }
+// --- 5 Master Ketogenic & Fasting Protocols ---
+const PROTOCOLS = {
+  adf: {
+    id: 'adf',
+    name: 'ADF Protocol',
+    shortName: 'ADF (36h)',
+    tagline: 'Alternate Day Fasting • 36h Fasting / Refeed',
+    defaultPreset: 36,
+    schedule: [
+      { id: 1, dayName: 'Monday', dayType: 'standard', cals: 1650, protein: 155, carbs: 20, fat: 120, workouts: [{ id: 'w-mon-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-mon-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-mon-2', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }] },
+      { id: 2, dayName: 'Tuesday', dayType: 'fasting', cals: 0, protein: 0, carbs: 0, fat: 0, workouts: [{ id: 'w-tue-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-tue-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
+      { id: 3, dayName: 'Wednesday', dayType: 'adf-eat', cals: 2000, protein: 175, carbs: 25, fat: 140, workouts: [{ id: 'w-wed-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-wed-1', name: 'Anti-Inflammatory Turmeric Eggs', cals: 480, protein: 38, carbs: 3, fat: 34 }, { id: 'm-wed-2', name: 'Ginger Salmon & Avo Bowl', cals: 620, protein: 46, carbs: 5, fat: 42 }] },
+      { id: 4, dayName: 'Thursday', dayType: 'fasting', cals: 0, protein: 0, carbs: 0, fat: 0, workouts: [{ id: 'w-thu-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-thu-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
+      { id: 5, dayName: 'Friday', dayType: 'adf-eat', cals: 2000, protein: 175, carbs: 25, fat: 140, workouts: [{ id: 'w-fri-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-fri-1', name: 'Crispy Chicken & Avocado Wrap', cals: 590, protein: 48, carbs: 4, fat: 40 }, { id: 'm-fri-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }] },
+      { id: 6, dayName: 'Saturday', dayType: 'standard', cals: 1650, protein: 155, carbs: 20, fat: 120, workouts: [{ id: 'w-sat-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-sat-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-sat-2', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }] },
+      { id: 0, dayName: 'Sunday', dayType: 'standard', cals: 1650, protein: 155, carbs: 20, fat: 120, workouts: [{ id: 'w-sun-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: [{ id: 'm-sun-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-sun-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }] }
     ]
   },
-  { 
-    id: 2, dayName: 'Tuesday', dayType: 'fasting', cals: 0, protein: 0, carbs: 0, fat: 0,
-    workouts: [
-      { id: 'w-tue-1', name: '30-45m Jog', minutes: 35, url: '' },
-      { id: 'w-tue-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }
-    ],
-    meals: []
-  },
-  { 
-    id: 3, dayName: 'Wednesday', dayType: 'adf-eat', cals: 2000, protein: 175, carbs: 25, fat: 140,
-    workouts: [{ id: 'w-wed-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }],
-    meals: [
-      { id: 'm-wed-1', name: 'Anti-Inflammatory Turmeric Eggs', cals: 480, protein: 38, carbs: 3, fat: 34 },
-      { id: 'm-wed-2', name: 'Ginger Salmon & Avo Bowl', cals: 620, protein: 46, carbs: 5, fat: 42 }
+  '16_8': {
+    id: '16_8',
+    name: '16:8 Protocol',
+    shortName: '16:8 Daily',
+    tagline: 'Daily Time-Restricted Eating • 16h Fast / 8h Eating Window',
+    defaultPreset: 16,
+    schedule: [
+      { id: 1, dayName: 'Monday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-mon-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-mon-1', name: 'Bacon & Cheddar Omelet', cals: 550, protein: 42, carbs: 2, fat: 41 }, { id: 'm-mon-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }] },
+      { id: 2, dayName: 'Tuesday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-tue-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-tue-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [{ id: 'm-tue-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-tue-2', name: 'Garlic Butter Steak Bites', cals: 640, protein: 56, carbs: 1, fat: 45 }] },
+      { id: 3, dayName: 'Wednesday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-wed-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-wed-1', name: 'Anti-Inflammatory Turmeric Eggs', cals: 480, protein: 38, carbs: 3, fat: 34 }, { id: 'm-wed-2', name: 'Ginger Salmon & Avo Bowl', cals: 620, protein: 46, carbs: 5, fat: 42 }] },
+      { id: 4, dayName: 'Thursday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-thu-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-thu-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [{ id: 'm-thu-1', name: 'Spinach & Feta Frittata Slice', cals: 460, protein: 36, carbs: 4, fat: 32 }, { id: 'm-thu-2', name: 'Keto Cheeseburger Bowl', cals: 620, protein: 52, carbs: 4, fat: 43 }] },
+      { id: 5, dayName: 'Friday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-fri-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-fri-1', name: 'Crispy Chicken & Avocado Wrap', cals: 590, protein: 48, carbs: 4, fat: 40 }, { id: 'm-fri-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }] },
+      { id: 6, dayName: 'Saturday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-sat-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-sat-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-sat-2', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }] },
+      { id: 0, dayName: 'Sunday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-sun-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: [{ id: 'm-sun-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-sun-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }] }
     ]
   },
-  { 
-    id: 4, dayName: 'Thursday', dayType: 'fasting', cals: 0, protein: 0, carbs: 0, fat: 0,
-    workouts: [
-      { id: 'w-thu-1', name: '30-45m Jog', minutes: 35, url: '' },
-      { id: 'w-thu-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }
-    ],
-    meals: []
-  },
-  { 
-    id: 5, dayName: 'Friday', dayType: 'adf-eat', cals: 2000, protein: 175, carbs: 25, fat: 140,
-    workouts: [{ id: 'w-fri-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }],
-    meals: [
-      { id: 'm-fri-1', name: 'Crispy Chicken & Avocado Wrap', cals: 590, protein: 48, carbs: 4, fat: 40 },
-      { id: 'm-fri-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }
+  omad: {
+    id: 'omad',
+    name: 'OMAD Protocol',
+    shortName: 'OMAD (23h)',
+    tagline: 'One Meal A Day • 23h Fast / High-Density Keto Feast',
+    defaultPreset: 23,
+    schedule: [
+      { id: 1, dayName: 'Monday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-mon-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-mon-1', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }, { id: 'm-mon-2', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }] },
+      { id: 2, dayName: 'Tuesday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-tue-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-tue-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [{ id: 'm-tue-1', name: 'Ginger Salmon & Avo Bowl', cals: 620, protein: 46, carbs: 5, fat: 42 }, { id: 'm-tue-2', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }] },
+      { id: 3, dayName: 'Wednesday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-wed-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-wed-1', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }, { id: 'm-wed-2', name: 'Anti-Inflammatory Turmeric Eggs', cals: 480, protein: 38, carbs: 3, fat: 34 }] },
+      { id: 4, dayName: 'Thursday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-thu-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-thu-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [{ id: 'm-thu-1', name: 'Keto Cheeseburger Bowl', cals: 620, protein: 52, carbs: 4, fat: 43 }, { id: 'm-thu-2', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }] },
+      { id: 5, dayName: 'Friday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-fri-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-fri-1', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }, { id: 'm-fri-2', name: 'Crispy Chicken & Avocado Wrap', cals: 590, protein: 48, carbs: 4, fat: 40 }] },
+      { id: 6, dayName: 'Saturday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-sat-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-sat-1', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }, { id: 'm-sat-2', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }] },
+      { id: 0, dayName: 'Sunday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-sun-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: [{ id: 'm-sun-1', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }, { id: 'm-sun-2', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }] }
     ]
   },
-  { 
-    id: 6, dayName: 'Saturday', dayType: 'standard', cals: 1650, protein: 155, carbs: 20, fat: 120,
-    workouts: [{ id: 'w-sat-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }],
-    meals: [
-      { id: 'm-sat-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 },
-      { id: 'm-sat-2', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }
+  '2day_fast': {
+    id: '2day_fast',
+    name: '2-Day Extended Fast',
+    shortName: '2-Day (48h)',
+    tagline: '48h Autophagy Fast • Tue-Wed Complete Fast',
+    defaultPreset: 48,
+    schedule: [
+      { id: 1, dayName: 'Monday', dayType: 'pre-fast load', cals: 1800, protein: 165, carbs: 20, fat: 130, workouts: [{ id: 'w-mon-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-mon-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-mon-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }] },
+      { id: 2, dayName: 'Tuesday', dayType: 'fasting (48h)', cals: 0, protein: 0, carbs: 0, fat: 0, workouts: [{ id: 'w-tue-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-tue-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
+      { id: 3, dayName: 'Wednesday', dayType: 'fasting (48h)', cals: 0, protein: 0, carbs: 0, fat: 0, workouts: [{ id: 'w-wed-1', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
+      { id: 4, dayName: 'Thursday', dayType: 'bone broth refeed', cals: 1900, protein: 170, carbs: 22, fat: 135, workouts: [{ id: 'w-thu-1', name: '30-45m Jog', minutes: 35, url: '' }], meals: [{ id: 'm-thu-1', name: 'Slow-Simmered Beef Bone Broth Stew', cals: 540, protein: 58, carbs: 5, fat: 32 }, { id: 'm-thu-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }] },
+      { id: 5, dayName: 'Friday', dayType: 'standard', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-fri-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-fri-1', name: 'Crispy Chicken & Avocado Wrap', cals: 590, protein: 48, carbs: 4, fat: 40 }, { id: 'm-fri-2', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }] },
+      { id: 6, dayName: 'Saturday', dayType: 'standard', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-sat-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-sat-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-sat-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }] },
+      { id: 0, dayName: 'Sunday', dayType: 'standard', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-sun-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: [{ id: 'm-sun-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-sun-2', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }] }
     ]
   },
-  { 
-    id: 0, dayName: 'Sunday', dayType: 'standard', cals: 1650, protein: 155, carbs: 20, fat: 120,
-    workouts: [{ id: 'w-sun-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }],
-    meals: [
-      { id: 'm-sun-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 },
-      { id: 'm-sun-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }
+  '3day_fast': {
+    id: '3day_fast',
+    name: '3-Day Extended Fast',
+    shortName: '3-Day (72h)',
+    tagline: '72h Deep Fast • Tue-Thu Autophagy & Stem Cell Renewal',
+    defaultPreset: 72,
+    schedule: [
+      { id: 1, dayName: 'Monday', dayType: 'pre-fast load', cals: 1850, protein: 170, carbs: 20, fat: 135, workouts: [{ id: 'w-mon-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-mon-1', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }, { id: 'm-mon-2', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }] },
+      { id: 2, dayName: 'Tuesday', dayType: 'fasting (day 1)', cals: 0, protein: 0, carbs: 0, fat: 0, workouts: [{ id: 'w-tue-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-tue-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
+      { id: 3, dayName: 'Wednesday', dayType: 'fasting (day 2)', cals: 0, protein: 0, carbs: 0, fat: 0, workouts: [{ id: 'w-wed-1', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
+      { id: 4, dayName: 'Thursday', dayType: 'fasting (day 3)', cals: 0, protein: 0, carbs: 0, fat: 0, workouts: [{ id: 'w-thu-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: [] },
+      { id: 5, dayName: 'Friday', dayType: 'gentle refeed', cals: 1500, protein: 140, carbs: 15, fat: 100, workouts: [{ id: 'w-fri-1', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [{ id: 'm-fri-1', name: 'Slow-Simmered Beef Bone Broth Stew', cals: 540, protein: 58, carbs: 5, fat: 32 }, { id: 'm-fri-2', name: 'Spinach & Feta Frittata Slice', cals: 460, protein: 36, carbs: 4, fat: 32 }] },
+      { id: 6, dayName: 'Saturday', dayType: 'refeed build', cals: 1850, protein: 170, carbs: 20, fat: 135, workouts: [{ id: 'w-sat-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-sat-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-sat-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }] },
+      { id: 0, dayName: 'Sunday', dayType: 'standard', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-sun-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: [{ id: 'm-sun-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-sun-2', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }] }
     ]
   }
-];
+};
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -367,6 +393,11 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('schedule');
   const todayId = new Date().getDay();
   const [selectedDay, setSelectedDay] = useState(todayId);
+
+  // Active Protocol State ('adf' | '16_8' | 'omad' | '2day_fast' | '3day_fast')
+  const [activeProtocolKey, setActiveProtocolKey] = useState(() => {
+    try { return localStorage.getItem('ks_protocol') || 'adf'; } catch { return 'adf'; }
+  });
 
   // Completion State (Loaded from localStorage immediately)
   const [completion, setCompletion] = useState(() => {
@@ -408,7 +439,7 @@ export default function App() {
   const [recipeCategory, setRecipeCategory] = useState('All');
 
   // Modals
-  const [modalType, setModalType] = useState(null); // 'goals' | 'workout' | 'meal' | 'weight' | 'manageWorkouts' | null
+  const [modalType, setModalType] = useState(null); // 'goals' | 'workout' | 'meal' | 'weight' | 'manageWorkouts' | 'protocol' | null
 
   // Inputs for adding items
   const [selectedWorkoutIdToAdd, setSelectedWorkoutIdToAdd] = useState(workoutLibrary[0]?.id || '');
@@ -416,6 +447,10 @@ export default function App() {
   const [newLibWorkoutMins, setNewLibWorkoutMins] = useState(20);
   const [newLibWorkoutUrl, setNewLibWorkoutUrl] = useState('');
   const [selectedRecipeToAdd, setSelectedRecipeToAdd] = useState(recipes[0]?.id || '');
+
+  // Active Protocol Object
+  const currentProtocol = PROTOCOLS[activeProtocolKey] || PROTOCOLS.adf;
+  const activeSchedule = currentProtocol.schedule;
 
   // --- Firebase Auth & Firestore Sync ---
   useEffect(() => {
@@ -428,6 +463,7 @@ export default function App() {
           
           if (docSnap.exists()) {
             const data = docSnap.data();
+            if (data.protocol) { setActiveProtocolKey(data.protocol); localStorage.setItem('ks_protocol', data.protocol); }
             if (data.completion) { setCompletion(data.completion); localStorage.setItem('ks_completion', JSON.stringify(data.completion)); }
             if (data.fastingState) { setFastingState(data.fastingState); localStorage.setItem('ks_fasting', JSON.stringify(data.fastingState)); }
             if (data.customDays) { setCustomDays(data.customDays); localStorage.setItem('ks_custom_days', JSON.stringify(data.customDays)); }
@@ -437,6 +473,7 @@ export default function App() {
           } else {
             const initialData = {
               email: currentUser.email,
+              protocol: activeProtocolKey,
               completion,
               fastingState,
               customDays,
@@ -457,6 +494,7 @@ export default function App() {
 
   const syncToCloudAndLocal = async (updatedState) => {
     try {
+      if (updatedState.protocol !== undefined) localStorage.setItem('ks_protocol', updatedState.protocol);
       if (updatedState.completion !== undefined) localStorage.setItem('ks_completion', JSON.stringify(updatedState.completion));
       if (updatedState.fastingState !== undefined) localStorage.setItem('ks_fasting', JSON.stringify(updatedState.fastingState));
       if (updatedState.customDays !== undefined) localStorage.setItem('ks_custom_days', JSON.stringify(updatedState.customDays));
@@ -470,6 +508,7 @@ export default function App() {
       try {
         const userDocRef = doc(collection(db, "users"), user.uid);
         await setDoc(userDocRef, {
+          protocol: updatedState.protocol !== undefined ? updatedState.protocol : activeProtocolKey,
           completion: updatedState.completion !== undefined ? updatedState.completion : completion,
           fastingState: updatedState.fastingState !== undefined ? updatedState.fastingState : fastingState,
           customDays: updatedState.customDays !== undefined ? updatedState.customDays : customDays,
@@ -482,6 +521,30 @@ export default function App() {
         console.warn("Background cloud sync pending:", err.message);
       }
     }
+  };
+
+  // Switch Protocol & Dynamically Adjust Schedule + Fasting Presets
+  const handleSelectProtocol = (protocolKey) => {
+    const newProto = PROTOCOLS[protocolKey];
+    if (!newProto) return;
+    setActiveProtocolKey(protocolKey);
+    
+    // Automatically adjust the fasting target preset to match the protocol
+    const updatedFasting = { ...fastingState, preset: newProto.defaultPreset };
+    setFastingState(updatedFasting);
+
+    // Reset day customizations so the new protocol's macros & meals take effect cleanly
+    setCustomDays({});
+
+    syncToCloudAndLocal({
+      protocol: protocolKey,
+      fastingState: updatedFasting,
+      customDays: {}
+    });
+
+    setModalType(null);
+    setToastMessage(`Switched to ${newProto.name}! Targets updated.`);
+    setTimeout(() => setToastMessage(null), 3500);
   };
 
   const handleGoogleSignIn = async () => {
@@ -544,8 +607,8 @@ export default function App() {
     return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   };
 
-  // Get active day data with custom overrides
-  const defaultDay = SCHEDULE.find(d => d.id === selectedDay) || SCHEDULE[0];
+  // Get active day data based on selected protocol with custom overrides
+  const defaultDay = activeSchedule.find(d => d.id === selectedDay) || activeSchedule[0];
   const activeCustom = customDays[selectedDay] || {};
   const currentWorkouts = activeCustom.workouts || defaultDay.workouts || [];
   const currentMeals = activeCustom.meals || defaultDay.meals || [];
@@ -576,7 +639,7 @@ export default function App() {
   }, { cals: 0, protein: 0 });
 
   // Calculate Busy Dad Burpee minutes for the whole week
-  const weeklyBdpMinutes = SCHEDULE.reduce((total, d) => {
+  const weeklyBdpMinutes = activeSchedule.reduce((total, d) => {
     const dayWkts = customDays[d.id]?.workouts || d.workouts || [];
     const dayComp = completion[d.id] || {};
     dayWkts.forEach(w => {
@@ -801,217 +864,235 @@ export default function App() {
         
         {/* SCHEDULE TAB */}
         {activeTab === 'schedule' && (
-          <div className="bg-white rounded-2xl border border-[#eaeaea] shadow-xs overflow-hidden">
+          <div className="space-y-3">
             
-            {/* 7-Day Horizontal Bar */}
-            <div className="grid grid-cols-7 border-b border-[#eaeaea] bg-[#fafafa]">
-              {SCHEDULE.map(d => {
-                const isSelected = selectedDay === d.id;
-                const isRealToday = todayId === d.id;
-                const dayWkts = customDays[d.id]?.workouts || d.workouts || [];
-                const dayComp = completion[d.id] || {};
-                const allWktsDone = dayWkts.length > 0 && dayWkts.every(w => dayComp[w.id]);
-
-                return (
-                  <button
-                    key={d.id}
-                    onClick={() => setSelectedDay(d.id)}
-                    className={`py-3 text-center flex flex-col items-center justify-center transition-all border-r border-[#eaeaea] last:border-r-0 ${
-                      isSelected ? 'bg-white font-bold' : 'hover:bg-slate-100/60 text-slate-500'
-                    }`}
-                    style={isSelected ? { borderBottom: '2px solid #82bc41', color: '#000' } : {}}
-                  >
-                    <span className="text-[10px] uppercase tracking-wider">{d.dayName.slice(0, 3)}</span>
-                    <div className="h-3 flex items-center justify-center mt-1">
-                      {allWktsDone ? (
-                        <span className="text-[10px] font-black" style={{ color: '#82bc41' }}>✓</span>
-                      ) : isRealToday ? (
-                        <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#82bc41' }} />
-                      ) : (
-                        <div className="w-1 h-1 rounded-full bg-slate-300" />
-                      )}
-                    </div>
-                  </button>
-                );
-              })}
+            {/* Protocol Switcher Bar */}
+            <div className="bg-white rounded-2xl border border-[#eaeaea] p-3.5 shadow-xs flex items-center justify-between">
+              <div>
+                <span className="text-[9px] font-black uppercase tracking-wider text-slate-500 block">Active Protocol</span>
+                <span className="text-xs font-black text-slate-900">{currentProtocol.name}</span>
+                <span className="text-[10px] text-slate-500 block">{currentProtocol.tagline}</span>
+              </div>
+              <button
+                onClick={() => setModalType('protocol')}
+                className="px-3 py-1.5 rounded-xl text-xs font-black flex items-center gap-1 text-white shadow-xs transition-all hover:opacity-90"
+                style={{ backgroundColor: '#82bc41' }}
+              >
+                <Icons.Sliders size={13} /> Switch
+              </button>
             </div>
 
-            {/* Daily Body Section */}
-            <div className="p-5 space-y-6">
-              
-              {/* Day Header & Macros */}
-              <div className="flex justify-between items-center pb-4 border-b border-[#eaeaea]">
-                <div>
-                  <h2 className="text-base font-black text-slate-900">{defaultDay.dayName}</h2>
-                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                    {defaultDay.dayType} Protocol
-                  </span>
-                </div>
-                <div className="text-right flex items-center gap-3">
+            <div className="bg-white rounded-2xl border border-[#eaeaea] shadow-xs overflow-hidden">
+              {/* 7-Day Horizontal Bar */}
+              <div className="grid grid-cols-7 border-b border-[#eaeaea] bg-[#fafafa]">
+                {activeSchedule.map(d => {
+                  const isSelected = selectedDay === d.id;
+                  const isRealToday = todayId === d.id;
+                  const dayWkts = customDays[d.id]?.workouts || d.workouts || [];
+                  const dayComp = completion[d.id] || {};
+                  const allWktsDone = dayWkts.length > 0 && dayWkts.every(w => dayComp[w.id]);
+
+                  return (
+                    <button
+                      key={d.id}
+                      onClick={() => setSelectedDay(d.id)}
+                      className={`py-3 text-center flex flex-col items-center justify-center transition-all border-r border-[#eaeaea] last:border-r-0 ${
+                        isSelected ? 'bg-white font-bold' : 'hover:bg-slate-100/60 text-slate-500'
+                      }`}
+                      style={isSelected ? { borderBottom: '2px solid #82bc41', color: '#000' } : {}}
+                    >
+                      <span className="text-[10px] uppercase tracking-wider">{d.dayName.slice(0, 3)}</span>
+                      <div className="h-3 flex items-center justify-center mt-1">
+                        {allWktsDone ? (
+                          <span className="text-[10px] font-black" style={{ color: '#82bc41' }}>✓</span>
+                        ) : isRealToday ? (
+                          <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#82bc41' }} />
+                        ) : (
+                          <div className="w-1 h-1 rounded-full bg-slate-300" />
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Daily Body Section */}
+              <div className="p-5 space-y-6">
+                
+                {/* Day Header & Macros */}
+                <div className="flex justify-between items-center pb-4 border-b border-[#eaeaea]">
                   <div>
-                    <span className="block text-xs font-black" style={{ color: '#82bc41' }}>{targetCals} kcal</span>
-                    <span className="text-[9px] text-slate-500 font-bold uppercase">{targetProtein}g Protein</span>
+                    <h2 className="text-base font-black text-slate-900">{defaultDay.dayName}</h2>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                      {defaultDay.dayType}
+                    </span>
                   </div>
-                  <button 
-                    onClick={() => setModalType('goals')} 
-                    className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
-                    title="Edit Goals"
-                  >
-                    <Icons.Settings size={14} />
-                  </button>
-                </div>
-              </div>
-
-              {/* Training Routine Subsection */}
-              <div>
-                <div className="flex justify-between items-center mb-3">
-                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Training Routine</span>
-                  <div className="flex gap-2">
+                  <div className="text-right flex items-center gap-3">
+                    <div>
+                      <span className="block text-xs font-black" style={{ color: '#82bc41' }}>{targetCals} kcal</span>
+                      <span className="text-[9px] text-slate-500 font-bold uppercase">{targetProtein}g Protein</span>
+                    </div>
                     <button 
-                      onClick={() => setModalType('manageWorkouts')} 
-                      className="text-[10px] font-extrabold text-slate-700 hover:text-slate-900 bg-slate-100 px-2 py-1 rounded-lg border border-slate-200"
+                      onClick={() => setModalType('goals')} 
+                      className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
+                      title="Edit Goals"
                     >
-                      Library
-                    </button>
-                    <button 
-                      onClick={() => setModalType('workout')} 
-                      className="text-[10px] font-extrabold flex items-center gap-1 hover:underline"
-                      style={{ color: '#82bc41' }}
-                    >
-                      <Icons.Plus size={12} /> Assign
+                      <Icons.Settings size={14} />
                     </button>
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  {currentWorkouts.map(w => {
-                    const isChecked = !!currentDayCompletion[w.id];
-                    return (
-                      <div 
-                        key={w.id}
-                        className={`flex items-start justify-between p-3 rounded-xl border transition-all ${
-                          isChecked ? 'bg-slate-50 border-slate-200 opacity-50' : 'bg-white border-[#eaeaea]'
-                        }`}
+                {/* Training Routine Subsection */}
+                <div>
+                  <div className="flex justify-between items-center mb-3">
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Training Routine</span>
+                    <div className="flex gap-2">
+                      <button 
+                        onClick={() => setModalType('manageWorkouts')} 
+                        className="text-[10px] font-extrabold text-slate-700 hover:text-slate-900 bg-slate-100 px-2 py-1 rounded-lg border border-slate-200"
                       >
-                        <label className="flex items-start gap-3 cursor-pointer flex-1 mr-2">
-                          <input 
-                            type="checkbox" 
-                            checked={isChecked} 
-                            onChange={() => toggleTask(w.id)}
-                            className="mt-0.5 w-4 h-4 rounded border-slate-300"
-                            style={{ accentColor: '#82bc41' }} 
-                          />
-                          <div>
-                            <span className={`text-xs font-bold block ${isChecked ? 'text-slate-500 line-through' : 'text-slate-900'}`}>
-                              {w.name}
-                            </span>
-                            {w.url && (
-                              <a 
-                                href={w.url} 
-                                target="_blank" 
-                                rel="noreferrer" 
-                                className="inline-flex items-center gap-1 mt-1 text-[9px] font-bold text-slate-600 hover:text-slate-900"
-                              >
-                                <Icons.Youtube className="w-3 h-3 text-red-600" /> Watch Video
-                              </a>
-                            )}
-                          </div>
-                        </label>
-                        <button onClick={() => handleRemoveWorkoutFromDay(w.id)} className="text-slate-400 hover:text-red-500">
-                          <Icons.Trash size={13} />
-                        </button>
-                      </div>
-                    );
-                  })}
-                  {currentWorkouts.length === 0 && (
-                    <div className="p-3 text-center text-xs text-slate-500 bg-[#fafafa] rounded-xl border border-dashed border-[#eaeaea]">
-                      No workouts scheduled.
+                        Library
+                      </button>
+                      <button 
+                        onClick={() => setModalType('workout')} 
+                        className="text-[10px] font-extrabold flex items-center gap-1 hover:underline"
+                        style={{ color: '#82bc41' }}
+                      >
+                        <Icons.Plus size={12} /> Assign
+                      </button>
                     </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Nutrition Subsection */}
-              <div>
-                <div className="flex justify-between items-center mb-3">
-                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Nutrition & Meals</span>
-                  {defaultDay.dayType !== 'fasting' && (
-                    <button 
-                      onClick={() => setModalType('meal')} 
-                      className="text-[10px] font-extrabold flex items-center gap-1 hover:underline"
-                      style={{ color: '#82bc41' }}
-                    >
-                      <Icons.Plus size={12} /> Add Meal
-                    </button>
-                  )}
-                </div>
-
-                {defaultDay.dayType === 'fasting' ? (
-                  <div className="p-3.5 rounded-xl bg-[#fafafa] border border-[#eaeaea]">
-                    <div className="text-xs font-black text-slate-900 mb-0.5">Strict Fasting Protocol Active</div>
-                    <p className="text-[11px] text-slate-600 leading-relaxed">
-                      Zero calories today. Stay hydrated with electrolytes and black coffee.
-                    </p>
                   </div>
-                ) : (
-                  <>
-                    {/* Consumed Progress Bar */}
-                    <div className="bg-[#fafafa] p-3 rounded-xl border border-[#eaeaea] mb-3">
-                      <div className="flex justify-between text-[11px] font-bold text-slate-700 mb-1.5">
-                        <span>Consumed: <strong style={{ color: '#82bc41' }}>{consumedMacros.cals}</strong> / {targetCals} kcal</span>
-                        <span><strong style={{ color: '#82bc41' }}>{consumedMacros.protein}g</strong> / {targetProtein}g Pro</span>
-                      </div>
-                      <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+
+                  <div className="space-y-2">
+                    {currentWorkouts.map(w => {
+                      const isChecked = !!currentDayCompletion[w.id];
+                      return (
                         <div 
-                          className="h-full rounded-full transition-all duration-300"
-                          style={{ width: `${Math.min(100, targetCals > 0 ? (consumedMacros.cals / targetCals) * 100 : 0)}%`, backgroundColor: '#82bc41' }}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      {currentMeals.map(m => {
-                        const isChecked = !!currentDayCompletion[m.id];
-                        return (
-                          <div 
-                            key={m.id}
-                            className={`flex items-center justify-between p-3 rounded-xl border transition-all ${
-                              isChecked ? 'bg-slate-50 border-slate-200 opacity-50' : 'bg-white border-[#eaeaea]'
-                            }`}
-                          >
-                            <label className="flex items-center gap-3 cursor-pointer flex-1 mr-2">
-                              <input 
-                                type="checkbox" 
-                                checked={isChecked} 
-                                onChange={() => toggleTask(m.id)}
-                                className="w-4 h-4 rounded border-slate-300" 
-                                style={{ accentColor: '#82bc41' }}
-                              />
-                              <div>
-                                <span className={`text-xs font-bold block ${isChecked ? 'line-through text-slate-500' : 'text-slate-900'}`}>
-                                  {m.name}
-                                </span>
-                                <span className="text-[9px] text-slate-500 font-bold">
-                                  {m.cals} kcal • {m.protein}g Protein
-                                </span>
-                              </div>
-                            </label>
-                            <button onClick={() => handleRemoveMeal(m.id)} className="text-slate-400 hover:text-red-500">
-                              <Icons.Trash size={13} />
-                            </button>
-                          </div>
-                        );
-                      })}
-                      {currentMeals.length === 0 && (
-                        <div className="p-3 text-center text-xs text-slate-500 bg-[#fafafa] rounded-xl border border-dashed border-[#eaeaea]">
-                          No meals assigned.
+                          key={w.id}
+                          className={`flex items-start justify-between p-3 rounded-xl border transition-all ${
+                            isChecked ? 'bg-slate-50 border-slate-200 opacity-50' : 'bg-white border-[#eaeaea]'
+                          }`}
+                        >
+                          <label className="flex items-start gap-3 cursor-pointer flex-1 mr-2">
+                            <input 
+                              type="checkbox" 
+                              checked={isChecked} 
+                              onChange={() => toggleTask(w.id)}
+                              className="mt-0.5 w-4 h-4 rounded border-slate-300"
+                              style={{ accentColor: '#82bc41' }} 
+                            />
+                            <div>
+                              <span className={`text-xs font-bold block ${isChecked ? 'text-slate-500 line-through' : 'text-slate-900'}`}>
+                                {w.name}
+                              </span>
+                              {w.url && (
+                                <a 
+                                  href={w.url} 
+                                  target="_blank" 
+                                  rel="noreferrer" 
+                                  className="inline-flex items-center gap-1 mt-1 text-[9px] font-bold text-slate-600 hover:text-slate-900"
+                                >
+                                  <Icons.Youtube className="w-3 h-3 text-red-600" /> Watch Video
+                                </a>
+                              )}
+                            </div>
+                          </label>
+                          <button onClick={() => handleRemoveWorkoutFromDay(w.id)} className="text-slate-400 hover:text-red-500">
+                            <Icons.Trash size={13} />
+                          </button>
                         </div>
-                      )}
-                    </div>
-                  </>
-                )}
-              </div>
+                      );
+                    })}
+                    {currentWorkouts.length === 0 && (
+                      <div className="p-3 text-center text-xs text-slate-500 bg-[#fafafa] rounded-xl border border-dashed border-[#eaeaea]">
+                        No workouts scheduled.
+                      </div>
+                    )}
+                  </div>
+                </div>
 
+                {/* Nutrition Subsection */}
+                <div>
+                  <div className="flex justify-between items-center mb-3">
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Nutrition & Meals</span>
+                    {targetCals > 0 && (
+                      <button 
+                        onClick={() => setModalType('meal')} 
+                        className="text-[10px] font-extrabold flex items-center gap-1 hover:underline"
+                        style={{ color: '#82bc41' }}
+                      >
+                        <Icons.Plus size={12} /> Add Meal
+                      </button>
+                    )}
+                  </div>
+
+                  {targetCals === 0 ? (
+                    <div className="p-3.5 rounded-xl bg-[#fafafa] border border-[#eaeaea]">
+                      <div className="text-xs font-black text-slate-900 mb-0.5">Fasting Window Active</div>
+                      <p className="text-[11px] text-slate-600 leading-relaxed">
+                        Zero calorie fasting day. Hydrate with pure water, electrolytes, and black coffee.
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      {/* Consumed Progress Bar */}
+                      <div className="bg-[#fafafa] p-3 rounded-xl border border-[#eaeaea] mb-3">
+                        <div className="flex justify-between text-[11px] font-bold text-slate-700 mb-1.5">
+                          <span>Consumed: <strong style={{ color: '#82bc41' }}>{consumedMacros.cals}</strong> / {targetCals} kcal</span>
+                          <span><strong style={{ color: '#82bc41' }}>{consumedMacros.protein}g</strong> / {targetProtein}g Pro</span>
+                        </div>
+                        <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                          <div 
+                            className="h-full rounded-full transition-all duration-300"
+                            style={{ width: `${Math.min(100, targetCals > 0 ? (consumedMacros.cals / targetCals) * 100 : 0)}%`, backgroundColor: '#82bc41' }}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        {currentMeals.map(m => {
+                          const isChecked = !!currentDayCompletion[m.id];
+                          return (
+                            <div 
+                              key={m.id}
+                              className={`flex items-center justify-between p-3 rounded-xl border transition-all ${
+                                isChecked ? 'bg-slate-50 border-slate-200 opacity-50' : 'bg-white border-[#eaeaea]'
+                              }`}
+                            >
+                              <label className="flex items-center gap-3 cursor-pointer flex-1 mr-2">
+                                <input 
+                                  type="checkbox" 
+                                  checked={isChecked} 
+                                  onChange={() => toggleTask(m.id)}
+                                  className="w-4 h-4 rounded border-slate-300" 
+                                  style={{ accentColor: '#82bc41' }}
+                                />
+                                <div>
+                                  <span className={`text-xs font-bold block ${isChecked ? 'line-through text-slate-500' : 'text-slate-900'}`}>
+                                    {m.name}
+                                  </span>
+                                  <span className="text-[9px] text-slate-500 font-bold">
+                                    {m.cals} kcal • {m.protein}g Protein
+                                  </span>
+                                </div>
+                              </label>
+                              <button onClick={() => handleRemoveMeal(m.id)} className="text-slate-400 hover:text-red-500">
+                                <Icons.Trash size={13} />
+                              </button>
+                            </div>
+                          );
+                        })}
+                        {currentMeals.length === 0 && (
+                          <div className="p-3 text-center text-xs text-slate-500 bg-[#fafafa] rounded-xl border border-dashed border-[#eaeaea]">
+                            No meals assigned.
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  )}
+                </div>
+
+              </div>
             </div>
           </div>
         )}
@@ -1020,6 +1101,21 @@ export default function App() {
         {activeTab === 'dashboard' && (
           <div className="space-y-3">
             
+            {/* Protocol Quick Overview */}
+            <div className="bg-white rounded-2xl border border-[#eaeaea] p-4 shadow-xs flex items-center justify-between">
+              <div>
+                <span className="text-[9px] font-black uppercase tracking-widest text-slate-500 block">Current Regimen</span>
+                <span className="text-sm font-black text-slate-900">{currentProtocol.name}</span>
+                <p className="text-[10px] text-slate-500">{currentProtocol.tagline}</p>
+              </div>
+              <button
+                onClick={() => setModalType('protocol')}
+                className="px-3 py-1 rounded-xl text-xs font-bold border border-[#eaeaea] bg-slate-50 hover:bg-slate-100 text-slate-700"
+              >
+                Change
+              </button>
+            </div>
+
             {/* Weight Loss Progress */}
             <div className="bg-white rounded-2xl border border-[#eaeaea] p-5 shadow-xs">
               <div className="flex justify-between items-center mb-3">
@@ -1125,9 +1221,9 @@ export default function App() {
             <div className="bg-white rounded-2xl border border-[#eaeaea] p-5 shadow-xs">
               <h3 className="text-xs font-black text-slate-900 mb-2 uppercase tracking-wider">Protocol Anchors</h3>
               <ul className="text-xs text-slate-600 space-y-1.5 leading-relaxed">
-                <li>• Maintain 155g–175g daily protein on eating days to defend muscle mass.</li>
-                <li>• Dedicate Tuesdays and Thursdays strictly to Leo Moves mobility and joint decompression.</li>
-                <li>• Butter, cheeses, and eggs remain staples for clean ketogenic fats.</li>
+                <li>• Maintain high whole-food protein on eating days to protect lean muscle tissue.</li>
+                <li>• Prioritize joint recovery, hydration, and electrolytes during extended fasting blocks.</li>
+                <li>• Break fasts longer than 24h with bone broth or light protein 45 minutes before heavy food.</li>
               </ul>
             </div>
 
@@ -1200,6 +1296,21 @@ export default function App() {
         {/* FASTING TAB */}
         {activeTab === 'fasting' && (
           <div className="space-y-3">
+            
+            {/* Quick Switch Protocols */}
+            <div className="bg-white rounded-2xl border border-[#eaeaea] p-3.5 shadow-xs flex items-center justify-between">
+              <div>
+                <span className="text-[9px] font-black uppercase tracking-wider text-slate-500 block">Protocol Preset</span>
+                <span className="text-xs font-black text-slate-900">{currentProtocol.shortName}</span>
+              </div>
+              <button
+                onClick={() => setModalType('protocol')}
+                className="text-xs font-bold text-slate-700 hover:text-slate-950 underline"
+              >
+                Change Protocol
+              </button>
+            </div>
+
             <div className="bg-white rounded-2xl border border-[#eaeaea] p-6 shadow-xs text-center">
               <Icons.Clock className={`w-10 h-10 mx-auto mb-2 text-slate-400 ${fastingState.active ? 'animate-pulse' : ''}`} style={fastingState.active ? { color: '#82bc41' } : {}} />
               
@@ -1217,8 +1328,8 @@ export default function App() {
 
               {!fastingState.active ? (
                 <div className="space-y-3">
-                  <div className="grid grid-cols-3 gap-2">
-                    {[18, 36, 48].map(hrs => (
+                  <div className="grid grid-cols-5 gap-1.5">
+                    {[16, 23, 36, 48, 72].map(hrs => (
                       <button
                         key={hrs}
                         onClick={() => {
@@ -1231,7 +1342,7 @@ export default function App() {
                         }`}
                         style={fastingState.preset === hrs ? { backgroundColor: '#82bc41' } : {}}
                       >
-                        {hrs === 18 ? '18:6' : `${hrs}h ADF`}
+                        {hrs}h
                       </button>
                     ))}
                   </div>
@@ -1267,7 +1378,7 @@ export default function App() {
                 <span className="text-xs font-black text-slate-900">Transition Phase Helper</span>
               </div>
               <p className="text-xs text-slate-600 leading-relaxed">
-                Break prolonged 36h/48h fasts with easily digestible proteins or bone broth 45 minutes before a substantial meal to safeguard digestion and prevent insulin surges.
+                Break prolonged 36h/48h/72h fasts with warm bone broth or easily digestible lean protein 45 minutes prior to whole meals to ensure gut comfort and avoid insulin spikes.
               </p>
             </div>
           </div>
@@ -1276,6 +1387,54 @@ export default function App() {
       </main>
 
       {/* --- MODALS --- */}
+
+      {/* Protocol Switcher Modal */}
+      {modalType === 'protocol' && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 flex items-end sm:items-center justify-center p-4">
+          <div className="bg-white rounded-3xl p-6 w-full max-w-sm border border-[#eaeaea] shadow-2xl space-y-4">
+            <div className="flex justify-between items-center pb-2 border-b border-[#eaeaea]">
+              <div>
+                <h3 className="text-sm font-black text-slate-900 uppercase tracking-tight">Choose Fasting Protocol</h3>
+                <p className="text-[10px] text-slate-500">Dynamically updates macros & schedule</p>
+              </div>
+              <button onClick={() => setModalType(null)} className="text-slate-400 hover:text-slate-900">
+                <Icons.X size={18} />
+              </button>
+            </div>
+
+            <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-1">
+              {Object.values(PROTOCOLS).map(proto => (
+                <button
+                  key={proto.id}
+                  onClick={() => handleSelectProtocol(proto.id)}
+                  className={`w-full text-left p-3.5 rounded-2xl border transition-all flex flex-col gap-0.5 ${
+                    activeProtocolKey === proto.id
+                      ? 'border-[#82bc41] bg-emerald-50/50 shadow-xs'
+                      : 'border-[#eaeaea] bg-white hover:bg-slate-50'
+                  }`}
+                >
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs font-black text-slate-900">{proto.name}</span>
+                    {activeProtocolKey === proto.id && (
+                      <span className="text-[10px] font-black text-emerald-600 flex items-center gap-1">
+                        <Icons.Check size={12} /> Active
+                      </span>
+                    )}
+                  </div>
+                  <span className="text-[10px] text-slate-600 leading-relaxed">{proto.tagline}</span>
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={() => setModalType(null)}
+              className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-bold rounded-xl border border-slate-200"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Recipe Detail Modal */}
       {activeRecipeModal && (
@@ -1441,7 +1600,7 @@ export default function App() {
                     <span className="text-xs font-bold block text-slate-900">{w.name}</span>
                     <span className="text-[9px] text-slate-500">{w.minutes} minutes</span>
                   </div>
-                  <button onClick={() => handleDeleteGlobalWorkout(w.id)} className="text-slate-400 hover:text-red-600 p-1">
+                  <button onClick={() => handleDeleteGlobalWorkout(libId)} className="text-slate-400 hover:text-red-600 p-1">
                     <Icons.Trash size={13} />
                   </button>
                 </div>
