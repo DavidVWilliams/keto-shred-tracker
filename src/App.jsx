@@ -358,6 +358,77 @@ const PROTOCOLS = {
 
 const PLANNER_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
+// Helper function to intelligently classify items by food type
+const getFoodCategory = (itemName) => {
+  const l = (itemName || '').toLowerCase();
+  
+  // 1. Proteins & Meats
+  if (
+    l.includes('beef') || l.includes('steak') || l.includes('salmon') || 
+    l.includes('chicken') || l.includes('turkey') || l.includes('bacon') || 
+    l.includes('egg') || l.includes('tuna') || l.includes('shrimp') || 
+    l.includes('pork') || l.includes('ham') || l.includes('prosciutto') || 
+    l.includes('sardine') || l.includes('cod') || l.includes('halibut') || 
+    l.includes('scallop') || l.includes('meat') || l.includes('wings')
+  ) {
+    return 'Proteins & Meats';
+  }
+
+  // 2. Produce & Veggies
+  if (
+    l.includes('spinach') || l.includes('cabbage') || l.includes('asparagus') || 
+    l.includes('avocado') || l.includes('mushroom') || l.includes('celery') || 
+    l.includes('tomato') || l.includes('lettuce') || l.includes('bell pepper') || 
+    l.includes('onion') || l.includes('garlic') || l.includes('chive') || 
+    l.includes('scallion') || l.includes('parsley') || l.includes('dill') || 
+    l.includes('basil') || l.includes('ginger') || l.includes('lemon') || 
+    l.includes('lime') || l.includes('greens') || l.includes('zucchini') || 
+    l.includes('broccoli') || l.includes('cauliflower') || l.includes('romaine') ||
+    l.includes('sage')
+  ) {
+    return 'Produce & Veggies';
+  }
+
+  // 3. Dairy & Cheeses
+  if (
+    l.includes('cheese') || l.includes('cheddar') || l.includes('feta') || 
+    l.includes('swiss') || l.includes('mozzarella') || l.includes('parmesan') || 
+    l.includes('heavy cream') || l.includes('cream cheese') || l.includes('sour cream')
+  ) {
+    return 'Dairy & Cheeses';
+  }
+
+  // 4. Fats & Oils
+  if (
+    l.includes('butter') || l.includes('ghee') || l.includes('oil') || 
+    l.includes('mct') || l.includes('mayo') || l.includes('pesto')
+  ) {
+    return 'Fats & Oils';
+  }
+
+  // 5. Pantry, Broths & Seasonings
+  if (
+    l.includes('broth') || l.includes('salt') || l.includes('pepper') || 
+    l.includes('seasoning') || l.includes('rub') || l.includes('mustard') || 
+    l.includes('tamari') || l.includes('vinegar') || l.includes('almond flour') || 
+    l.includes('sesame') || l.includes('electrolyte') || l.includes('coffee') || 
+    l.includes('turmeric') || l.includes('chipotle') || l.includes('dijon')
+  ) {
+    return 'Pantry & Seasonings';
+  }
+
+  return 'Other Items';
+};
+
+const FOOD_CATEGORY_ORDER = [
+  'Proteins & Meats',
+  'Produce & Veggies',
+  'Dairy & Cheeses',
+  'Fats & Oils',
+  'Pantry & Seasonings',
+  'Other Items'
+];
+
 export default function App() {
   const [user, setUser] = useState(null);
 
@@ -385,12 +456,12 @@ export default function App() {
     try { return JSON.parse(localStorage.getItem('ks_fasting_history') || '[]'); } catch { return []; }
   });
 
-  // Weight Tracker State (Starts at 0 with no presets on first visit)
+  // Weight Tracker State
   const [weightData, setWeightData] = useState(() => {
     try { return JSON.parse(localStorage.getItem('ks_weight') || '{"start":0, "current":0, "goal":0}'); } catch { return { start: 0, current: 0, goal: 0 }; }
   });
 
-  // Weight History State (Clean - zero mock records)
+  // Weight History State
   const [weightHistory, setWeightHistory] = useState(() => {
     try { return JSON.parse(localStorage.getItem('ks_weight_history') || '[]'); } catch { return []; }
   });
@@ -1018,6 +1089,7 @@ export default function App() {
     setTimeout(() => setToastMessage(null), 3000);
   };
 
+  // Compute Aggregated Ingredients for Shopping List (with Category assigned)
   const getAggregatedShoppingList = () => {
     const recipeIngredients = [];
 
@@ -1032,7 +1104,8 @@ export default function App() {
                 id: `current-${day.dayName}-${m.name}-${ing}`,
                 name: ing,
                 source: m.name,
-                day: day.dayName
+                day: day.dayName,
+                category: getFoodCategory(ing)
               });
             });
           }
@@ -1048,7 +1121,8 @@ export default function App() {
                 id: `upcoming-${dayName}-${m.name}-${ing}`,
                 name: ing,
                 source: m.name,
-                day: dayName
+                day: dayName,
+                category: getFoodCategory(ing)
               });
             });
           }
@@ -1061,7 +1135,8 @@ export default function App() {
       name: item.name,
       source: 'Custom Entry',
       custom: true,
-      originalId: item.id
+      originalId: item.id,
+      category: getFoodCategory(item.name)
     }));
 
     return [...customItems, ...recipeIngredients];
@@ -1070,12 +1145,21 @@ export default function App() {
   const currentShoppingItems = getAggregatedShoppingList();
   const checkedShoppingCount = currentShoppingItems.filter(item => checkedGroceries[item.id]).length;
 
+  // Group shopping items by category
+  const groupedShoppingItems = FOOD_CATEGORY_ORDER.reduce((acc, cat) => {
+    const items = currentShoppingItems.filter(item => item.category === cat);
+    if (items.length > 0) {
+      acc[cat] = items;
+    }
+    return acc;
+  }, {});
+
   const categories = ['All', 'Eggs', 'Beef', 'Fish', 'Poultry'];
   const filteredRecipes = recipeCategory === 'All' 
     ? recipes 
     : recipes.filter(r => r.category === recipeCategory);
 
-  // Dynamic Weight Delta & Progress Calculations (Safe when start / current is 0)
+  // Dynamic Weight Delta & Progress Calculations
   const isWeightConfigured = weightData.start > 0 && weightData.current > 0;
   const weightDiff = isWeightConfigured ? weightData.start - weightData.current : 0;
   const isWeightLost = weightDiff >= 0;
@@ -1314,7 +1398,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Training Routine Subsection (Week 1 Schedule Preserved) */}
                 <div>
                   <div className="flex justify-between items-center mb-3">
                     <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Training Routine</span>
@@ -1383,7 +1466,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Nutrition Subsection (Starts Empty on First Visit) */}
                 <div>
                   <div className="flex justify-between items-center mb-3">
                     <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Nutrition & Meals</span>
@@ -1485,7 +1567,7 @@ export default function App() {
               </button>
             </div>
 
-            {/* Weight Goal Progress Card (Clean Initial State) */}
+            {/* Weight Goal Progress Card */}
             <div className="bg-white rounded-2xl border border-[#eaeaea] p-5 shadow-xs">
               <div className="flex justify-between items-center mb-3">
                 <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Weight Goal Progress</span>
@@ -1905,7 +1987,7 @@ export default function App() {
               </div>
             )}
 
-            {/* SUB-TAB 4: INTEGRATED GROCERY & SHOPPING LIST */}
+            {/* SUB-TAB 4: INTEGRATED GROCERY & SHOPPING LIST (SORTED BY FOOD TYPE) */}
             {recipeSubTab === 'shopping' && (
               <div className="space-y-4">
                 <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-4">
@@ -1916,7 +1998,7 @@ export default function App() {
                         <Icons.ShoppingCart size={14} style={{ color: '#82bc41' }} />
                         Interactive Grocery List
                       </h3>
-                      <p className="text-[10px] text-slate-500">Auto-compiled from your active ketogenic schedule & plan</p>
+                      <p className="text-[10px] text-slate-500">Sorted by food type and aisle for streamlined shopping</p>
                     </div>
 
                     <div className="bg-[#fafafa] p-1 rounded-2xl border border-[#eaeaea] grid grid-cols-2 gap-1 w-full">
@@ -1976,52 +2058,71 @@ export default function App() {
                     )}
                   </div>
 
-                  <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
+                  {/* Grouped & Sorted By Food Type */}
+                  <div className="space-y-4 max-h-96 overflow-y-auto pr-1">
                     {currentShoppingItems.length === 0 ? (
                       <div className="p-8 text-center text-xs text-slate-400 bg-[#fafafa] rounded-2xl border border-dashed border-[#eaeaea]">
                         No items in this list yet. Check out the <strong>Keto Foods</strong> tab or assign meals in Planner.
                       </div>
                     ) : (
-                      currentShoppingItems.map((item, idx) => {
-                        const isChecked = !!checkedGroceries[item.id];
+                      Object.keys(groupedShoppingItems).map((categoryName) => {
+                        const items = groupedShoppingItems[categoryName];
                         return (
-                          <div
-                            key={item.id || idx}
-                            className={`flex items-center justify-between p-3 rounded-xl border transition-all ${
-                              isChecked
-                                ? 'bg-slate-50 border-slate-200 opacity-60'
-                                : 'bg-white border-[#eaeaea]'
-                            }`}
-                          >
-                            <label className="flex items-center gap-3 cursor-pointer flex-1 mr-2">
-                              <input
-                                type="checkbox"
-                                checked={isChecked}
-                                onChange={() => handleToggleGroceryCheck(item.id)}
-                                className="w-4 h-4 rounded border-slate-300"
-                                style={{ accentColor: '#82bc41' }}
-                              />
-                              <div>
-                                <span className={`text-xs font-bold block ${isChecked ? 'line-through text-slate-400' : 'text-slate-900'}`}>
-                                  {item.name}
-                                </span>
-                                {item.source && (
-                                  <span className="text-[9px] text-slate-500 font-medium">
-                                    {item.custom ? 'Custom Entry' : `for ${item.source} (${item.day})`}
-                                  </span>
-                                )}
-                              </div>
-                            </label>
+                          <div key={categoryName} className="space-y-2">
+                            <div className="flex items-center justify-between px-1">
+                              <span className="text-[10px] font-black uppercase tracking-wider text-slate-500">
+                                {categoryName}
+                              </span>
+                              <span className="text-[9px] font-bold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md border border-slate-200">
+                                {items.length}
+                              </span>
+                            </div>
 
-                            {item.custom && (
-                              <button
-                                onClick={() => handleDeleteCustomGrocery(item.originalId)}
-                                className="text-slate-400 hover:text-red-500 p-1"
-                                title="Delete item"
-                              >
-                                <Icons.Trash size={12} />
-                              </button>
-                            )}
+                            <div className="space-y-1.5">
+                              {items.map((item, idx) => {
+                                const isChecked = !!checkedGroceries[item.id];
+                                return (
+                                  <div
+                                    key={item.id || idx}
+                                    className={`flex items-center justify-between p-3 rounded-xl border transition-all ${
+                                      isChecked
+                                        ? 'bg-slate-50 border-slate-200 opacity-60'
+                                        : 'bg-white border-[#eaeaea]'
+                                    }`}
+                                  >
+                                    <label className="flex items-center gap-3 cursor-pointer flex-1 mr-2">
+                                      <input
+                                        type="checkbox"
+                                        checked={isChecked}
+                                        onChange={() => handleToggleGroceryCheck(item.id)}
+                                        className="w-4 h-4 rounded border-slate-300"
+                                        style={{ accentColor: '#82bc41' }}
+                                      />
+                                      <div>
+                                        <span className={`text-xs font-bold block ${isChecked ? 'line-through text-slate-400' : 'text-slate-900'}`}>
+                                          {item.name}
+                                        </span>
+                                        {item.source && (
+                                          <span className="text-[9px] text-slate-500 font-medium">
+                                            {item.custom ? 'Custom Entry' : `for ${item.source} (${item.day})`}
+                                          </span>
+                                        )}
+                                      </div>
+                                    </label>
+
+                                    {item.custom && (
+                                      <button
+                                        onClick={() => handleDeleteCustomGrocery(item.originalId)}
+                                        className="text-slate-400 hover:text-red-500 p-1"
+                                        title="Delete item"
+                                      >
+                                        <Icons.Trash size={12} />
+                                      </button>
+                                    )}
+                                  </div>
+                                );
+                              })}
+                            </div>
                           </div>
                         );
                       })
@@ -2272,7 +2373,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* Historical Weight Trend Card (Clean State) */}
+            {/* Historical Weight Trend Card */}
             <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-2 border-b border-[#eaeaea]">
                 <div>
@@ -2918,7 +3019,7 @@ export default function App() {
         </div>
       )}
 
-      {/* 5. Weight Tracker Modal (No Hardcoded 205/198, Pure Clean Inputs) */}
+      {/* 5. Weight Tracker Modal */}
       {modalType === 'weight' && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-xs z-50 flex items-end sm:items-center justify-center p-4">
           <div className="bg-white rounded-2xl p-5 w-full max-w-sm border border-[#eaeaea] shadow-xl">
