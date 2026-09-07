@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app); // Correct standard initialization for the default Firestore instance
+const db = getFirestore(app);
 const googleProvider = new GoogleAuthProvider();
 
 export default function App() {
@@ -24,14 +24,18 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [appData, setAppData] = useState(null);
 
-  // Listen for Auth State Changes & Sync Firestore Profile
+  // Listen for Auth State Changes & Sync Firestore Profile safely
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
         try {
+          // Force a small delay or token refresh assurance for Firestore security context
+          await currentUser.getIdToken(true);
+          
           const docRef = doc(db, "users", currentUser.uid);
           const docSnap = await getDoc(docRef);
+          
           if (docSnap.exists()) {
             setAppData(docSnap.data());
           } else {
@@ -56,9 +60,11 @@ export default function App() {
 
   const handleGoogleSignIn = async () => {
     try {
+      setLoading(true);
       await signInWithPopup(auth, googleProvider);
     } catch (err) {
       console.error("Sign-in error:", err);
+      setLoading(false);
     }
   };
 
