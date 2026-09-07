@@ -55,7 +55,8 @@ const Icons = {
   Award: (p) => <Icon {...p} path='<circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>' />,
   TrendingUp: (p) => <Icon {...p} path='<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>' />,
   Clipboard: (p) => <Icon {...p} path='<path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>' />,
-  RotateCcw: (p) => <Icon {...p} path='<polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/>' />
+  RotateCcw: (p) => <Icon {...p} path='<polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/>' />,
+  ShoppingCart: (p) => <Icon {...p} path='<circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>' />
 };
 
 const INITIAL_WORKOUTS = [
@@ -116,7 +117,6 @@ const INITIAL_RECIPES = [
   { id: 'poultry-12', name: 'Chicken Thigh & Avocado Salad', category: 'Poultry', cals: 570, protein: 49, carbs: 4, fat: 39, ingredients: ['2 grilled chicken thighs (sliced)', '2 cups mixed greens', '1/2 sliced avocado', 'Olive oil & lime dressing'], instructions: 'Lay warm grilled chicken thigh slices over a bed of mixed greens and fresh avocado. Dress with olive oil and lime.' }
 ];
 
-// --- 8 Fasting Presets ---
 const FASTING_PRESETS = [
   { id: '16_8', label: '16:8', hours: 16 },
   { id: '20_4', label: '20:4', hours: 20 },
@@ -128,7 +128,6 @@ const FASTING_PRESETS = [
   { id: '72h', label: '72H', hours: 72 }
 ];
 
-// --- 5 Dynamic Metabolic Stages of Fasting ---
 const METABOLIC_PHASES = [
   {
     id: 'phase_1',
@@ -291,6 +290,8 @@ const PROTOCOLS = {
   }
 };
 
+const PLANNER_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
 export default function App() {
   const [user, setUser] = useState(null);
 
@@ -318,12 +319,12 @@ export default function App() {
     try { return JSON.parse(localStorage.getItem('ks_fasting_history') || '[]'); } catch { return []; }
   });
 
-  // Weight Tracker State (Unified Profile)
+  // Weight Tracker State
   const [weightData, setWeightData] = useState(() => {
     try { return JSON.parse(localStorage.getItem('ks_weight') || '{"start":205, "current":198, "goal":180}'); } catch { return { start: 205, current: 198, goal: 180 }; }
   });
 
-  // Weight History State (Cleaned - no hardcoded mock numbers)
+  // Weight History State
   const [weightHistory, setWeightHistory] = useState(() => {
     try {
       const saved = localStorage.getItem('ks_weight_history');
@@ -354,6 +355,34 @@ export default function App() {
     try { return JSON.parse(localStorage.getItem('ks_recipes') || JSON.stringify(INITIAL_RECIPES)); } catch { return INITIAL_RECIPES; }
   });
 
+  // --- Recipe Sub-Tabs & Meal Planning / Shopping State ---
+  const [recipeSubTab, setRecipeSubTab] = useState('catalog'); // 'catalog' | 'planner' | 'shopping'
+  const [selectedPlanDay, setSelectedPlanDay] = useState('Monday');
+  const [nextWeekPlan, setNextWeekPlan] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('ks_next_week_plan') || '{"Monday":[],"Tuesday":[],"Wednesday":[],"Thursday":[],"Friday":[],"Saturday":[],"Sunday":[]}');
+    } catch {
+      return { Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: [], Saturday: [], Sunday: [] };
+    }
+  });
+
+  const [activeShoppingWeek, setActiveShoppingWeek] = useState('upcoming'); // 'current' | 'upcoming'
+  const [customGroceries, setCustomGroceries] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('ks_custom_groceries') || '{"current":[],"upcoming":[]}');
+    } catch {
+      return { current: [], upcoming: [] };
+    }
+  });
+  const [checkedGroceries, setCheckedGroceries] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('ks_checked_groceries') || '{}');
+    } catch {
+      return {};
+    }
+  });
+  const [newCustomGroceryText, setNewCustomGroceryText] = useState('');
+
   // Toast feedback state
   const [toastMessage, setToastMessage] = useState(null);
 
@@ -368,6 +397,7 @@ export default function App() {
   const [newLibWorkoutMins, setNewLibWorkoutMins] = useState(20);
   const [newLibWorkoutUrl, setNewLibWorkoutUrl] = useState('');
   const [selectedRecipeToAdd, setSelectedRecipeToAdd] = useState(recipes[0]?.id || '');
+  const [selectedPlannerRecipeToAdd, setSelectedPlannerRecipeToAdd] = useState(recipes[0]?.id || '');
 
   // Active Protocol Object
   const currentProtocol = PROTOCOLS[activeProtocolKey] || PROTOCOLS.adf;
@@ -394,6 +424,9 @@ export default function App() {
             if (data.workoutLibrary) { setWorkoutLibrary(data.workoutLibrary); localStorage.setItem('ks_workout_library', JSON.stringify(data.workoutLibrary)); }
             if (data.weightData) { setWeightData(data.weightData); localStorage.setItem('ks_weight', JSON.stringify(data.weightData)); }
             if (data.recipes) { setRecipes(data.recipes); localStorage.setItem('ks_recipes', JSON.stringify(data.recipes)); }
+            if (data.nextWeekPlan) { setNextWeekPlan(data.nextWeekPlan); localStorage.setItem('ks_next_week_plan', JSON.stringify(data.nextWeekPlan)); }
+            if (data.customGroceries) { setCustomGroceries(data.customGroceries); localStorage.setItem('ks_custom_groceries', JSON.stringify(data.customGroceries)); }
+            if (data.checkedGroceries) { setCheckedGroceries(data.checkedGroceries); localStorage.setItem('ks_checked_groceries', JSON.stringify(data.checkedGroceries)); }
           } else {
             const initialData = {
               email: currentUser.email,
@@ -407,6 +440,9 @@ export default function App() {
               workoutLibrary,
               weightData,
               recipes,
+              nextWeekPlan,
+              customGroceries,
+              checkedGroceries,
               initializedAt: new Date().toISOString()
             };
             await setDoc(userDocRef, initialData);
@@ -431,6 +467,9 @@ export default function App() {
       if (updatedState.workoutLibrary !== undefined) localStorage.setItem('ks_workout_library', JSON.stringify(updatedState.workoutLibrary));
       if (updatedState.weightData !== undefined) localStorage.setItem('ks_weight', JSON.stringify(updatedState.weightData));
       if (updatedState.recipes !== undefined) localStorage.setItem('ks_recipes', JSON.stringify(updatedState.recipes));
+      if (updatedState.nextWeekPlan !== undefined) localStorage.setItem('ks_next_week_plan', JSON.stringify(updatedState.nextWeekPlan));
+      if (updatedState.customGroceries !== undefined) localStorage.setItem('ks_custom_groceries', JSON.stringify(updatedState.customGroceries));
+      if (updatedState.checkedGroceries !== undefined) localStorage.setItem('ks_checked_groceries', JSON.stringify(updatedState.checkedGroceries));
     } catch (e) {}
 
     if (user) {
@@ -447,6 +486,9 @@ export default function App() {
           workoutLibrary: updatedState.workoutLibrary !== undefined ? updatedState.workoutLibrary : workoutLibrary,
           weightData: updatedState.weightData !== undefined ? updatedState.weightData : weightData,
           recipes: updatedState.recipes !== undefined ? updatedState.recipes : recipes,
+          nextWeekPlan: updatedState.nextWeekPlan !== undefined ? updatedState.nextWeekPlan : nextWeekPlan,
+          customGroceries: updatedState.customGroceries !== undefined ? updatedState.customGroceries : customGroceries,
+          checkedGroceries: updatedState.checkedGroceries !== undefined ? updatedState.checkedGroceries : checkedGroceries,
           updatedAt: new Date().toISOString()
         }, { merge: true });
       } catch (err) {
@@ -739,12 +781,153 @@ export default function App() {
     setTimeout(() => setToastMessage(null), 3000);
   };
 
+  // --- Next Week Planner Handlers ---
+  const handleAddPlannedRecipeToNextWeek = () => {
+    const r = recipes.find(item => item.id === selectedPlannerRecipeToAdd);
+    if (!r) return;
+    const newPlannedMeal = {
+      id: `plan-${Date.now()}`,
+      recipeId: r.id,
+      name: r.name,
+      category: r.category,
+      cals: r.cals,
+      protein: r.protein,
+      carbs: r.carbs,
+      fat: r.fat,
+      ingredients: r.ingredients || []
+    };
+    const updatedPlan = {
+      ...nextWeekPlan,
+      [selectedPlanDay]: [...(nextWeekPlan[selectedPlanDay] || []), newPlannedMeal]
+    };
+    setNextWeekPlan(updatedPlan);
+    syncToCloudAndLocal({ nextWeekPlan: updatedPlan });
+    setModalType(null);
+    setToastMessage(`Added to ${selectedPlanDay}'s plan!`);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
+  const handleRemovePlannedRecipe = (dayName, mealId) => {
+    const updatedDayMeals = (nextWeekPlan[dayName] || []).filter(m => m.id !== mealId);
+    const updatedPlan = {
+      ...nextWeekPlan,
+      [dayName]: updatedDayMeals
+    };
+    setNextWeekPlan(updatedPlan);
+    syncToCloudAndLocal({ nextWeekPlan: updatedPlan });
+  };
+
+  // --- Shopping List Handlers & Aggregator ---
+  const handleToggleGroceryCheck = (itemId) => {
+    const updated = {
+      ...checkedGroceries,
+      [itemId]: !checkedGroceries[itemId]
+    };
+    setCheckedGroceries(updated);
+    syncToCloudAndLocal({ checkedGroceries: updated });
+  };
+
+  const handleAddCustomGrocery = (e) => {
+    e.preventDefault();
+    if (!newCustomGroceryText.trim()) return;
+    const newItem = {
+      id: `cg-${Date.now()}`,
+      name: newCustomGroceryText.trim(),
+      custom: true
+    };
+    const updated = {
+      ...customGroceries,
+      [activeShoppingWeek]: [newItem, ...(customGroceries[activeShoppingWeek] || [])]
+    };
+    setCustomGroceries(updated);
+    syncToCloudAndLocal({ customGroceries: updated });
+    setNewCustomGroceryText('');
+  };
+
+  const handleDeleteCustomGrocery = (itemId) => {
+    const updatedWeekList = (customGroceries[activeShoppingWeek] || []).filter(item => item.id !== itemId);
+    const updated = {
+      ...customGroceries,
+      [activeShoppingWeek]: updatedWeekList
+    };
+    setCustomGroceries(updated);
+    syncToCloudAndLocal({ customGroceries: updated });
+  };
+
+  const handleClearCheckedGroceries = () => {
+    const updatedChecked = { ...checkedGroceries };
+    Object.keys(updatedChecked).forEach(key => {
+      if (key.startsWith(`${activeShoppingWeek}-`)) {
+        delete updatedChecked[key];
+      }
+    });
+    setCheckedGroceries(updatedChecked);
+    syncToCloudAndLocal({ checkedGroceries: updatedChecked });
+    setToastMessage('Checked items cleared.');
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
+  // Compute Aggregated Ingredients for Shopping List
+  const getAggregatedShoppingList = () => {
+    const recipeIngredients = [];
+
+    if (activeShoppingWeek === 'current') {
+      // Pull from active current week schedule
+      activeSchedule.forEach(day => {
+        const dayMeals = customDays[day.id]?.meals || day.meals || [];
+        dayMeals.forEach(m => {
+          const matchRecipe = recipes.find(r => r.name.toLowerCase() === m.name.toLowerCase());
+          if (matchRecipe && matchRecipe.ingredients) {
+            matchRecipe.ingredients.forEach(ing => {
+              recipeIngredients.push({
+                id: `current-${m.name}-${ing}`,
+                name: ing,
+                source: m.name,
+                day: day.dayName
+              });
+            });
+          }
+        });
+      });
+    } else {
+      // Pull from next week planner
+      PLANNER_DAYS.forEach(dayName => {
+        const dayMeals = nextWeekPlan[dayName] || [];
+        dayMeals.forEach(m => {
+          if (m.ingredients && Array.isArray(m.ingredients)) {
+            m.ingredients.forEach(ing => {
+              recipeIngredients.push({
+                id: `upcoming-${m.name}-${ing}`,
+                name: ing,
+                source: m.name,
+                day: dayName
+              });
+            });
+          }
+        });
+      });
+    }
+
+    const customItems = (customGroceries[activeShoppingWeek] || []).map(item => ({
+      id: `${activeShoppingWeek}-${item.id}`,
+      name: item.name,
+      source: 'Custom Item',
+      custom: true,
+      originalId: item.id
+    }));
+
+    return [...customItems, ...recipeIngredients];
+  };
+
+  const currentShoppingItems = getAggregatedShoppingList();
+  const checkedShoppingCount = currentShoppingItems.filter(item => checkedGroceries[item.id]).length;
+
   const categories = ['All', 'Eggs', 'Beef', 'Fish', 'Poultry'];
   const filteredRecipes = recipeCategory === 'All' 
     ? recipes 
     : recipes.filter(r => r.category === recipeCategory);
 
-  // Dynamic Weight Delta & Progress Calculations (Unified across Dash & Stats)
+  // Dynamic Weight Delta & Progress Calculations
   const weightDiff = weightData.start - weightData.current;
   const isWeightLost = weightDiff >= 0;
   const absWeightDiff = Math.abs(weightDiff).toFixed(1);
@@ -753,7 +936,7 @@ export default function App() {
     ? Math.max(0, Math.min(100, Math.round((weightDiff / totalToLose) * 100)))
     : 0;
 
-  // Reset Weight Baseline Handler (Used in Stats tab & Modal)
+  // Reset Weight Baseline Handler
   const handleResetWeightProgress = () => {
     const confirmed = window.confirm(
       `Reset weight progress?\n\nThis will set your starting weight baseline to your current weight (${weightData.current} lbs) and clear old progression trends.`
@@ -1273,63 +1456,310 @@ export default function App() {
           </div>
         )}
 
-        {/* RECIPES TAB */}
+        {/* RECIPES, NEXT WEEK PLANNER & SHOPPING LIST TAB */}
         {activeTab === 'recipes' && (
-          <div className="space-y-3">
-            <div className="flex gap-1 overflow-x-auto pb-1 no-scrollbar">
-              {categories.map(cat => (
+          <div className="space-y-4">
+            
+            {/* Sub-Navigation: Catalog | Next Week Plan | Shopping List */}
+            <div className="bg-white p-1 rounded-2xl border border-[#eaeaea] shadow-2xs grid grid-cols-3 gap-1">
+              {[
+                { id: 'catalog', label: 'Cookbook' },
+                { id: 'planner', label: 'Next Week Plan' },
+                { id: 'shopping', label: 'Shopping List' }
+              ].map(sub => (
                 <button
-                  key={cat}
-                  onClick={() => setRecipeCategory(cat)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
-                    recipeCategory === cat ? 'text-white shadow-xs' : 'bg-white border border-[#eaeaea] text-slate-700 hover:bg-slate-50'
+                  key={sub.id}
+                  onClick={() => setRecipeSubTab(sub.id)}
+                  className={`py-2 text-[11px] font-black rounded-xl transition-all text-center ${
+                    recipeSubTab === sub.id
+                      ? 'text-white shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                   }`}
-                  style={recipeCategory === cat ? { backgroundColor: '#82bc41' } : {}}
+                  style={recipeSubTab === sub.id ? { backgroundColor: '#82bc41' } : {}}
                 >
-                  {cat}
+                  {sub.label}
                 </button>
               ))}
             </div>
 
-            <div className="space-y-2.5">
-              {filteredRecipes.map(recipe => (
-                <div key={recipe.id} className="bg-white rounded-2xl border border-[#eaeaea] p-4 shadow-xs">
-                  <div className="flex justify-between items-start mb-1.5">
-                    <div>
-                      <span className="text-[9px] font-black uppercase tracking-wider text-slate-500 block mb-0.5">
-                        {recipe.category}
-                      </span>
-                      <h3 className="text-xs font-black text-slate-900">{recipe.name}</h3>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <button 
-                        onClick={() => setActiveRecipeModal(recipe)}
-                        className="text-slate-700 hover:text-slate-900 p-1 bg-slate-100 rounded-lg border border-slate-200 text-[10px] font-bold px-2 py-1 flex items-center gap-1"
-                      >
-                        View <Icons.ExternalLink size={11} />
-                      </button>
-                      <button 
-                        onClick={() => handleDeleteRecipe(recipe.id)}
-                        className="text-slate-400 hover:text-red-600 p-1 bg-slate-100 rounded-lg border border-slate-200"
-                        title="Delete Recipe"
-                      >
-                        <Icons.Trash size={12} />
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">
-                    <span style={{ color: '#82bc41' }}>{recipe.cals} KCAL</span>
-                    <span>• {recipe.protein}g PRO</span>
-                    <span>• {recipe.carbs}g CARB</span>
-                  </div>
-
-                  <p className="text-xs text-slate-600 bg-[#fafafa] p-2.5 rounded-xl border border-[#eaeaea] leading-relaxed line-clamp-2">
-                    {recipe.instructions}
-                  </p>
+            {/* SUB-TAB 1: COOKBOOK / RECIPE CATALOG */}
+            {recipeSubTab === 'catalog' && (
+              <div className="space-y-3">
+                <div className="flex gap-1 overflow-x-auto pb-1 no-scrollbar">
+                  {categories.map(cat => (
+                    <button
+                      key={cat}
+                      onClick={() => setRecipeCategory(cat)}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
+                        recipeCategory === cat ? 'text-white shadow-xs' : 'bg-white border border-[#eaeaea] text-slate-700 hover:bg-slate-50'
+                      }`}
+                      style={recipeCategory === cat ? { backgroundColor: '#82bc41' } : {}}
+                    >
+                      {cat}
+                    </button>
+                  ))}
                 </div>
-              ))}
-            </div>
+
+                <div className="space-y-2.5">
+                  {filteredRecipes.map(recipe => (
+                    <div key={recipe.id} className="bg-white rounded-2xl border border-[#eaeaea] p-4 shadow-xs">
+                      <div className="flex justify-between items-start mb-1.5">
+                        <div>
+                          <span className="text-[9px] font-black uppercase tracking-wider text-slate-500 block mb-0.5">
+                            {recipe.category}
+                          </span>
+                          <h3 className="text-xs font-black text-slate-900">{recipe.name}</h3>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <button 
+                            onClick={() => setActiveRecipeModal(recipe)}
+                            className="text-slate-700 hover:text-slate-900 p-1 bg-slate-100 rounded-lg border border-slate-200 text-[10px] font-bold px-2 py-1 flex items-center gap-1"
+                          >
+                            View <Icons.ExternalLink size={11} />
+                          </button>
+                          <button 
+                            onClick={() => handleDeleteRecipe(recipe.id)}
+                            className="text-slate-400 hover:text-red-600 p-1 bg-slate-100 rounded-lg border border-slate-200"
+                            title="Delete Recipe"
+                          >
+                            <Icons.Trash size={12} />
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">
+                        <span style={{ color: '#82bc41' }}>{recipe.cals} KCAL</span>
+                        <span>• {recipe.protein}g PRO</span>
+                        <span>• {recipe.carbs}g CARB</span>
+                      </div>
+
+                      <p className="text-xs text-slate-600 bg-[#fafafa] p-2.5 rounded-xl border border-[#eaeaea] leading-relaxed line-clamp-2">
+                        {recipe.instructions}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* SUB-TAB 2: NEXT WEEK MEAL PLANNER */}
+            {recipeSubTab === 'planner' && (
+              <div className="space-y-3">
+                <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-3">
+                  <div className="flex justify-between items-center pb-2 border-b border-[#eaeaea]">
+                    <div>
+                      <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                        <Icons.Calendar size={14} style={{ color: '#82bc41' }} />
+                        Upcoming Week Meal Plan
+                      </h3>
+                      <p className="text-[10px] text-slate-500">Planned recipes automatically populate your shopping list</p>
+                    </div>
+                    <button
+                      onClick={() => setModalType('addPlanMeal')}
+                      className="px-3 py-1.5 text-[10px] font-black text-white rounded-xl shadow-xs flex items-center gap-1"
+                      style={{ backgroundColor: '#82bc41' }}
+                    >
+                      <Icons.Plus size={12} /> Add Recipe
+                    </button>
+                  </div>
+
+                  {/* Day Picker Pill Buttons */}
+                  <div className="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+                    {PLANNER_DAYS.map(day => {
+                      const count = (nextWeekPlan[day] || []).length;
+                      return (
+                        <button
+                          key={day}
+                          onClick={() => setSelectedPlanDay(day)}
+                          className={`py-1.5 px-3 rounded-xl text-[11px] font-bold shrink-0 transition-all border ${
+                            selectedPlanDay === day
+                              ? 'text-white border-transparent shadow-xs'
+                              : 'bg-white text-slate-700 border-[#eaeaea] hover:bg-slate-50'
+                          }`}
+                          style={selectedPlanDay === day ? { backgroundColor: '#82bc41' } : {}}
+                        >
+                          <span>{day.slice(0, 3)}</span>
+                          {count > 0 && (
+                            <span className="ml-1 text-[9px] px-1.5 py-0.2 rounded-full bg-black/20 text-white font-black">
+                              {count}
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Selected Day's Planned Dishes */}
+                  <div className="pt-2 space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs font-black text-slate-900 uppercase tracking-tight">
+                        {selectedPlanDay}'s Planned Meals
+                      </span>
+                      <span className="text-[10px] font-bold text-slate-500">
+                        {(nextWeekPlan[selectedPlanDay] || []).length} Dishes Selected
+                      </span>
+                    </div>
+
+                    {(nextWeekPlan[selectedPlanDay] || []).length === 0 ? (
+                      <div className="p-6 text-center text-xs text-slate-400 bg-[#fafafa] rounded-2xl border border-dashed border-[#eaeaea]">
+                        No recipes planned for {selectedPlanDay} yet. Tap <strong>"+ Add Recipe"</strong> above.
+                      </div>
+                    ) : (
+                      (nextWeekPlan[selectedPlanDay] || []).map(meal => (
+                        <div key={meal.id} className="p-3.5 bg-[#fafafa] rounded-2xl border border-[#eaeaea] flex items-center justify-between">
+                          <div>
+                            <span className="text-[9px] font-black uppercase text-slate-400 block mb-0.5">{meal.category}</span>
+                            <span className="text-xs font-black text-slate-900 block">{meal.name}</span>
+                            <span className="text-[10px] font-bold text-slate-500">
+                              {meal.cals} kcal • {meal.protein}g Protein • {(meal.ingredients || []).length} Ingredients
+                            </span>
+                          </div>
+                          <button
+                            onClick={() => handleRemovePlannedRecipe(selectedPlanDay, meal.id)}
+                            className="text-slate-400 hover:text-red-500 p-1"
+                            title="Remove from plan"
+                          >
+                            <Icons.Trash size={13} />
+                          </button>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* SUB-TAB 3: INTEGRATED GROCERY & SHOPPING LIST */}
+            {recipeSubTab === 'shopping' && (
+              <div className="space-y-4">
+                <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-4">
+                  
+                  {/* Shopping Header & Week Switcher Toggle */}
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pb-3 border-b border-[#eaeaea]">
+                    <div>
+                      <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                        <Icons.ShoppingCart size={14} style={{ color: '#82bc41' }} />
+                        Interactive Grocery List
+                      </h3>
+                      <p className="text-[10px] text-slate-500">Auto-compiled from your active ketogenic schedule & plan</p>
+                    </div>
+
+                    {/* Week Toggle: Current vs Upcoming */}
+                    <div className="bg-[#fafafa] p-1 rounded-xl border border-[#eaeaea] flex gap-1 self-stretch sm:self-auto">
+                      <button
+                        onClick={() => setActiveShoppingWeek('current')}
+                        className={`flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-[10px] font-black transition-all ${
+                          activeShoppingWeek === 'current'
+                            ? 'bg-slate-900 text-white shadow-xs'
+                            : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        Current Week
+                      </button>
+                      <button
+                        onClick={() => setActiveShoppingWeek('upcoming')}
+                        className={`flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-[10px] font-black transition-all ${
+                          activeShoppingWeek === 'upcoming'
+                            ? 'bg-slate-900 text-white shadow-xs'
+                            : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        Upcoming Week
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Add Custom Grocery Item Bar */}
+                  <form onSubmit={handleAddCustomGrocery} className="flex gap-2">
+                    <input
+                      type="text"
+                      placeholder={`Add item to ${activeShoppingWeek} shopping list...`}
+                      value={newCustomGroceryText}
+                      onChange={(e) => setNewCustomGroceryText(e.target.value)}
+                      className="flex-1 p-2.5 rounded-xl border border-slate-200 bg-[#fafafa] text-xs text-slate-900 font-bold focus:outline-none"
+                    />
+                    <button
+                      type="submit"
+                      className="px-4 py-2.5 text-white font-black text-xs rounded-xl shadow-xs shrink-0"
+                      style={{ backgroundColor: '#82bc41' }}
+                    >
+                      + Add
+                    </button>
+                  </form>
+
+                  {/* List Summary & Actions */}
+                  <div className="flex justify-between items-center text-xs pt-1">
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-wider">
+                      {currentShoppingItems.length} Total Items ({checkedShoppingCount} in basket)
+                    </span>
+                    {checkedShoppingCount > 0 && (
+                      <button
+                        onClick={handleClearCheckedGroceries}
+                        className="text-[10px] font-bold text-slate-500 hover:text-slate-900 underline"
+                      >
+                        Clear Checked
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Checklist of Aggregated Ingredients + Custom Items */}
+                  <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
+                    {currentShoppingItems.length === 0 ? (
+                      <div className="p-8 text-center text-xs text-slate-400 bg-[#fafafa] rounded-2xl border border-dashed border-[#eaeaea]">
+                        No items in this list yet. Assign meals to your{' '}
+                        {activeShoppingWeek === 'current' ? 'schedule' : 'Next Week Planner'} or add custom items above.
+                      </div>
+                    ) : (
+                      currentShoppingItems.map((item, idx) => {
+                        const isChecked = !!checkedGroceries[item.id];
+                        return (
+                          <div
+                            key={item.id || idx}
+                            className={`flex items-center justify-between p-3 rounded-xl border transition-all ${
+                              isChecked
+                                ? 'bg-slate-50 border-slate-200 opacity-60'
+                                : 'bg-white border-[#eaeaea]'
+                            }`}
+                          >
+                            <label className="flex items-center gap-3 cursor-pointer flex-1 mr-2">
+                              <input
+                                type="checkbox"
+                                checked={isChecked}
+                                onChange={() => handleToggleGroceryCheck(item.id)}
+                                className="w-4 h-4 rounded border-slate-300"
+                                style={{ accentColor: '#82bc41' }}
+                              />
+                              <div>
+                                <span className={`text-xs font-bold block ${isChecked ? 'line-through text-slate-400' : 'text-slate-900'}`}>
+                                  {item.name}
+                                </span>
+                                {item.source && (
+                                  <span className="text-[9px] text-slate-500 font-medium">
+                                    {item.custom ? 'Custom Entry' : `for ${item.source} (${item.day})`}
+                                  </span>
+                                )}
+                              </div>
+                            </label>
+
+                            {item.custom && (
+                              <button
+                                onClick={() => handleDeleteCustomGrocery(item.originalId)}
+                                className="text-slate-400 hover:text-red-500 p-1"
+                                title="Delete item"
+                              >
+                                <Icons.Trash size={12} />
+                              </button>
+                            )}
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+
+                </div>
+              </div>
+            )}
+
           </div>
         )}
 
@@ -1570,7 +2000,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* Historical Weight Trend Card - Unified with Dashboard Data */}
+            {/* Historical Weight Trend Card */}
             <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-2 border-b border-[#eaeaea]">
                 <div>
@@ -1598,9 +2028,8 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Dynamic Baseline Bars (Directly Connected to weightData) */}
+              {/* Dynamic Baseline Bars */}
               <div className="space-y-3 pt-1">
-                {/* Starting Baseline */}
                 <div className="space-y-1">
                   <div className="flex justify-between text-xs font-bold text-slate-700">
                     <span className="text-slate-500">Starting Baseline</span>
@@ -1611,7 +2040,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Current Weight with Net Delta */}
                 <div className="space-y-1">
                   <div className="flex justify-between text-xs font-bold text-slate-700">
                     <span className="text-slate-900 font-black">Current Weight</span>
@@ -1643,7 +2071,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Historical Weigh-in Log (If Available) */}
                 {weightHistory.length > 0 && (
                   <div className="pt-3 border-t border-[#eaeaea] space-y-2">
                     <span className="text-[9px] font-black uppercase tracking-wider text-slate-400 block">
@@ -1771,6 +2198,57 @@ export default function App() {
       </main>
 
       {/* --- MODALS --- */}
+
+      {/* Add Recipe to Next Week Planner Modal */}
+      {modalType === 'addPlanMeal' && (
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-xs z-50 flex items-end sm:items-center justify-center p-4">
+          <div className="bg-white rounded-3xl p-5 w-full max-w-sm border border-[#eaeaea] shadow-xl">
+            <div className="flex justify-between items-center mb-3">
+              <h3 className="text-xs font-black text-slate-900">Add to {selectedPlanDay}'s Plan</h3>
+              <button onClick={() => setModalType(null)} className="text-slate-400 hover:text-slate-900">
+                <Icons.X size={16} />
+              </button>
+            </div>
+            <div className="space-y-3">
+              <div>
+                <label className="text-[10px] font-bold text-slate-500 uppercase block mb-1">Select Day</label>
+                <select
+                  value={selectedPlanDay}
+                  onChange={(e) => setSelectedPlanDay(e.target.value)}
+                  className="w-full p-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-900 bg-[#fafafa] focus:outline-none"
+                >
+                  {PLANNER_DAYS.map(d => (
+                    <option key={d} value={d}>{d}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="text-[10px] font-bold text-slate-500 uppercase block mb-1">Choose Recipe</label>
+                <select
+                  value={selectedPlannerRecipeToAdd}
+                  onChange={(e) => setSelectedPlannerRecipeToAdd(e.target.value)}
+                  className="w-full p-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-900 bg-[#fafafa] focus:outline-none"
+                >
+                  {recipes.map(r => (
+                    <option key={r.id} value={r.id}>
+                      {r.name} ({r.cals} kcal, {r.protein}g P)
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <button
+                onClick={handleAddPlannedRecipeToNextWeek}
+                className="w-full py-2.5 text-white font-bold rounded-xl text-xs tracking-wide shadow-xs mt-2"
+                style={{ backgroundColor: '#82bc41' }}
+              >
+                Add Recipe to Plan
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Protocol Switcher Modal */}
       {modalType === 'protocol' && (
@@ -2104,7 +2582,6 @@ export default function App() {
                     const updated = { ...weightData, current: newCurrent };
                     setWeightData(updated);
 
-                    // Auto-record to weight history
                     const lastEntry = weightHistory[0];
                     const diff = lastEntry ? Number((newCurrent - lastEntry.weight).toFixed(1)) : 0;
                     const newEntry = {
