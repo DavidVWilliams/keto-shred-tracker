@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth';
-import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, setDoc, collection } from 'firebase/firestore';
 
 // --- Firebase Initialization ---
 const firebaseConfig = {
@@ -24,17 +24,14 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [appData, setAppData] = useState(null);
 
-  // Listen for Auth State Changes & Sync Firestore Profile safely
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
         try {
-          // Force a small delay or token refresh assurance for Firestore security context
-          await currentUser.getIdToken(true);
-          
-          const docRef = doc(db, "users", currentUser.uid);
-          const docSnap = await getDoc(docRef);
+          // Explicitly reference the 'users' collection using collection() + doc() helper
+          const userDocRef = doc(collection(db, "users"), currentUser.uid);
+          const docSnap = await getDoc(userDocRef);
           
           if (docSnap.exists()) {
             setAppData(docSnap.data());
@@ -44,7 +41,7 @@ export default function App() {
               displayName: currentUser.displayName || "User",
               initializedAt: new Date().toISOString() 
             };
-            await setDoc(docRef, defaultData);
+            await setDoc(userDocRef, defaultData);
             setAppData(defaultData);
           }
         } catch (err) {
