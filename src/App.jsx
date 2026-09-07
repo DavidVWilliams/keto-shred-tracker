@@ -53,7 +53,8 @@ const Icons = {
   Sliders: (p) => <Icon {...p} path='<line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/>' />,
   Zap: (p) => <Icon {...p} path='<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>' />,
   Award: (p) => <Icon {...p} path='<circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>' />,
-  ArrowRight: (p) => <Icon {...p} path='<line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>' />
+  TrendingUp: (p) => <Icon {...p} path='<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>' />,
+  Clipboard: (p) => <Icon {...p} path='<path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>' />
 };
 
 const INITIAL_WORKOUTS = [
@@ -64,246 +65,54 @@ const INITIAL_WORKOUTS = [
 ];
 
 const INITIAL_RECIPES = [
-  { 
-    id: 'egg-1', name: 'Cheesy Keto Scramble', category: 'Eggs', cals: 520, protein: 45, carbs: 4, fat: 36, 
-    ingredients: ['3 pasture-raised eggs', '1 tbsp grass-fed butter', '1 oz sharp cheddar cheese', 'Salt & pepper'], 
-    instructions: 'Melt butter in a skillet over medium heat. Crack eggs into a bowl, whisk lightly, and pour into pan. Stir gently to form soft curds. Top with cheddar in the final minute.' 
-  },
-  { 
-    id: 'egg-2', name: 'Anti-Inflammatory Turmeric Eggs', category: 'Eggs', cals: 480, protein: 38, carbs: 3, fat: 34, 
-    ingredients: ['3 pasture-raised eggs', '1/2 tsp turmeric', 'Pinch of black pepper', '1 tbsp butter', '1 cup baby spinach'], 
-    instructions: 'Sauté baby spinach in butter until wilted. Whisk eggs with turmeric and pepper, pour over spinach and scramble gently.' 
-  },
-  { 
-    id: 'egg-3', name: 'Bacon & Cheddar Omelet', category: 'Eggs', cals: 550, protein: 42, carbs: 2, fat: 41, 
-    ingredients: ['3 large eggs', '3 slices cooked bacon (crumbled)', '1 oz shredded cheddar', '1 tbsp butter'], 
-    instructions: 'Whisk eggs and pour into a buttered skillet over medium-low heat. Sprinkle crumbled bacon and cheddar on one half, fold over, and cook until melted.' 
-  },
-  { 
-    id: 'egg-4', name: 'Avocado Baked Eggs', category: 'Eggs', cals: 490, protein: 32, carbs: 5, fat: 38, 
-    ingredients: ['2 large avocados (halved and pitted)', '4 small pasture eggs', 'Chives', 'Salt & red pepper flakes'], 
-    instructions: 'Scoop out a bit of flesh from avocado halves to fit an egg yolk. Crack an egg into each avocado cavity. Bake at 425°F for 15 minutes.' 
-  },
-  { 
-    id: 'egg-5', name: 'Spinach & Feta Frittata Slice', category: 'Eggs', cals: 460, protein: 36, carbs: 4, fat: 32, 
-    ingredients: ['3 eggs', '1 oz crumbled feta', '1 cup spinach', '1 tbsp olive oil'], 
-    instructions: 'Sauté spinach in olive oil in an oven-safe skillet. Pour in whisked eggs, top with feta, and broil for 3 minutes until golden.' 
-  },
-  { 
-    id: 'egg-6', name: 'Mushroom & Swiss Egg White Scramble', category: 'Eggs', cals: 420, protein: 48, carbs: 3, fat: 22, 
-    ingredients: ['4 egg whites + 1 whole egg', '1/2 cup sliced button mushrooms', '1 oz Swiss cheese', '1 tbsp butter'], 
-    instructions: 'Sauté mushrooms in butter until tender. Pour in whisked whole egg and egg whites, scrambling until soft. Fold in Swiss cheese until melted.' 
-  },
-  { 
-    id: 'egg-7', name: 'Deviled Egg Salad with Bacon', category: 'Eggs', cals: 510, protein: 34, carbs: 2, fat: 40, 
-    ingredients: ['4 hard-boiled eggs (chopped)', '2 tbsp avocado oil mayo', '1 tsp Dijon mustard', '2 strips cooked bacon (crumbled)'], 
-    instructions: 'Mix chopped hard-boiled eggs with mayo, Dijon, salt, and pepper. Top generously with crispy crumbled bacon.' 
-  },
-  { 
-    id: 'egg-8', name: 'Pesto & Goat Cheese Scramble', category: 'Eggs', cals: 530, protein: 40, carbs: 3, fat: 39, 
-    ingredients: ['3 large eggs', '1 tbsp basil pesto', '1.5 oz goat cheese', '1 tbsp butter'], 
-    instructions: 'Whisk eggs with pesto. Cook in butter over medium-low heat. Fold in tangy goat cheese right before eggs finish setting.' 
-  },
-  { 
-    id: 'egg-9', name: 'Tomato & Basil Baked Shakshuka Eggs', category: 'Eggs', cals: 440, protein: 35, carbs: 8, fat: 29, 
-    ingredients: ['3 eggs', '1/2 cup low-carb crushed tomatoes', '1 garlic clove (minced)', '1 tbsp olive oil', 'Fresh basil'], 
-    instructions: 'Simmer tomatoes and garlic in olive oil. Make small wells in the sauce and crack eggs into them. Cover and poach on low until whites are set.' 
-  },
-  { 
-    id: 'egg-10', name: 'Cream Cheese Fluffy Scramble', category: 'Eggs', cals: 540, protein: 38, carbs: 2, fat: 42, 
-    ingredients: ['3 large eggs', '1.5 oz full-fat cream cheese', '1 tbsp grass-fed butter', 'Chives'], 
-    instructions: 'Whisk eggs thoroughly with softened cream cheese pieces. Cook slowly in melted butter over low heat for ultra-creamy, fluffy curds.' 
-  },
-  { 
-    id: 'egg-11', name: 'Ham & Cheddar Egg Cups', category: 'Eggs', cals: 470, protein: 44, carbs: 2, fat: 31, 
-    ingredients: ['3 large eggs', '2 oz diced deli ham', '1 oz cheddar cheese', '1 tbsp butter'], 
-    instructions: 'Crisp diced ham in a buttered skillet. Pour whisked eggs over top, scramble with cheddar until fully set.' 
-  },
-  { 
-    id: 'egg-12', name: 'Smoked Salmon & Scallion Scramble', category: 'Eggs', cals: 490, protein: 46, carbs: 2, fat: 33, 
-    ingredients: ['3 large eggs', '2 oz smoked salmon (torn)', '1 tbsp butter', 'Chopped scallions'], 
-    instructions: 'Melt butter in a pan, scramble eggs gently. Fold in torn smoked salmon and fresh chopped scallions in the final 30 seconds of heat.' 
-  },
-  { 
-    id: 'beef-1', name: 'Beef & Cabbage Skillet', category: 'Beef', cals: 650, protein: 55, carbs: 7, fat: 44, 
-    ingredients: ['8 oz 80/20 ground beef', '2 cups shredded green cabbage', '1 tbsp butter', '2 tbsp bone broth', 'Sea salt & garlic powder'], 
-    instructions: 'Brown ground beef in a large skillet. Add shredded cabbage and butter, sautéing until tender. Stir in bone broth and seasonings.' 
-  },
-  { 
-    id: 'beef-2', name: 'Weekly Steak Feast (Ribeye)', category: 'Beef', cals: 680, protein: 58, carbs: 1, fat: 48, 
-    ingredients: ['12 oz Ribeye steak', '2 tbsp butter', '1 fresh rosemary sprig', '2 crushed garlic cloves', 'Coarse sea salt'], 
-    instructions: 'Season ribeye with salt. Sear in a hot cast-iron skillet for 4 mins per side. Add butter, garlic, and rosemary, spooning melted butter continuously.' 
-  },
-  { 
-    id: 'beef-3', name: 'Garlic Butter Steak Bites', category: 'Beef', cals: 640, protein: 56, carbs: 1, fat: 45, 
-    ingredients: ['10 oz sirloin steak (cubed)', '2 tbsp butter', '3 minced garlic cloves', 'Oregano', 'Salt & pepper'], 
-    instructions: 'Sear sirloin cubes in a smoking hot skillet for 2 minutes. Reduce heat, toss with butter, garlic, and oregano for 1 minute before serving.' 
-  },
-  { 
-    id: 'beef-4', name: 'Keto Cheeseburger Bowl', category: 'Beef', cals: 620, protein: 52, carbs: 4, fat: 43, 
-    ingredients: ['8 oz ground beef', '2 oz cheddar cheese', '2 cups shredded lettuce', '2 tbsp special mayo-mustard sauce', 'Pickles'], 
-    instructions: 'Brown ground beef with salt and pepper. Serve over a bed of shredded lettuce topped with melted cheddar, pickles, and low-carb burger sauce.' 
-  },
-  { 
-    id: 'beef-5', name: 'Mushroom Swiss Ground Beef Bowl', category: 'Beef', cals: 590, protein: 50, carbs: 3, fat: 41, 
-    ingredients: ['8 oz ground beef', '1 cup sliced mushrooms', '1.5 oz Swiss cheese', '1 tbsp butter'], 
-    instructions: 'Sauté mushrooms in butter until golden, remove. Brown ground beef in the same pan, mix mushrooms back in, and top with melting Swiss cheese.' 
-  },
-  { 
-    id: 'beef-6', name: 'Keto Beef Stroganoff Bowl', category: 'Beef', cals: 660, protein: 54, carbs: 5, fat: 47, 
-    ingredients: ['8 oz sliced flank steak', '1/2 cup heavy cream', '1 cup sliced mushrooms', '1 tbsp butter', 'Dijon mustard'], 
-    instructions: 'Sear sliced flank steak and mushrooms in butter. Stir in heavy cream and Dijon, simmering until rich and thickened.' 
-  },
-  { 
-    id: 'beef-7', name: 'Bacon Wrapped Meatloaf Slice', category: 'Beef', cals: 610, protein: 48, carbs: 4, fat: 44, 
-    ingredients: ['8 oz ground beef', '1 egg', '1 oz almond flour', '2 strips bacon wrapped on top', 'Sugar-free ketchup glaze'], 
-    instructions: 'Mix beef, egg, almond flour, and seasonings. Shape into a mini loaf, wrap with bacon, glaze lightly, and bake at 375°F for 35 mins.' 
-  },
-  { 
-    id: 'beef-8', name: 'Classic弁当 New York Strip with Herb Butter', category: 'Beef', cals: 630, protein: 60, carbs: 0, fat: 42, 
-    ingredients: ['10 oz NY Strip steak', '2 tbsp compound herb butter', 'Sea salt & cracked pepper'], 
-    instructions: 'Pan-sear NY strip to medium-rare. Rest for 5 minutes, then top immediately with a melting pat of herb butter.' 
-  },
-  { 
-    id: 'beef-9', name: 'Spicy Beef & Pepper Stir-Fry', category: 'Beef', cals: 580, protein: 52, carbs: 6, fat: 38, 
-    ingredients: ['8 oz sliced flank steak', '1 cup sliced bell peppers', '1 tbsp avocado oil', 'Tamari soy sauce', 'Ginger & garlic'], 
-    instructions: 'Flash-fry sliced flank steak and bell peppers in avocado oil over high heat. Toss with tamari, minced ginger, and garlic.' 
-  },
-  { 
-    id: 'beef-10', name: 'Cheesy Taco Beef Skillet', category: 'Beef', cals: 610, protein: 53, carbs: 4, fat: 42, 
-    ingredients: ['8 oz ground beef', '1 tbsp keto taco seasoning', '2 oz Mexican blend cheese', '2 tbsp sour cream'], 
-    instructions: 'Brown ground beef with taco seasoning and 2 tbsp water. Melt Mexican blend cheese directly on top and garnish with sour cream.' 
-  },
-  { 
-    id: 'beef-11', name: 'Steak & Blue Cheese Salad', category: 'Beef', cals: 590, protein: 50, carbs: 3, fat: 41, 
-    ingredients: ['8 oz sliced sirloin steak', '2 cups mixed greens', '1.5 oz crumbled blue cheese', '2 tbsp olive oil & vinegar'], 
-    instructions: 'Grill or pan-sear sirloin steak. Lay warm steak slices over fresh mixed greens tossed with olive oil, vinegar, and crumbled blue cheese.' 
-  },
-  { 
-    id: 'beef-12', name: 'Slow-Simmered Beef Bone Broth Stew', category: 'Beef', cals: 540, protein: 58, carbs: 5, fat: 32, 
-    ingredients: ['8 oz cubed chuck roast', '2 cups rich beef bone broth', '1 cup chopped celery', '1 tbsp grass-fed butter'], 
-    instructions: 'Brown chuck roast cubes in butter, then simmer slowly in rich beef bone broth and chopped celery until fork-tender.' 
-  },
-  { 
-    id: 'fish-1', name: 'Ginger Salmon & Avo Bowl', category: 'Fish', cals: 620, protein: 46, carbs: 5, fat: 42, 
-    ingredients: ['6 oz wild salmon fillet', '1 tbsp ginger-infused avocado oil', '1/2 sliced avocado', '2 cups baby greens', 'Lemon juice'], 
-    instructions: 'Brush salmon with ginger oil and bake at 400°F for 12-15 mins. Serve over baby greens with fresh sliced avocado and lemon.' 
-  },
-  { 
-    id: 'fish-2', name: 'Lemon Garlic Butter Shrimp', category: 'Fish', cals: 490, protein: 46, carbs: 2, fat: 33, 
-    ingredients: ['10 oz large shrimp (peeled)', '3 tbsp butter', '4 minced garlic cloves', 'Fresh lemon juice', 'Parsley'], 
-    instructions: 'Sauté garlic in butter until fragrant. Add shrimp and cook for 2-3 mins until pink. Drizzle with lemon juice and garnish with parsley.' 
-  },
-  { 
-    id: 'fish-3', name: 'Crispy Pan-Seared White Fish & Asparagus', category: 'Fish', cals: 460, protein: 48, carbs: 4, fat: 28, 
-    ingredients: ['7 oz cod or halibut fillet', '10 spears asparagus', '2 tbsp butter', 'Lemon zest'], 
-    instructions: 'Pan-sear cod in butter until golden and flaky. Sauté asparagus spears in the same pan until tender-crisp.' 
-  },
-  { 
-    id: 'fish-4', name: 'Creamy Garlic Butter Scallops', category: 'Fish', cals: 510, protein: 42, carbs: 4, fat: 35, 
-    ingredients: ['8 oz sea scallops', '2 tbsp butter', '1/4 cup heavy cream', 'Minced garlic'], 
-    instructions: 'Sear sea scallops in a hot pan with butter for 2 mins per side; remove. Deglaze pan with cream and garlic to create a rich pan sauce.' 
-  },
-  { 
-    id: 'fish-5', name: 'Cajun Blackened Mahi Mahi', category: 'Fish', cals: 480, protein: 50, carbs: 2, fat: 30, 
-    ingredients: ['7 oz Mahi Mahi fillet', '1 tbsp Cajun spice rub', '2 tbsp butter'], 
-    instructions: 'Coat Mahi Mahi generously in Cajun spices. Sear in a screaming hot cast-iron skillet with butter for 3-4 mins per side.' 
-  },
-  { 
-    id: 'fish-6', name: 'Tuna & Avocado Lettuce Boats', category: 'Fish', cals: 450, protein: 44, carbs: 3, fat: 29, 
-    ingredients: ['1 can (6 oz) wild tuna (drained)', '2 tbsp avocado oil mayo', '1/2 diced avocado', 'Romaine lettuce leaves'], 
-    instructions: 'Mix tuna, mayo, and diced avocado. Spoon generous portions into crisp Romaine lettuce leaves for handheld wraps.' 
-  },
-  { 
-    id: 'fish-7', name: 'Baked Salmon with Pesto Crust', category: 'Fish', cals: 600, protein: 48, carbs: 2, fat: 43, 
-    ingredients: ['6 oz salmon fillet', '2 tbsp basil pesto', '1 tbsp grated parmesan'], 
-    instructions: 'Spread basil pesto evenly over the top of the salmon fillet, sprinkle with parmesan, and bake at 400°F until flaky.' 
-  },
-  { 
-    id: 'fish-8', name: 'Garlic Butter Sardines & Greens', category: 'Fish', cals: 470, protein: 42, carbs: 2, fat: 32, 
-    ingredients: ['2 cans fresh or packed sardines', '2 tbsp butter', 'Lemon juice', '2 cups spinach'], 
-    instructions: 'Warm sardines gently in butter and lemon juice, serving over a fresh bed of wilted spinach.' 
-  },
-  { 
-    id: 'fish-9', name: 'Creamy Tuscan Garlic Salmon', category: 'Fish', cals: 640, protein: 49, carbs: 5, fat: 46, 
-    ingredients: ['6 oz salmon fillet', '1/3 cup heavy cream', '2 tbsp sun-dried tomatoes', '1 cup spinach', '1 tbsp olive oil'], 
-    instructions: 'Sear salmon and set aside. In same pan, simmer heavy cream, sun-dried tomatoes, and spinach. Return salmon to sauce.' 
-  },
-  { 
-    id: 'fish-10', name: 'Lemon Herb Baked Trout', category: 'Fish', cals: 520, protein: 52, carbs: 1, fat: 34, 
-    ingredients: ['7 oz whole trout or fillet', '2 tbsp butter', 'Fresh dill', 'Lemon slices'], 
-    instructions: 'Top trout with butter pats, fresh dill, and lemon slices. Wrap in parchment paper and bake at 375°F for 18 minutes.' 
-  },
-  { 
-    id: 'fish-11', name: 'Chipotle Lime Shrimp Salad', category: 'Fish', cals: 490, protein: 45, carbs: 4, fat: 32, 
-    ingredients: ['8 oz shrimp', '1 tsp chipotle powder', 'Lime juice', '2 cups shredded cabbage', '2 tbsp mayo'], 
-    instructions: 'Sauté shrimp with chipotle powder and lime juice. Toss with shredded cabbage and creamy lime mayo dressing.' 
-  },
-  { 
-    id: 'fish-12', name: 'Sesame Crusted Ahi Tuna Steak', category: 'Fish', cals: 530, protein: 56, carbs: 2, fat: 31, 
-    ingredients: ['7 oz Ahi tuna steak', '1 tbsp black & white sesame seeds', '1 tbsp avocado oil', 'Tamari'], 
-    instructions: 'Press sesame seeds onto all sides of the Ahi tuna. Balance center rare.' 
-  },
-  { 
-    id: 'poultry-1', name: 'Crispy Chicken & Avocado Wrap', category: 'Poultry', cals: 590, protein: 48, carbs: 4, fat: 40, 
-    ingredients: ['6 oz shredded chicken breast', '2 eggs & 1 oz mozzarella (for cheese wrap shell)', '2 tbsp avocado oil mayo', '1/2 sliced avocado'], 
-    instructions: 'Melt mozzarella and beaten eggs in a small pan to form a zero-carb wrap shell. Fill with shredded chicken, mayo, and avocado.' 
-  },
-  { 
-    id: 'poultry-2', name: 'Creamy Tuscan Garlic Chicken', category: 'Poultry', cals: 610, protein: 52, carbs: 4, fat: 42, 
-    ingredients: ['2 chicken thighs', '1/2 cup heavy cream', '1/4 cup sun-dried tomatoes', '1 cup spinach', '2 garlic cloves'], 
-    instructions: 'Sear chicken thighs until golden; remove. Sauté garlic, sun-dried tomatoes, and heavy cream. Simmer with spinach and chicken.' 
-  },
-  { 
-    id: 'poultry-3', name: 'Bacon Ranch Chicken Skillet', category: 'Poultry', cals: 630, protein: 55, carbs: 2, fat: 44, 
-    ingredients: ['2 chicken breasts (cubed)', '3 strips bacon (chopped)', '2 tbsp ranch seasoning', '2 tbsp butter'], 
-    instructions: 'Crisp chopped bacon in a skillet, remove. Sear chicken cubes in the bacon fat and butter, toss with ranch seasoning and crispy bacon.' 
-  },
-  { 
-    id: 'poultry-4', name: 'Lemon Herb Roasted Turkey Thigh', category: 'Poultry', cals: 580, protein: 58, carbs: 1, fat: 37, 
-    ingredients: ['8 oz turkey thigh', '2 tbsp butter', 'Lemon zest & rosemary', 'Garlic powder'], 
-    instructions: 'Rub turkey thigh with butter, lemon zest, rosemary, and garlic. Roast at 375°F for 35 minutes until skin is crispy.' 
-  },
-  { 
-    id: 'poultry-5', name: 'Buffalo Chicken & Blue Cheese Bowl', category: 'Poultry', cals: 570, protein: 53, carbs: 2, fat: 38, 
-    ingredients: ['7 oz shredded grilled chicken', '3 tbsp buffalo hot sauce', '1.5 oz blue cheese crumbles', '2 tbsp butter'], 
-    instructions: 'Warm shredded chicken in a pan with melted butter and buffalo hot sauce. Top with cooling blue cheese crumbles.' 
-  },
-  { 
-    id: 'poultry-6', name: 'Garlic Parmesan Chicken Wings', category: 'Poultry', cals: 650, protein: 46, carbs: 1, fat: 51, 
-    ingredients: ['8 chicken wings', '3 tbsp butter', '1/4 cup grated parmesan', 'Minced garlic'], 
-    instructions: 'Bake chicken wings at 400°F for 45 minutes until extra crispy. Toss immediately in melted butter, garlic, and parmesan.' 
-  },
-  { 
-    id: 'poultry-7', name: 'Creamy Mushroom Chicken Thighs', category: 'Poultry', cals: 600, protein: 50, carbs: 4, fat: 43, 
-    ingredients: ['2 chicken thighs', '1 cup sliced mushrooms', '1/3 cup heavy cream', '1 tbsp butter'], 
-    instructions: 'Sear chicken thighs in butter; remove. Sauté mushrooms, stir in heavy cream, and simmer chicken until sauce coats the back of a spoon.' 
-  },
-  { 
-    id: 'poultry-8', name: 'Prosciutto Wrapped Chicken Breast', category: 'Poultry', cals: 560, protein: 56, carbs: 1, fat: 36, 
-    ingredients: ['1 large chicken breast', '2 slices prosciutto', '1 tbsp olive oil', 'Sage leaves'], 
-    instructions: 'Wrap chicken breast tightly with prosciutto slices and fresh sage leaves. Pan-sear in olive oil and bake until cooked through.' 
-  },
-  { 
-    id: 'poultry-9', name: 'Chicken Fajita Lettuce Cups', category: 'Poultry', cals: 510, protein: 48, carbs: 6, fat: 32, 
-    ingredients: ['7 oz sliced chicken breast', '1 cup bell peppers & onions', '1 tbsp avocado oil', 'Fajita spices'], 
-    instructions: 'Sauté sliced chicken, bell peppers, and onions in avocado oil with fajita spices. Spoon into crisp lettuce cups.' 
-  },
-  { 
-    id: 'poultry-10', name: 'Pesto Chicken Bake with Mozzarella', category: 'Poultry', cals: 620, protein: 54, carbs: 2, fat: 44, 
-    ingredients: ['2 chicken breasts', '2 tbsp basil pesto', '2 oz fresh mozzarella slices'], 
-    instructions: 'Top chicken breasts with pesto and fresh mozzarella. Bake at 375°F for 25 minutes until cheese is bubbly and golden.' 
-  },
-  { 
-    id: 'poultry-11', name: 'Creamy Spinach Stuffed Chicken', category: 'Poultry', cals: 590, protein: 53, carbs: 3, fat: 40, 
-    ingredients: ['1 large chicken breast (pocket sliced)', '2 oz cream cheese', '1/2 cup cooked spinach', 'Garlic powder'], 
-    instructions: 'Stuff a pocket in chicken breast with cream cheese and cooked spinach. Secure with toothpicks and bake until tender.' 
-  },
-  { 
-    id: 'poultry-12', name: 'Chicken Thigh & Avocado Salad', category: 'Poultry', cals: 570, protein: 49, carbs: 4, fat: 39, 
-    ingredients: ['2 grilled chicken thighs (sliced)', '2 cups mixed greens', '1/2 sliced avocado', 'Olive oil & lime dressing'], 
-    instructions: 'Lay warm grilled chicken thigh slices over a bed of mixed greens and fresh avocado. Dress with olive oil and lime.' 
-  }
+  { id: 'egg-1', name: 'Cheesy Keto Scramble', category: 'Eggs', cals: 520, protein: 45, carbs: 4, fat: 36, ingredients: ['3 pasture-raised eggs', '1 tbsp grass-fed butter', '1 oz sharp cheddar cheese', 'Salt & pepper'], instructions: 'Melt butter in a skillet over medium heat. Crack eggs into a bowl, whisk lightly, and pour into pan. Stir gently to form soft curds. Top with cheddar in the final minute.' },
+  { id: 'egg-2', name: 'Anti-Inflammatory Turmeric Eggs', category: 'Eggs', cals: 480, protein: 38, carbs: 3, fat: 34, ingredients: ['3 pasture-raised eggs', '1/2 tsp turmeric', 'Pinch of black pepper', '1 tbsp butter', '1 cup baby spinach'], instructions: 'Sauté baby spinach in butter until wilted. Whisk eggs with turmeric and pepper, pour over spinach and scramble gently.' },
+  { id: 'egg-3', name: 'Bacon & Cheddar Omelet', category: 'Eggs', cals: 550, protein: 42, carbs: 2, fat: 41, ingredients: ['3 large eggs', '3 slices cooked bacon (crumbled)', '1 oz shredded cheddar', '1 tbsp butter'], instructions: 'Whisk eggs and pour into a buttered skillet over medium-low heat. Sprinkle crumbled bacon and cheddar on one half, fold over, and cook until melted.' },
+  { id: 'egg-4', name: 'Avocado Baked Eggs', category: 'Eggs', cals: 490, protein: 32, carbs: 5, fat: 38, ingredients: ['2 large avocados (halved and pitted)', '4 small pasture eggs', 'Chives', 'Salt & red pepper flakes'], instructions: 'Scoop out a bit of flesh from avocado halves to fit an egg yolk. Crack an egg into each avocado cavity. Bake at 425°F for 15 minutes.' },
+  { id: 'egg-5', name: 'Spinach & Feta Frittata Slice', category: 'Eggs', cals: 460, protein: 36, carbs: 4, fat: 32, ingredients: ['3 eggs', '1 oz crumbled feta', '1 cup spinach', '1 tbsp olive oil'], instructions: 'Sauté spinach in olive oil in an oven-safe skillet. Pour in whisked eggs, top with feta, and broil for 3 minutes until golden.' },
+  { id: 'egg-6', name: 'Mushroom & Swiss Egg White Scramble', category: 'Eggs', cals: 420, protein: 48, carbs: 3, fat: 22, ingredients: ['4 egg whites + 1 whole egg', '1/2 cup sliced button mushrooms', '1 oz Swiss cheese', '1 tbsp butter'], instructions: 'Sauté mushrooms in butter until tender. Pour in whisked whole egg and egg whites, scrambling until soft. Fold in Swiss cheese until melted.' },
+  { id: 'egg-7', name: 'Deviled Egg Salad with Bacon', category: 'Eggs', cals: 510, protein: 34, carbs: 2, fat: 40, ingredients: ['4 hard-boiled eggs (chopped)', '2 tbsp avocado oil mayo', '1 tsp Dijon mustard', '2 strips cooked bacon (crumbled)'], instructions: 'Mix chopped hard-boiled eggs with mayo, Dijon, salt, and pepper. Top generously with crispy crumbled bacon.' },
+  { id: 'egg-8', name: 'Pesto & Goat Cheese Scramble', category: 'Eggs', cals: 530, protein: 40, carbs: 3, fat: 39, ingredients: ['3 large eggs', '1 tbsp basil pesto', '1.5 oz goat cheese', '1 tbsp butter'], instructions: 'Whisk eggs with pesto. Cook in butter over medium-low heat. Fold in tangy goat cheese right before eggs finish setting.' },
+  { id: 'egg-9', name: 'Tomato & Basil Baked Shakshuka Eggs', category: 'Eggs', cals: 440, protein: 35, carbs: 8, fat: 29, ingredients: ['3 eggs', '1/2 cup low-carb crushed tomatoes', '1 garlic clove (minced)', '1 tbsp olive oil', 'Fresh basil'], instructions: 'Simmer tomatoes and garlic in olive oil. Make small wells in the sauce and crack eggs into them. Cover and poach on low until whites are set.' },
+  { id: 'egg-10', name: 'Cream Cheese Fluffy Scramble', category: 'Eggs', cals: 540, protein: 38, carbs: 2, fat: 42, ingredients: ['3 large eggs', '1.5 oz full-fat cream cheese', '1 tbsp grass-fed butter', 'Chives'], instructions: 'Whisk eggs thoroughly with softened cream cheese pieces. Cook slowly in melted butter over low heat for ultra-creamy, fluffy curds.' },
+  { id: 'egg-11', name: 'Ham & Cheddar Egg Cups', category: 'Eggs', cals: 470, protein: 44, carbs: 2, fat: 31, ingredients: ['3 large eggs', '2 oz diced deli ham', '1 oz cheddar cheese', '1 tbsp butter'], instructions: 'Crisp diced ham in a buttered skillet. Pour whisked eggs over top, scramble with cheddar until fully set.' },
+  { id: 'egg-12', name: 'Smoked Salmon & Scallion Scramble', category: 'Eggs', cals: 490, protein: 46, carbs: 2, fat: 33, ingredients: ['3 large eggs', '2 oz smoked salmon (torn)', '1 tbsp butter', 'Chopped scallions'], instructions: 'Melt butter in a pan, scramble eggs gently. Fold in torn smoked salmon and fresh chopped scallions in the final 30 seconds of heat.' },
+  { id: 'beef-1', name: 'Beef & Cabbage Skillet', category: 'Beef', cals: 650, protein: 55, carbs: 7, fat: 44, ingredients: ['8 oz 80/20 ground beef', '2 cups shredded green cabbage', '1 tbsp butter', '2 tbsp bone broth', 'Sea salt & garlic powder'], instructions: 'Brown ground beef in a large skillet. Add shredded cabbage and butter, sautéing until tender. Stir in bone broth and seasonings.' },
+  { id: 'beef-2', name: 'Weekly Steak Feast (Ribeye)', category: 'Beef', cals: 680, protein: 58, carbs: 1, fat: 48, ingredients: ['12 oz Ribeye steak', '2 tbsp butter', '1 fresh rosemary sprig', '2 crushed garlic cloves', 'Coarse sea salt'], instructions: 'Season ribeye with salt. Sear in a hot cast-iron skillet for 4 mins per side. Add butter, garlic, and rosemary, spooning melted butter continuously.' },
+  { id: 'beef-3', name: 'Garlic Butter Steak Bites', category: 'Beef', cals: 640, protein: 56, carbs: 1, fat: 45, ingredients: ['10 oz sirloin steak (cubed)', '2 tbsp butter', '3 minced garlic cloves', 'Oregano', 'Salt & pepper'], instructions: 'Sear sirloin cubes in a smoking hot skillet for 2 minutes. Reduce heat, toss with butter, garlic, and oregano for 1 minute before serving.' },
+  { id: 'beef-4', name: 'Keto Cheeseburger Bowl', category: 'Beef', cals: 620, protein: 52, carbs: 4, fat: 43, ingredients: ['8 oz ground beef', '2 oz cheddar cheese', '2 cups shredded lettuce', '2 tbsp special mayo-mustard sauce', 'Pickles'], instructions: 'Brown ground beef with salt and pepper. Serve over a bed of shredded lettuce topped with melted cheddar, pickles, and low-carb burger sauce.' },
+  { id: 'beef-5', name: 'Mushroom Swiss Ground Beef Bowl', category: 'Beef', cals: 590, protein: 50, carbs: 3, fat: 41, ingredients: ['8 oz ground beef', '1 cup sliced mushrooms', '1.5 oz Swiss cheese', '1 tbsp butter'], instructions: 'Sauté mushrooms in butter until golden, remove. Brown ground beef in the same pan, mix mushrooms back in, and top with melting Swiss cheese.' },
+  { id: 'beef-6', name: 'Keto Beef Stroganoff Bowl', category: 'Beef', cals: 660, protein: 54, carbs: 5, fat: 47, ingredients: ['8 oz sliced flank steak', '1/2 cup heavy cream', '1 cup sliced mushrooms', '1 tbsp butter', 'Dijon mustard'], instructions: 'Sear sliced flank steak and mushrooms in butter. Stir in heavy cream and Dijon, simmering until rich and thickened.' },
+  { id: 'beef-7', name: 'Bacon Wrapped Meatloaf Slice', category: 'Beef', cals: 610, protein: 48, carbs: 4, fat: 44, ingredients: ['8 oz ground beef', '1 egg', '1 oz almond flour', '2 strips bacon wrapped on top', 'Sugar-free ketchup glaze'], instructions: 'Mix beef, egg, almond flour, and seasonings. Shape into a mini loaf, wrap with bacon, glaze lightly, and bake at 375°F for 35 mins.' },
+  { id: 'beef-8', name: 'Classic New York Strip with Herb Butter', category: 'Beef', cals: 630, protein: 60, carbs: 0, fat: 42, ingredients: ['10 oz NY Strip steak', '2 tbsp compound herb butter', 'Sea salt & cracked pepper'], instructions: 'Pan-sear NY strip to medium-rare. Rest for 5 minutes, then top immediately with a melting pat of herb butter.' },
+  { id: 'beef-9', name: 'Spicy Beef & Pepper Stir-Fry', category: 'Beef', cals: 580, protein: 52, carbs: 6, fat: 38, ingredients: ['8 oz sliced flank steak', '1 cup sliced bell peppers', '1 tbsp avocado oil', 'Tamari soy sauce', 'Ginger & garlic'], instructions: 'Flash-fry sliced flank steak and bell peppers in avocado oil over high heat. Toss with tamari, minced ginger, and garlic.' },
+  { id: 'beef-10', name: 'Cheesy Taco Beef Skillet', category: 'Beef', cals: 610, protein: 53, carbs: 4, fat: 42, ingredients: ['8 oz ground beef', '1 tbsp keto taco seasoning', '2 oz Mexican blend cheese', '2 tbsp sour cream'], instructions: 'Brown ground beef with taco seasoning and 2 tbsp water. Melt Mexican blend cheese directly on top and garnish with sour cream.' },
+  { id: 'beef-11', name: 'Steak & Blue Cheese Salad', category: 'Beef', cals: 590, protein: 50, carbs: 3, fat: 41, ingredients: ['8 oz sliced sirloin steak', '2 cups mixed greens', '1.5 oz crumbled blue cheese', '2 tbsp olive oil & vinegar'], instructions: 'Grill or pan-sear sirloin steak. Lay warm steak slices over fresh mixed greens tossed with olive oil, vinegar, and crumbled blue cheese.' },
+  { id: 'beef-12', name: 'Slow-Simmered Beef Bone Broth Stew', category: 'Beef', cals: 540, protein: 58, carbs: 5, fat: 32, ingredients: ['8 oz cubed chuck roast', '2 cups rich beef bone broth', '1 cup chopped celery', '1 tbsp grass-fed butter'], instructions: 'Brown chuck roast cubes in butter, then simmer slowly in rich beef bone broth and chopped celery until fork-tender.' },
+  { id: 'fish-1', name: 'Ginger Salmon & Avo Bowl', category: 'Fish', cals: 620, protein: 46, carbs: 5, fat: 42, ingredients: ['6 oz wild salmon fillet', '1 tbsp ginger-infused avocado oil', '1/2 sliced avocado', '2 cups baby greens', 'Lemon juice'], instructions: 'Brush salmon with ginger oil and bake at 400°F for 12-15 mins. Serve over baby greens with fresh sliced avocado and lemon.' },
+  { id: 'fish-2', name: 'Lemon Garlic Butter Shrimp', category: 'Fish', cals: 490, protein: 46, carbs: 2, fat: 33, ingredients: ['10 oz large shrimp (peeled)', '3 tbsp butter', '4 minced garlic cloves', 'Fresh lemon juice', 'Parsley'], instructions: 'Sauté garlic in butter until fragrant. Add shrimp and cook for 2-3 mins until pink. Drizzle with lemon juice and garnish with parsley.' },
+  { id: 'fish-3', name: 'Crispy Pan-Seared White Fish & Asparagus', category: 'Fish', cals: 460, protein: 48, carbs: 4, fat: 28, ingredients: ['7 oz cod or halibut fillet', '10 spears asparagus', '2 tbsp butter', 'Lemon zest'], instructions: 'Pan-sear cod in butter until golden and flaky. Sauté asparagus spears in the same pan until tender-crisp.' },
+  { id: 'fish-4', name: 'Creamy Garlic Butter Scallops', category: 'Fish', cals: 510, protein: 42, carbs: 4, fat: 35, ingredients: ['8 oz sea scallops', '2 tbsp butter', '1/4 cup heavy cream', 'Minced garlic'], instructions: 'Sear sea scallops in a hot pan with butter for 2 mins per side; remove. Deglaze pan with cream and garlic to create a rich pan sauce.' },
+  { id: 'fish-5', name: 'Cajun Blackened Mahi Mahi', category: 'Fish', cals: 480, protein: 50, carbs: 2, fat: 30, ingredients: ['7 oz Mahi Mahi fillet', '1 tbsp Cajun spice rub', '2 tbsp butter'], instructions: 'Coat Mahi Mahi generously in Cajun spices. Sear in a screaming hot cast-iron skillet with butter for 3-4 mins per side.' },
+  { id: 'fish-6', name: 'Tuna & Avocado Lettuce Boats', category: 'Fish', cals: 450, protein: 44, carbs: 3, fat: 29, ingredients: ['1 can (6 oz) wild tuna (drained)', '2 tbsp avocado oil mayo', '1/2 diced avocado', 'Romaine lettuce leaves'], instructions: 'Mix tuna, mayo, and diced avocado. Spoon generous portions into crisp Romaine lettuce leaves for handheld wraps.' },
+  { id: 'fish-7', name: 'Baked Salmon with Pesto Crust', category: 'Fish', cals: 600, protein: 48, carbs: 2, fat: 43, ingredients: ['6 oz salmon fillet', '2 tbsp basil pesto', '1 tbsp grated parmesan'], instructions: 'Spread basil pesto evenly over the top of the salmon fillet, sprinkle with parmesan, and bake at 400°F until flaky.' },
+  { id: 'fish-8', name: 'Garlic Butter Sardines & Greens', category: 'Fish', cals: 470, protein: 42, carbs: 2, fat: 32, ingredients: ['2 cans fresh or packed sardines', '2 tbsp butter', 'Lemon juice', '2 cups spinach'], instructions: 'Warm sardines gently in butter and lemon juice, serving over a fresh bed of wilted spinach.' },
+  { id: 'fish-9', name: 'Creamy Tuscan Garlic Salmon', category: 'Fish', cals: 640, protein: 49, carbs: 5, fat: 46, ingredients: ['6 oz salmon fillet', '1/3 cup heavy cream', '2 tbsp sun-dried tomatoes', '1 cup spinach', '1 tbsp olive oil'], instructions: 'Sear salmon and set aside. In same pan, simmer heavy cream, sun-dried tomatoes, and spinach. Return salmon to sauce.' },
+  { id: 'fish-10', name: 'Lemon Herb Baked Trout', category: 'Fish', cals: 520, protein: 52, carbs: 1, fat: 34, ingredients: ['7 oz whole trout or fillet', '2 tbsp butter', 'Fresh dill', 'Lemon slices'], instructions: 'Top trout with butter pats, fresh dill, and lemon slices. Wrap in parchment paper and bake at 375°F for 18 minutes.' },
+  { id: 'fish-11', name: 'Chipotle Lime Shrimp Salad', category: 'Fish', cals: 490, protein: 45, carbs: 4, fat: 32, ingredients: ['8 oz shrimp', '1 tsp chipotle powder', 'Lime juice', '2 cups shredded cabbage', '2 tbsp mayo'], instructions: 'Sauté shrimp with chipotle powder and lime juice. Toss with shredded cabbage and creamy lime mayo dressing.' },
+  { id: 'fish-12', name: 'Sesame Crusted Ahi Tuna Steak', category: 'Fish', cals: 530, protein: 56, carbs: 2, fat: 31, ingredients: ['7 oz Ahi tuna steak', '1 tbsp black & white sesame seeds', '1 tbsp avocado oil', 'Tamari'], instructions: 'Press sesame seeds onto all sides of the Ahi tuna. Balance center rare.' },
+  { id: 'poultry-1', name: 'Crispy Chicken & Avocado Wrap', category: 'Poultry', cals: 590, protein: 48, carbs: 4, fat: 40, ingredients: ['6 oz shredded chicken breast', '2 eggs & 1 oz mozzarella (for cheese wrap shell)', '2 tbsp avocado oil mayo', '1/2 sliced avocado'], instructions: 'Melt mozzarella and beaten eggs in a small pan to form a zero-carb wrap shell. Fill with shredded chicken, mayo, and avocado.' },
+  { id: 'poultry-2', name: 'Creamy Tuscan Garlic Chicken', category: 'Poultry', cals: 610, protein: 52, carbs: 4, fat: 42, ingredients: ['2 chicken thighs', '1/2 cup heavy cream', '1/4 cup sun-dried tomatoes', '1 cup spinach', '2 garlic cloves'], instructions: 'Sear chicken thighs until golden; remove. Sauté garlic, sun-dried tomatoes, and heavy cream. Simmer with spinach and chicken.' },
+  { id: 'poultry-3', name: 'Bacon Ranch Chicken Skillet', category: 'Poultry', cals: 630, protein: 55, carbs: 2, fat: 44, ingredients: ['2 chicken breasts (cubed)', '3 strips bacon (chopped)', '2 tbsp ranch seasoning', '2 tbsp butter'], instructions: 'Crisp chopped bacon in a skillet, remove. Sear chicken cubes in the bacon fat and butter, toss with ranch seasoning and crispy bacon.' },
+  { id: 'poultry-4', name: 'Lemon Herb Roasted Turkey Thigh', category: 'Poultry', cals: 580, protein: 58, carbs: 1, fat: 37, ingredients: ['8 oz turkey thigh', '2 tbsp butter', 'Lemon zest & rosemary', 'Garlic powder'], instructions: 'Rub turkey thigh with butter, lemon zest, rosemary, and garlic. Roast at 375°F for 35 minutes until skin is crispy.' },
+  { id: 'poultry-5', name: 'Buffalo Chicken & Blue Cheese Bowl', category: 'Poultry', cals: 570, protein: 53, carbs: 2, fat: 38, ingredients: ['7 oz shredded grilled chicken', '3 tbsp buffalo hot sauce', '1.5 oz blue cheese crumbles', '2 tbsp butter'], instructions: 'Warm shredded chicken in a pan with melted butter and buffalo hot sauce. Top with cooling blue cheese crumbles.' },
+  { id: 'poultry-6', name: 'Garlic Parmesan Chicken Wings', category: 'Poultry', cals: 650, protein: 46, carbs: 1, fat: 51, ingredients: ['8 chicken wings', '3 tbsp butter', '1/4 cup grated parmesan', 'Minced garlic'], instructions: 'Bake chicken wings at 400°F for 45 minutes until extra crispy. Toss immediately in melted butter, garlic, and parmesan.' },
+  { id: 'poultry-7', name: 'Creamy Mushroom Chicken Thighs', category: 'Poultry', cals: 600, protein: 50, carbs: 4, fat: 43, ingredients: ['2 chicken thighs', '1 cup sliced mushrooms', '1/3 cup heavy cream', '1 tbsp butter'], instructions: 'Sear chicken thighs in butter; remove. Sauté mushrooms, stir in heavy cream, and simmer chicken until sauce coats the back of a spoon.' },
+  { id: 'poultry-8', name: 'Prosciutto Wrapped Chicken Breast', category: 'Poultry', cals: 560, protein: 56, carbs: 1, fat: 36, ingredients: ['1 large chicken breast', '2 slices prosciutto', '1 tbsp olive oil', 'Sage leaves'], instructions: 'Wrap chicken breast tightly with prosciutto slices and fresh sage leaves. Pan-sear in olive oil and bake until cooked through.' },
+  { id: 'poultry-9', name: 'Chicken Fajita Lettuce Cups', category: 'Poultry', cals: 510, protein: 48, carbs: 6, fat: 32, ingredients: ['7 oz sliced chicken breast', '1 cup bell peppers & onions', '1 tbsp avocado oil', 'Fajita spices'], instructions: 'Sauté sliced chicken, bell peppers, and onions in avocado oil with average fajita spices. Spoon into crisp lettuce cups.' },
+  { id: 'poultry-10', name: 'Pesto Chicken Bake with Mozzarella', category: 'Poultry', cals: 620, protein: 54, carbs: 2, fat: 44, ingredients: ['2 chicken breasts', '2 tbsp basil pesto', '2 oz fresh mozzarella slices'], instructions: 'Top chicken breasts with pesto and fresh mozzarella. Bake at 375°F for 25 minutes until cheese is bubbly and golden.' },
+  { id: 'poultry-11', name: 'Creamy Spinach Stuffed Chicken', category: 'Poultry', cals: 590, protein: 53, carbs: 3, fat: 40, ingredients: ['1 large chicken breast (pocket sliced)', '2 oz cream cheese', '1/2 cup cooked spinach', 'Garlic powder'], instructions: 'Stuff a pocket in chicken breast with cream cheese and cooked spinach. Secure with toothpicks and bake until tender.' },
+  { id: 'poultry-12', name: 'Chicken Thigh & Avocado Salad', category: 'Poultry', cals: 570, protein: 49, carbs: 4, fat: 39, ingredients: ['2 grilled chicken thighs (sliced)', '2 cups mixed greens', '1/2 sliced avocado', 'Olive oil & lime dressing'], instructions: 'Lay warm grilled chicken thigh slices over a bed of mixed greens and fresh avocado. Dress with olive oil and lime.' }
 ];
 
 // --- 8 Fasting Presets ---
@@ -503,10 +312,28 @@ export default function App() {
     try { return JSON.parse(localStorage.getItem('ks_fasting') || '{"active":false, "startTime":null, "preset":36, "lastCompletedFast":null}'); } catch { return { active: false, startTime: null, preset: 36, lastCompletedFast: null }; }
   });
 
-  // Fasting History Log State (Saved in user profile)
+  // Fasting History Log State
   const [fastingHistory, setFastingHistory] = useState(() => {
     try { return JSON.parse(localStorage.getItem('ks_fasting_history') || '[]'); } catch { return []; }
   });
+
+  // Weight History State (For Analytics & Trends)
+  const [weightHistory, setWeightHistory] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('ks_weight_history') || JSON.stringify([
+        { id: 'wh-init-1', date: 'Start', weight: 205, diff: 0 },
+        { id: 'wh-init-2', date: 'Current', weight: 198, diff: -7.0 }
+      ]));
+    } catch {
+      return [{ id: 'wh-init-1', date: 'Start', weight: 205, diff: 0 }];
+    }
+  });
+
+  // Historical Daily Journal Notes
+  const [journalNotes, setJournalNotes] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('ks_journal_notes') || '[]'); } catch { return []; }
+  });
+  const [newJournalText, setNewJournalText] = useState('');
 
   // Custom Workouts & Meals Overrides
   const [customDays, setCustomDays] = useState(() => {
@@ -531,13 +358,9 @@ export default function App() {
   // Toast feedback state
   const [toastMessage, setToastMessage] = useState(null);
 
-  // Recipe Detail Modal State
-  const [activeRecipeModal, setActiveRecipeModal] = useState(null);
-
-  // Recipe Category Filter
-  const [recipeCategory, setRecipeCategory] = useState('All');
-
   // Modals
+  const [activeRecipeModal, setActiveRecipeModal] = useState(null);
+  const [recipeCategory, setRecipeCategory] = useState('All');
   const [modalType, setModalType] = useState(null);
 
   // Inputs for adding items
@@ -566,6 +389,8 @@ export default function App() {
             if (data.completion) { setCompletion(data.completion); localStorage.setItem('ks_completion', JSON.stringify(data.completion)); }
             if (data.fastingState) { setFastingState(data.fastingState); localStorage.setItem('ks_fasting', JSON.stringify(data.fastingState)); }
             if (data.fastingHistory) { setFastingHistory(data.fastingHistory); localStorage.setItem('ks_fasting_history', JSON.stringify(data.fastingHistory)); }
+            if (data.weightHistory) { setWeightHistory(data.weightHistory); localStorage.setItem('ks_weight_history', JSON.stringify(data.weightHistory)); }
+            if (data.journalNotes) { setJournalNotes(data.journalNotes); localStorage.setItem('ks_journal_notes', JSON.stringify(data.journalNotes)); }
             if (data.customDays) { setCustomDays(data.customDays); localStorage.setItem('ks_custom_days', JSON.stringify(data.customDays)); }
             if (data.workoutLibrary) { setWorkoutLibrary(data.workoutLibrary); localStorage.setItem('ks_workout_library', JSON.stringify(data.workoutLibrary)); }
             if (data.weightData) { setWeightData(data.weightData); localStorage.setItem('ks_weight', JSON.stringify(data.weightData)); }
@@ -577,6 +402,8 @@ export default function App() {
               completion,
               fastingState,
               fastingHistory,
+              weightHistory,
+              journalNotes,
               customDays,
               workoutLibrary,
               weightData,
@@ -599,6 +426,8 @@ export default function App() {
       if (updatedState.completion !== undefined) localStorage.setItem('ks_completion', JSON.stringify(updatedState.completion));
       if (updatedState.fastingState !== undefined) localStorage.setItem('ks_fasting', JSON.stringify(updatedState.fastingState));
       if (updatedState.fastingHistory !== undefined) localStorage.setItem('ks_fasting_history', JSON.stringify(updatedState.fastingHistory));
+      if (updatedState.weightHistory !== undefined) localStorage.setItem('ks_weight_history', JSON.stringify(updatedState.weightHistory));
+      if (updatedState.journalNotes !== undefined) localStorage.setItem('ks_journal_notes', JSON.stringify(updatedState.journalNotes));
       if (updatedState.customDays !== undefined) localStorage.setItem('ks_custom_days', JSON.stringify(updatedState.customDays));
       if (updatedState.workoutLibrary !== undefined) localStorage.setItem('ks_workout_library', JSON.stringify(updatedState.workoutLibrary));
       if (updatedState.weightData !== undefined) localStorage.setItem('ks_weight', JSON.stringify(updatedState.weightData));
@@ -613,6 +442,8 @@ export default function App() {
           completion: updatedState.completion !== undefined ? updatedState.completion : completion,
           fastingState: updatedState.fastingState !== undefined ? updatedState.fastingState : fastingState,
           fastingHistory: updatedState.fastingHistory !== undefined ? updatedState.fastingHistory : fastingHistory,
+          weightHistory: updatedState.weightHistory !== undefined ? updatedState.weightHistory : weightHistory,
+          journalNotes: updatedState.journalNotes !== undefined ? updatedState.journalNotes : journalNotes,
           customDays: updatedState.customDays !== undefined ? updatedState.customDays : customDays,
           workoutLibrary: updatedState.workoutLibrary !== undefined ? updatedState.workoutLibrary : workoutLibrary,
           weightData: updatedState.weightData !== undefined ? updatedState.weightData : weightData,
@@ -713,10 +544,10 @@ export default function App() {
     return `${h} hr${h > 1 ? 's' : ''} ${m > 0 ? `${m} min${m > 1 ? 's' : ''}` : ''}`;
   };
 
-  // Current Fasting Elapsed Hours (Decimal)
+  // Current Fasting Elapsed Hours
   const currentElapsedHours = fastingElapsed / (1000 * 60 * 60);
 
-  // Dynamic Metabolic Phase Calculations (Only 1 Phase Active at a time)
+  // Dynamic Metabolic Phase Calculations (Only 1 Phase Active)
   let currentPhaseIndex = METABOLIC_PHASES.findIndex(
     p => currentElapsedHours >= p.minHours && currentElapsedHours < p.maxHours
   );
@@ -725,18 +556,15 @@ export default function App() {
   }
   const activePhase = METABOLIC_PHASES[currentPhaseIndex];
 
-  // Progress through the active phase (0% - 100%)
   const phaseSpan = activePhase.maxHours - activePhase.minHours;
   const hoursIntoCurrentPhase = Math.max(0, currentElapsedHours - activePhase.minHours);
   const activePhaseProgress = fastingState.active
     ? Math.min(100, Math.max(0, Math.round((hoursIntoCurrentPhase / phaseSpan) * 100)))
     : 0;
 
-  // Dynamic Tip for Current Hour within this active phase
   const activeTip = activePhase.insights.find(ins => currentElapsedHours <= ins.maxH)?.tip 
     || activePhase.insights[activePhase.insights.length - 1]?.tip;
 
-  // Next phase countdown
   const nextPhase = METABOLIC_PHASES[currentPhaseIndex + 1];
   const msToNextPhase = nextPhase ? Math.max(0, (nextPhase.minHours * 3600 * 1000) - fastingElapsed) : null;
 
@@ -781,6 +609,22 @@ export default function App() {
     });
     return total;
   }, 0);
+
+  // --- Analytical Calculations ---
+  const totalFastingHours = fastingHistory.reduce((sum, f) => sum + (f.durationHours || 0), 0);
+  const avgFastHours = fastingHistory.length > 0 ? (totalFastingHours / fastingHistory.length).toFixed(1) : 0;
+  const longestFastHours = fastingHistory.length > 0 ? Math.max(...fastingHistory.map(f => f.durationHours || 0)).toFixed(1) : 0;
+  const fastsCompletedCount = fastingHistory.filter(f => f.hitGoal).length;
+  const fastSuccessRate = fastingHistory.length > 0 ? Math.round((fastsCompletedCount / fastingHistory.length) * 100) : 100;
+
+  // Workout Consistency Rate
+  const totalWeeklyScheduledWorkouts = activeSchedule.reduce((acc, d) => acc + (customDays[d.id]?.workouts || d.workouts || []).length, 0);
+  const totalCompletedWorkouts = activeSchedule.reduce((acc, d) => {
+    const dayWkts = customDays[d.id]?.workouts || d.workouts || [];
+    const comp = completion[d.id] || {};
+    return acc + dayWkts.filter(w => comp[w.id]).length;
+  }, 0);
+  const workoutConsistencyRate = totalWeeklyScheduledWorkouts > 0 ? Math.round((totalCompletedWorkouts / totalWeeklyScheduledWorkouts) * 100) : 0;
 
   // Workout Handlers
   const handleRemoveWorkoutFromDay = (workoutId) => {
@@ -880,7 +724,23 @@ export default function App() {
     setModalType(null);
   };
 
-  // Recipe Categories
+  const handleAddJournalNote = (e) => {
+    e.preventDefault();
+    if (!newJournalText.trim()) return;
+    const newEntry = {
+      id: `jn-${Date.now()}`,
+      date: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }),
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      text: newJournalText.trim()
+    };
+    const updatedNotes = [newEntry, ...journalNotes];
+    setJournalNotes(updatedNotes);
+    syncToCloudAndLocal({ journalNotes: updatedNotes });
+    setNewJournalText('');
+    setToastMessage('Journal entry saved!');
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
   const categories = ['All', 'Eggs', 'Beef', 'Fish', 'Poultry'];
   const filteredRecipes = recipeCategory === 'All' 
     ? recipes 
@@ -988,18 +848,19 @@ export default function App() {
           </div>
         </div>
 
-        {/* Tab Navigation */}
-        <div className="flex border-b border-[#eaeaea] -mx-5 px-5 gap-6">
+        {/* Tab Navigation - Includes Stats/Journal */}
+        <div className="flex border-b border-[#eaeaea] -mx-5 px-5 gap-4 overflow-x-auto no-scrollbar">
           {[
             { id: 'dashboard', icon: Icons.Activity, label: 'Dash' },
             { id: 'schedule', icon: Icons.Calendar, label: 'Schedule' },
-            { id: 'recipes', icon: Icons.BookOpen, label: 'Recipes' },
-            { id: 'fasting', icon: Icons.Clock, label: 'Fasting' }
+            { id: 'fasting', icon: Icons.Clock, label: 'Fasting' },
+            { id: 'stats', icon: Icons.TrendingUp, label: 'Stats' },
+            { id: 'recipes', icon: Icons.BookOpen, label: 'Recipes' }
           ].map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-1.5 py-2.5 text-xs font-bold transition-all border-b-2 -mb-[1px] ${
+              className={`flex items-center gap-1.5 py-2.5 text-xs font-bold transition-all border-b-2 -mb-[1px] whitespace-nowrap ${
                 activeTab === tab.id ? 'text-slate-900' : 'text-slate-500 border-transparent hover:text-slate-900'
               }`}
               style={activeTab === tab.id ? { borderColor: '#82bc41' } : {}}
@@ -1384,6 +1245,183 @@ export default function App() {
           </div>
         )}
 
+        {/* PROGRESS & ANALYTICS TAB (NEW) */}
+        {activeTab === 'stats' && (
+          <div className="space-y-4">
+            
+            {/* Top Stat KPI Highlights */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              <div className="bg-white p-3.5 rounded-2xl border border-[#eaeaea] shadow-xs text-center">
+                <span className="text-[9px] font-black uppercase tracking-wider text-slate-500 block">Total Fasting</span>
+                <span className="text-lg font-black text-slate-900">{totalFastingHours.toFixed(0)}h</span>
+                <span className="text-[9px] text-slate-500 block mt-0.5">{fastingHistory.length} sessions</span>
+              </div>
+              <div className="bg-white p-3.5 rounded-2xl border border-[#eaeaea] shadow-xs text-center">
+                <span className="text-[9px] font-black uppercase tracking-wider text-slate-500 block">Avg Fast</span>
+                <span className="text-lg font-black text-slate-900">{avgFastHours}h</span>
+                <span className="text-[9px] text-emerald-600 font-bold block mt-0.5">{fastSuccessRate}% hit goal</span>
+              </div>
+              <div className="bg-white p-3.5 rounded-2xl border border-[#eaeaea] shadow-xs text-center">
+                <span className="text-[9px] font-black uppercase tracking-wider text-slate-500 block">Net Weight</span>
+                <span className="text-lg font-black text-slate-900" style={{ color: isWeightLost ? '#82bc41' : '#e11d48' }}>
+                  {isWeightLost ? `-${absWeightDiff}` : `+${absWeightDiff}`} lbs
+                </span>
+                <span className="text-[9px] text-slate-500 block mt-0.5">Goal: {weightData.goal} lbs</span>
+              </div>
+              <div className="bg-white p-3.5 rounded-2xl border border-[#eaeaea] shadow-xs text-center">
+                <span className="text-[9px] font-black uppercase tracking-wider text-slate-500 block">Consistency</span>
+                <span className="text-lg font-black text-slate-900">{workoutConsistencyRate}%</span>
+                <span className="text-[9px] text-slate-500 block mt-0.5">{totalCompletedWorkouts} workouts</span>
+              </div>
+            </div>
+
+            {/* Historical Weight Trend Card */}
+            <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-4">
+              <div className="flex items-center justify-between pb-2 border-b border-[#eaeaea]">
+                <div>
+                  <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                    <Icons.TrendingUp size={14} style={{ color: '#82bc41' }} />
+                    Weight Progression Trend
+                  </h3>
+                  <p className="text-[10px] text-slate-500">Historical weigh-ins with delta tracking</p>
+                </div>
+                <button
+                  onClick={() => setModalType('weight')}
+                  className="px-2.5 py-1 text-[10px] font-black text-white rounded-lg shadow-xs"
+                  style={{ backgroundColor: '#82bc41' }}
+                >
+                  + Log Weight
+                </button>
+              </div>
+
+              {/* Visual Bars for Weight History */}
+              <div className="space-y-2">
+                {weightHistory.map((item, idx) => {
+                  const percentOfGoal = Math.min(100, Math.max(15, Math.round(((215 - item.weight) / (215 - weightData.goal)) * 100)));
+                  return (
+                    <div key={item.id || idx} className="space-y-1">
+                      <div className="flex justify-between text-xs font-bold text-slate-700">
+                        <span>{item.date}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-slate-900 font-extrabold">{item.weight} lbs</span>
+                          {item.diff !== undefined && item.diff !== 0 && (
+                            <span className={`text-[10px] font-black ${item.diff < 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                              {item.diff < 0 ? `${item.diff} lbs` : `+${item.diff} lbs`}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full rounded-full transition-all duration-300"
+                          style={{ width: `${percentOfGoal}%`, backgroundColor: '#82bc41' }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Fasting Endurance Metrics */}
+            <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-3">
+              <div className="flex items-center justify-between pb-2 border-b border-[#eaeaea]">
+                <div>
+                  <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                    <Icons.Clock size={14} style={{ color: '#82bc41' }} />
+                    Fasting Endurance Stats
+                  </h3>
+                  <p className="text-[10px] text-slate-500">Cumulative metabolic endurance</p>
+                </div>
+                <span className="text-[10px] font-black text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+                  Longest: {longestFastHours}h
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 pt-1">
+                <div className="bg-[#fafafa] p-3 rounded-2xl border border-[#eaeaea]">
+                  <span className="text-[9px] font-black text-slate-500 uppercase block">Weekly BDP Burpees</span>
+                  <span className="text-base font-black text-slate-900">{weeklyBdpMinutes} / 80 Mins</span>
+                  <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden mt-1.5">
+                    <div 
+                      className="h-full rounded-full" 
+                      style={{ width: `${Math.min(100, (weeklyBdpMinutes / 80) * 100)}%`, backgroundColor: '#82bc41' }} 
+                    />
+                  </div>
+                </div>
+
+                <div className="bg-[#fafafa] p-3 rounded-2xl border border-[#eaeaea]">
+                  <span className="text-[9px] font-black text-slate-500 uppercase block">Fasting Target Rate</span>
+                  <span className="text-base font-black text-slate-900">{fastSuccessRate}% On-Target</span>
+                  <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden mt-1.5">
+                    <div 
+                      className="h-full rounded-full" 
+                      style={{ width: `${fastSuccessRate}%`, backgroundColor: '#82bc41' }} 
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Daily Journal & Notes Section */}
+            <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-3">
+              <div className="flex items-center justify-between pb-2 border-b border-[#eaeaea]">
+                <div>
+                  <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                    <Icons.Clipboard size={14} style={{ color: '#82bc41' }} />
+                    Protocol Journal & Check-ins
+                  </h3>
+                  <p className="text-[10px] text-slate-500">Log joint comfort, energy, ketone levels, or refeed notes</p>
+                </div>
+              </div>
+
+              <form onSubmit={handleAddJournalNote} className="space-y-2">
+                <textarea
+                  value={newJournalText}
+                  onChange={(e) => setNewJournalText(e.target.value)}
+                  placeholder="Record today's notes (e.g., Felt sharp during 20m burpees, joints felt pain-free, broken fast with bone broth)..."
+                  className="w-full p-3 rounded-xl border border-slate-200 bg-[#fafafa] text-xs text-slate-900 font-medium focus:outline-none focus:border-slate-400 min-h-[70px]"
+                />
+                <button
+                  type="submit"
+                  className="w-full py-2.5 text-white font-black text-xs rounded-xl shadow-xs transition-all"
+                  style={{ backgroundColor: '#82bc41' }}
+                >
+                  Save Journal Entry
+                </button>
+              </form>
+
+              <div className="space-y-2 pt-2 max-h-48 overflow-y-auto pr-1">
+                {journalNotes.length === 0 ? (
+                  <p className="text-xs text-slate-400 italic text-center py-2">No journal entries logged yet.</p>
+                ) : (
+                  journalNotes.map(item => (
+                    <div key={item.id} className="p-3 bg-[#fafafa] rounded-2xl border border-[#eaeaea] space-y-1">
+                      <div className="flex justify-between items-center text-[10px] font-black text-slate-500">
+                        <span>{item.date} • {item.time}</span>
+                        <button
+                          onClick={() => {
+                            const updated = journalNotes.filter(j => j.id !== item.id);
+                            setJournalNotes(updated);
+                            syncToCloudAndLocal({ journalNotes: updated });
+                          }}
+                          className="text-slate-400 hover:text-red-500"
+                        >
+                          <Icons.Trash size={12} />
+                        </button>
+                      </div>
+                      <p className="text-xs text-slate-800 font-medium leading-relaxed">
+                        {item.text}
+                      </p>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+
+          </div>
+        )}
+
         {/* RECIPES TAB */}
         {activeTab === 'recipes' && (
           <div className="space-y-3">
@@ -1444,7 +1482,7 @@ export default function App() {
           </div>
         )}
 
-        {/* FASTING TAB - ONLY ACTIVE METABOLIC PHASE SHOWN (ONE REPLACES THE OTHER) */}
+        {/* FASTING TAB */}
         {activeTab === 'fasting' && (
           <div className="space-y-4">
             
@@ -1457,7 +1495,6 @@ export default function App() {
                 </span>
               </div>
               
-              {/* Digital Stopwatch */}
               <div className="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight tabular-nums font-mono py-1">
                 {formatTime(fastingElapsed)}
               </div>
@@ -1568,7 +1605,7 @@ export default function App() {
               </div>
             )}
 
-            {/* SINGLE DYNAMIC METABOLIC PHASE CARD (One Replaces the Other) */}
+            {/* SINGLE DYNAMIC METABOLIC PHASE CARD */}
             <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-[#eaeaea]">
                 <div>
@@ -1592,7 +1629,6 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Live Stage Progress Bar */}
               {fastingState.active && (
                 <div className="space-y-1.5">
                   <div className="flex justify-between text-[10px] font-bold text-slate-600">
@@ -1608,7 +1644,6 @@ export default function App() {
                 </div>
               )}
 
-              {/* Detailed Physiological Summary for This Phase */}
               <div className="bg-[#fafafa] p-3.5 rounded-2xl border border-[#eaeaea] space-y-2">
                 <p className="text-xs text-slate-700 leading-relaxed font-medium">
                   {activePhase.summary}
@@ -1622,7 +1657,6 @@ export default function App() {
                 )}
               </div>
 
-              {/* Biomarkers & Next Phase Countdown */}
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pt-1">
                 <div className="text-[10px] font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200">
                   Biomarkers: <span className="text-slate-900 font-extrabold">{activePhase.biomarkers}</span>
@@ -2047,9 +2081,23 @@ export default function App() {
                   step="0.1"
                   value={weightData.current}
                   onChange={(e) => {
-                    const updated = { ...weightData, current: parseFloat(e.target.value) || 0 };
+                    const newCurrent = parseFloat(e.target.value) || 0;
+                    const updated = { ...weightData, current: newCurrent };
                     setWeightData(updated);
-                    syncToCloudAndLocal({ weightData: updated });
+
+                    // Auto-record to weight history
+                    const lastEntry = weightHistory[0];
+                    const diff = lastEntry ? Number((newCurrent - lastEntry.weight).toFixed(1)) : 0;
+                    const newEntry = {
+                      id: `wh-${Date.now()}`,
+                      date: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+                      weight: newCurrent,
+                      diff: diff
+                    };
+                    const updatedHistory = [newEntry, ...weightHistory.slice(0, 9)];
+                    setWeightHistory(updatedHistory);
+
+                    syncToCloudAndLocal({ weightData: updated, weightHistory: updatedHistory });
                   }}
                   className="w-full p-2.5 rounded-xl border border-slate-200 bg-[#fafafa] font-bold text-slate-900 text-xs mt-1 focus:outline-none" 
                 />
