@@ -41,7 +41,7 @@ const Icons = {
   BookOpen: (p) => <Icon {...p} path='<path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>' />,
   Activity: (p) => <Icon {...p} path='<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>' />,
   Clock: (p) => <Icon {...p} path='<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>' />,
-  Settings: (p) => <Icon {...p} path='<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l-.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06-.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>' />,
+  Settings: (p) => <Icon {...p} path='<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l-.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06-.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>' />,
   X: (p) => <Icon {...p} path='<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>' />,
   Plus: (p) => <Icon {...p} path='<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>' />,
   Trash: (p) => <Icon {...p} path='<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>' />,
@@ -117,7 +117,6 @@ const INITIAL_RECIPES = [
   { id: 'poultry-12', name: 'Chicken Thigh & Avocado Salad', category: 'Poultry', cals: 570, protein: 49, carbs: 4, fat: 39, ingredients: ['2 grilled chicken thighs (sliced)', '2 cups mixed greens', '1/2 sliced avocado', 'Olive oil & lime dressing'], instructions: 'Lay warm grilled chicken thigh slices over a bed of mixed greens and fresh avocado. Dress with olive oil and lime.' }
 ];
 
-// --- Curated Keto-Friendly Foods Database ---
 const KETO_FRIENDLY_FOODS = [
   {
     category: "Fats & Oils",
@@ -273,6 +272,7 @@ const METABOLIC_PHASES = [
   }
 ];
 
+// --- 5 Master Ketogenic Protocols (Only Week 1 Workouts Preset, Zero Preset Meals) ---
 const PROTOCOLS = {
   adf: {
     id: 'adf',
@@ -281,13 +281,13 @@ const PROTOCOLS = {
     tagline: 'Alternate Day Fasting • 36h Fasting / Feast Cycle',
     defaultPreset: 36,
     schedule: [
-      { id: 1, dayName: 'Monday', dayType: 'standard', cals: 1650, protein: 155, carbs: 20, fat: 120, workouts: [{ id: 'w-mon-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-mon-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-mon-2', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }] },
+      { id: 1, dayName: 'Monday', dayType: 'standard', cals: 1650, protein: 155, carbs: 20, fat: 120, workouts: [{ id: 'w-mon-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [] },
       { id: 2, dayName: 'Tuesday', dayType: 'fasting', cals: 0, protein: 0, carbs: 0, fat: 0, workouts: [{ id: 'w-tue-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-tue-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
-      { id: 3, dayName: 'Wednesday', dayType: 'adf-eat', cals: 2000, protein: 175, carbs: 25, fat: 140, workouts: [{ id: 'w-wed-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-wed-1', name: 'Anti-Inflammatory Turmeric Eggs', cals: 480, protein: 38, carbs: 3, fat: 34 }, { id: 'm-wed-2', name: 'Ginger Salmon & Avo Bowl', cals: 620, protein: 46, carbs: 5, fat: 42 }] },
+      { id: 3, dayName: 'Wednesday', dayType: 'adf-eat', cals: 2000, protein: 175, carbs: 25, fat: 140, workouts: [{ id: 'w-wed-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [] },
       { id: 4, dayName: 'Thursday', dayType: 'fasting', cals: 0, protein: 0, carbs: 0, fat: 0, workouts: [{ id: 'w-thu-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-thu-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
-      { id: 5, dayName: 'Friday', dayType: 'adf-eat', cals: 2000, protein: 175, carbs: 25, fat: 140, workouts: [{ id: 'w-fri-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-fri-1', name: 'Crispy Chicken & Avocado Wrap', cals: 590, protein: 48, carbs: 4, fat: 40 }, { id: 'm-fri-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }] },
-      { id: 6, dayName: 'Saturday', dayType: 'standard', cals: 1650, protein: 155, carbs: 20, fat: 120, workouts: [{ id: 'w-sat-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-sat-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-sat-2', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }] },
-      { id: 0, dayName: 'Sunday', dayType: 'standard', cals: 1650, protein: 155, carbs: 20, fat: 120, workouts: [{ id: 'w-sun-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: [{ id: 'm-sun-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-sun-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }] }
+      { id: 5, dayName: 'Friday', dayType: 'adf-eat', cals: 2000, protein: 175, carbs: 25, fat: 140, workouts: [{ id: 'w-fri-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [] },
+      { id: 6, dayName: 'Saturday', dayType: 'standard', cals: 1650, protein: 155, carbs: 20, fat: 120, workouts: [{ id: 'w-sat-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [] },
+      { id: 0, dayName: 'Sunday', dayType: 'standard', cals: 1650, protein: 155, carbs: 20, fat: 120, workouts: [{ id: 'w-sun-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: [] }
     ]
   },
   '16_8': {
@@ -297,13 +297,13 @@ const PROTOCOLS = {
     tagline: 'Daily Time-Restricted Eating • 16h Fast / 8h Eating Window',
     defaultPreset: 16,
     schedule: [
-      { id: 1, dayName: 'Monday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-mon-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-mon-1', name: 'Bacon & Cheddar Omelet', cals: 550, protein: 42, carbs: 2, fat: 41 }, { id: 'm-mon-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }] },
-      { id: 2, dayName: 'Tuesday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-tue-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-tue-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [{ id: 'm-tue-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-tue-2', name: 'Garlic Butter Steak Bites', cals: 640, protein: 56, carbs: 1, fat: 45 }] },
-      { id: 3, dayName: 'Wednesday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-wed-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-wed-1', name: 'Anti-Inflammatory Turmeric Eggs', cals: 480, protein: 38, carbs: 3, fat: 34 }, { id: 'm-wed-2', name: 'Ginger Salmon & Avo Bowl', cals: 620, protein: 46, carbs: 5, fat: 42 }] },
-      { id: 4, dayName: 'Thursday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-thu-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-thu-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [{ id: 'm-thu-1', name: 'Spinach & Feta Frittata Slice', cals: 460, protein: 36, carbs: 4, fat: 32 }, { id: 'm-thu-2', name: 'Keto Cheeseburger Bowl', cals: 620, protein: 52, carbs: 4, fat: 43 }] },
-      { id: 5, dayName: 'Friday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-fri-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-fri-1', name: 'Crispy Chicken & Avocado Wrap', cals: 590, protein: 48, carbs: 4, fat: 40 }, { id: 'm-fri-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }] },
-      { id: 6, dayName: 'Saturday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-sat-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-sat-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-sat-2', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }] },
-      { id: 0, dayName: 'Sunday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-sun-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: [{ id: 'm-sun-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-sun-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }] }
+      { id: 1, dayName: 'Monday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-mon-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [] },
+      { id: 2, dayName: 'Tuesday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-tue-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-tue-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
+      { id: 3, dayName: 'Wednesday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-wed-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [] },
+      { id: 4, dayName: 'Thursday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-thu-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-thu-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
+      { id: 5, dayName: 'Friday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-fri-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [] },
+      { id: 6, dayName: 'Saturday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-sat-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [] },
+      { id: 0, dayName: 'Sunday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-sun-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: [] }
     ]
   },
   omad: {
@@ -313,13 +313,13 @@ const PROTOCOLS = {
     tagline: 'One Meal A Day • 23h Fast / High-Density Keto Feast',
     defaultPreset: 23,
     schedule: [
-      { id: 1, dayName: 'Monday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-mon-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-mon-1', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }, { id: 'm-mon-2', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }] },
-      { id: 2, dayName: 'Tuesday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-tue-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-tue-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [{ id: 'm-tue-1', name: 'Ginger Salmon & Avo Bowl', cals: 620, protein: 46, carbs: 5, fat: 42 }, { id: 'm-tue-2', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }] },
-      { id: 3, dayName: 'Wednesday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-wed-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-wed-1', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }, { id: 'm-wed-2', name: 'Anti-Inflammatory Turmeric Eggs', cals: 480, protein: 38, carbs: 3, fat: 34 }] },
-      { id: 4, dayName: 'Thursday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-thu-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-thu-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [{ id: 'm-thu-1', name: 'Keto Cheeseburger Bowl', cals: 620, protein: 52, carbs: 4, fat: 43 }, { id: 'm-thu-2', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }] },
-      { id: 5, dayName: 'Friday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-fri-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-fri-1', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }, { id: 'm-fri-2', name: 'Crispy Chicken & Avocado Wrap', cals: 590, protein: 48, carbs: 4, fat: 40 }] },
-      { id: 6, dayName: 'Saturday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-sat-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-sat-1', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }, { id: 'm-sat-2', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }] },
-      { id: 0, dayName: 'Sunday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-sun-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: [{ id: 'm-sun-1', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }, { id: 'm-sun-2', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }] }
+      { id: 1, dayName: 'Monday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-mon-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [] },
+      { id: 2, dayName: 'Tuesday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-tue-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-tue-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
+      { id: 3, dayName: 'Wednesday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-wed-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [] },
+      { id: 4, dayName: 'Thursday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-thu-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-thu-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
+      { id: 5, dayName: 'Friday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-fri-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [] },
+      { id: 6, dayName: 'Saturday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-sat-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [] },
+      { id: 0, dayName: 'Sunday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-sun-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: [] }
     ]
   },
   '2day_fast': {
@@ -329,13 +329,13 @@ const PROTOCOLS = {
     tagline: '48h Autophagy Fast • Tue-Wed Complete Fast',
     defaultPreset: 48,
     schedule: [
-      { id: 1, dayName: 'Monday', dayType: 'pre-fast load', cals: 1800, protein: 165, carbs: 20, fat: 130, workouts: [{ id: 'w-mon-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-mon-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-mon-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }] },
+      { id: 1, dayName: 'Monday', dayType: 'pre-fast load', cals: 1800, protein: 165, carbs: 20, fat: 130, workouts: [{ id: 'w-mon-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [] },
       { id: 2, dayName: 'Tuesday', dayType: 'fasting (48h)', cals: 0, protein: 0, carbs: 0, fat: 0, workouts: [{ id: 'w-tue-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-tue-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
       { id: 3, dayName: 'Wednesday', dayType: 'fasting (48h)', cals: 0, protein: 0, carbs: 0, fat: 0, workouts: [{ id: 'w-wed-1', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
-      { id: 4, dayName: 'Thursday', dayType: 'bone broth refeed', cals: 1900, protein: 170, carbs: 22, fat: 135, workouts: [{ id: 'w-thu-1', name: '30-45m Jog', minutes: 35, url: '' }], meals: [{ id: 'm-thu-1', name: 'Slow-Simmered Beef Bone Broth Stew', cals: 540, protein: 58, carbs: 5, fat: 32 }, { id: 'm-thu-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }] },
-      { id: 5, dayName: 'Friday', dayType: 'standard', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-fri-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-fri-1', name: 'Crispy Chicken & Avocado Wrap', cals: 590, protein: 48, carbs: 4, fat: 40 }, { id: 'm-fri-2', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }] },
-      { id: 6, dayName: 'Saturday', dayType: 'standard', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-sat-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-sat-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-sat-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }] },
-      { id: 0, dayName: 'Sunday', dayType: 'standard', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-sun-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: [{ id: 'm-sun-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-sun-2', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }] }
+      { id: 4, dayName: 'Thursday', dayType: 'bone broth refeed', cals: 1900, protein: 170, carbs: 22, fat: 135, workouts: [{ id: 'w-thu-1', name: '30-45m Jog', minutes: 35, url: '' }], meals: [] },
+      { id: 5, dayName: 'Friday', dayType: 'standard', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-fri-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [] },
+      { id: 6, dayName: 'Saturday', dayType: 'standard', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-sat-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [] },
+      { id: 0, dayName: 'Sunday', dayType: 'standard', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-sun-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: [] }
     ]
   },
   '3day_fast': {
@@ -345,13 +345,13 @@ const PROTOCOLS = {
     tagline: '72h Deep Fast • Tue-Thu Autophagy & Stem Cell Renewal',
     defaultPreset: 72,
     schedule: [
-      { id: 1, dayName: 'Monday', dayType: 'pre-fast load', cals: 1850, protein: 170, carbs: 20, fat: 135, workouts: [{ id: 'w-mon-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-mon-1', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }, { id: 'm-mon-2', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }] },
+      { id: 1, dayName: 'Monday', dayType: 'pre-fast load', cals: 1850, protein: 170, carbs: 20, fat: 135, workouts: [{ id: 'w-mon-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [] },
       { id: 2, dayName: 'Tuesday', dayType: 'fasting (day 1)', cals: 0, protein: 0, carbs: 0, fat: 0, workouts: [{ id: 'w-tue-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-tue-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
       { id: 3, dayName: 'Wednesday', dayType: 'fasting (day 2)', cals: 0, protein: 0, carbs: 0, fat: 0, workouts: [{ id: 'w-wed-1', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
       { id: 4, dayName: 'Thursday', dayType: 'fasting (day 3)', cals: 0, protein: 0, carbs: 0, fat: 0, workouts: [{ id: 'w-thu-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: [] },
-      { id: 5, dayName: 'Friday', dayType: 'gentle refeed', cals: 1500, protein: 140, carbs: 15, fat: 100, workouts: [{ id: 'w-fri-1', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [{ id: 'm-fri-1', name: 'Slow-Simmered Beef Bone Broth Stew', cals: 540, protein: 58, carbs: 5, fat: 32 }, { id: 'm-fri-2', name: 'Spinach & Feta Frittata Slice', cals: 460, protein: 36, carbs: 4, fat: 32 }] },
-      { id: 6, dayName: 'Saturday', dayType: 'refeed build', cals: 1850, protein: 170, carbs: 20, fat: 135, workouts: [{ id: 'w-sat-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-sat-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-sat-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }] },
-      { id: 0, dayName: 'Sunday', dayType: 'standard', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-sun-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: [{ id: 'm-sun-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-sun-2', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }] }
+      { id: 5, dayName: 'Friday', dayType: 'gentle refeed', cals: 1500, protein: 140, carbs: 15, fat: 100, workouts: [{ id: 'w-fri-1', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
+      { id: 6, dayName: 'Saturday', dayType: 'refeed build', cals: 1850, protein: 170, carbs: 20, fat: 135, workouts: [{ id: 'w-sat-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [] },
+      { id: 0, dayName: 'Sunday', dayType: 'standard', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-sun-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: [] }
     ]
   }
 };
@@ -385,19 +385,14 @@ export default function App() {
     try { return JSON.parse(localStorage.getItem('ks_fasting_history') || '[]'); } catch { return []; }
   });
 
-  // Weight Tracker State
+  // Weight Tracker State (Starts at 0 with no presets on first visit)
   const [weightData, setWeightData] = useState(() => {
-    try { return JSON.parse(localStorage.getItem('ks_weight') || '{"start":205, "current":198, "goal":180}'); } catch { return { start: 205, current: 198, goal: 180 }; }
+    try { return JSON.parse(localStorage.getItem('ks_weight') || '{"start":0, "current":0, "goal":0}'); } catch { return { start: 0, current: 0, goal: 0 }; }
   });
 
-  // Weight History State
+  // Weight History State (Clean - zero mock records)
   const [weightHistory, setWeightHistory] = useState(() => {
-    try {
-      const saved = localStorage.getItem('ks_weight_history');
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
+    try { return JSON.parse(localStorage.getItem('ks_weight_history') || '[]'); } catch { return []; }
   });
 
   // Historical Daily Journal Notes
@@ -416,7 +411,7 @@ export default function App() {
     try { return JSON.parse(localStorage.getItem('ks_workout_library') || JSON.stringify(INITIAL_WORKOUTS)); } catch { return INITIAL_WORKOUTS; }
   });
 
-  // Recipes State
+  // Recipes Master Catalog State
   const [recipes, setRecipes] = useState(() => {
     try { return JSON.parse(localStorage.getItem('ks_recipes') || JSON.stringify(INITIAL_RECIPES)); } catch { return INITIAL_RECIPES; }
   });
@@ -946,7 +941,6 @@ export default function App() {
     const targetWeek = activeShoppingWeek;
     const currentList = customGroceries[targetWeek] || [];
     
-    // Check if already in list
     const alreadyExists = currentList.some(item => item.name.toLowerCase() === foodName.toLowerCase());
     if (alreadyExists) {
       setToastMessage(`${foodName} is already on your ${targetWeek === 'current' ? 'Current' : 'Upcoming'} list!`);
@@ -1081,39 +1075,30 @@ export default function App() {
     ? recipes 
     : recipes.filter(r => r.category === recipeCategory);
 
-  // Dynamic Weight Delta & Progress Calculations
-  const weightDiff = weightData.start - weightData.current;
+  // Dynamic Weight Delta & Progress Calculations (Safe when start / current is 0)
+  const isWeightConfigured = weightData.start > 0 && weightData.current > 0;
+  const weightDiff = isWeightConfigured ? weightData.start - weightData.current : 0;
   const isWeightLost = weightDiff >= 0;
   const absWeightDiff = Math.abs(weightDiff).toFixed(1);
   const totalToLose = weightData.start - weightData.goal;
-  const weightProgress = totalToLose > 0 
+  const weightProgress = (isWeightConfigured && totalToLose > 0)
     ? Math.max(0, Math.min(100, Math.round((weightDiff / totalToLose) * 100)))
     : 0;
 
   // Reset Weight Baseline Handler
   const handleResetWeightProgress = () => {
     const confirmed = window.confirm(
-      `Reset weight progress?\n\nThis will set your starting weight baseline to your current weight (${weightData.current} lbs) and clear old progression trends.`
+      `Reset weight profile and history?\n\nThis will reset your starting baseline and clear historical progression logs.`
     );
     if (!confirmed) return;
 
-    const updatedWeight = {
-      ...weightData,
-      start: weightData.current
-    };
-    const updatedHistory = [
-      {
-        id: `wh-${Date.now()}`,
-        date: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
-        weight: weightData.current,
-        diff: 0
-      }
-    ];
+    const resetWeight = { start: 0, current: 0, goal: 0 };
+    const resetHistory = [];
 
-    setWeightData(updatedWeight);
-    setWeightHistory(updatedHistory);
-    syncToCloudAndLocal({ weightData: updatedWeight, weightHistory: updatedHistory });
-    setToastMessage(`Baseline reset to ${weightData.current} lbs.`);
+    setWeightData(resetWeight);
+    setWeightHistory(resetHistory);
+    syncToCloudAndLocal({ weightData: resetWeight, weightHistory: resetHistory });
+    setToastMessage(`Weight tracker reset.`);
     setTimeout(() => setToastMessage(null), 3000);
   };
 
@@ -1182,10 +1167,10 @@ export default function App() {
               className="text-right px-3 py-1.5 rounded-xl border border-[#e2e2e2] bg-white transition-all hover:bg-slate-50 shadow-xs"
             >
               <span className="block text-sm font-black leading-none" style={{ color: '#82bc41' }}>
-                {absWeightDiff} lbs
+                {isWeightConfigured ? `${absWeightDiff} lbs` : '0.0 lbs'}
               </span>
               <span className="text-[8px] text-slate-500 font-bold uppercase tracking-wider">
-                {isWeightLost ? 'Lost' : 'Gained'}
+                {isWeightConfigured ? (isWeightLost ? 'Lost' : 'Gained') : 'Lost'}
               </span>
             </button>
 
@@ -1329,6 +1314,7 @@ export default function App() {
                   </div>
                 </div>
 
+                {/* Training Routine Subsection (Week 1 Schedule Preserved) */}
                 <div>
                   <div className="flex justify-between items-center mb-3">
                     <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Training Routine</span>
@@ -1397,6 +1383,7 @@ export default function App() {
                   </div>
                 </div>
 
+                {/* Nutrition Subsection (Starts Empty on First Visit) */}
                 <div>
                   <div className="flex justify-between items-center mb-3">
                     <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Nutrition & Meals</span>
@@ -1467,8 +1454,8 @@ export default function App() {
                           );
                         })}
                         {currentMeals.length === 0 && (
-                          <div className="p-3 text-center text-xs text-slate-500 bg-[#fafafa] rounded-xl border border-dashed border-[#eaeaea]">
-                            No meals assigned.
+                          <div className="p-4 text-center text-xs text-slate-400 bg-[#fafafa] rounded-2xl border border-dashed border-[#eaeaea]">
+                            No meals assigned for today. Tap <strong>"+ Add Meal"</strong> above or plan meals in the Recipes tab.
                           </div>
                         )}
                       </div>
@@ -1498,28 +1485,34 @@ export default function App() {
               </button>
             </div>
 
-            {/* Weight Goal Progress Card */}
+            {/* Weight Goal Progress Card (Clean Initial State) */}
             <div className="bg-white rounded-2xl border border-[#eaeaea] p-5 shadow-xs">
               <div className="flex justify-between items-center mb-3">
                 <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Weight Goal Progress</span>
-                <button onClick={() => setModalType('weight')} className="text-[10px] font-bold hover:underline" style={{ color: '#82bc41' }}>Update</button>
+                <button onClick={() => setModalType('weight')} className="text-[10px] font-bold hover:underline" style={{ color: '#82bc41' }}>
+                  {isWeightConfigured ? 'Update' : 'Set Baseline'}
+                </button>
               </div>
               <div className="flex items-baseline justify-between mb-2">
                 <div>
-                  <span className="text-2xl font-black text-slate-900">{weightData.current}</span>
+                  <span className="text-2xl font-black text-slate-900">
+                    {isWeightConfigured ? weightData.current : '--'}
+                  </span>
                   <span className="text-xs text-slate-500 font-bold ml-1">lbs</span>
                 </div>
                 <div className="text-xs text-slate-600 font-bold">
-                  Target: {weightData.goal} lbs
+                  Target: {weightData.goal > 0 ? `${weightData.goal} lbs` : '-- lbs'}
                 </div>
               </div>
               <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden mb-2">
                 <div className="h-full rounded-full transition-all duration-500" style={{ width: `${weightProgress}%`, backgroundColor: '#82bc41' }} />
               </div>
               <div className="flex justify-between text-[10px] font-bold text-slate-500">
-                <span>Start: {weightData.start} lbs</span>
+                <span>Start: {weightData.start > 0 ? `${weightData.start} lbs` : '-- lbs'}</span>
                 <span style={{ color: isWeightLost ? '#82bc41' : '#e11d48' }}>
-                  {isWeightLost ? `${weightProgress}% completed (${absWeightDiff} lbs lost)` : `${absWeightDiff} lbs gained`}
+                  {isWeightConfigured
+                    ? (isWeightLost ? `${weightProgress}% completed (${absWeightDiff} lbs lost)` : `${absWeightDiff} lbs gained`)
+                    : 'Tap Set Baseline to begin'}
                 </span>
               </div>
             </div>
@@ -2268,9 +2261,9 @@ export default function App() {
               <div className="bg-white p-3.5 rounded-2xl border border-[#eaeaea] shadow-xs text-center">
                 <span className="text-[9px] font-black uppercase tracking-wider text-slate-500 block">Net Weight</span>
                 <span className="text-lg font-black text-slate-900" style={{ color: isWeightLost ? '#82bc41' : '#e11d48' }}>
-                  {isWeightLost ? `-${absWeightDiff}` : `+${absWeightDiff}`} lbs
+                  {isWeightConfigured ? (isWeightLost ? `-${absWeightDiff}` : `+${absWeightDiff}`) : '0.0'} lbs
                 </span>
-                <span className="text-[9px] text-slate-500 block mt-0.5">Goal: {weightData.goal} lbs</span>
+                <span className="text-[9px] text-slate-500 block mt-0.5">Goal: {weightData.goal > 0 ? `${weightData.goal} lbs` : '--'}</span>
               </div>
               <div className="bg-white p-3.5 rounded-2xl border border-[#eaeaea] shadow-xs text-center">
                 <span className="text-[9px] font-black uppercase tracking-wider text-slate-500 block">Consistency</span>
@@ -2279,7 +2272,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* Historical Weight Trend Card */}
+            {/* Historical Weight Trend Card (Clean State) */}
             <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-2 border-b border-[#eaeaea]">
                 <div>
@@ -2307,72 +2300,77 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Dynamic Baseline Bars */}
-              <div className="space-y-3 pt-1">
-                <div className="space-y-1">
-                  <div className="flex justify-between text-xs font-bold text-slate-700">
-                    <span className="text-slate-500">Starting Baseline</span>
-                    <span className="text-slate-900 font-extrabold">{weightData.start} lbs</span>
+              {isWeightConfigured ? (
+                <div className="space-y-3 pt-1">
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-xs font-bold text-slate-700">
+                      <span className="text-slate-500">Starting Baseline</span>
+                      <span className="text-slate-900 font-extrabold">{weightData.start} lbs</span>
+                    </div>
+                    <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                      <div className="h-full rounded-full bg-slate-400 w-full" />
+                    </div>
                   </div>
-                  <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                    <div className="h-full rounded-full bg-slate-400 w-full" />
-                  </div>
-                </div>
 
-                <div className="space-y-1">
-                  <div className="flex justify-between text-xs font-bold text-slate-700">
-                    <span className="text-slate-900 font-black">Current Weight</span>
-                    <div className="flex items-center gap-2">
-                      <span className="text-slate-900 font-black text-sm">{weightData.current} lbs</span>
-                      <span 
-                        className={`text-[10px] font-black px-1.5 py-0.5 rounded ${
-                          isWeightLost ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'
-                        }`}
-                      >
-                        {isWeightLost ? `-${absWeightDiff} lbs` : `+${absWeightDiff} lbs`}
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-xs font-bold text-slate-700">
+                      <span className="text-slate-900 font-black">Current Weight</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-slate-900 font-black text-sm">{weightData.current} lbs</span>
+                        <span 
+                          className={`text-[10px] font-black px-1.5 py-0.5 rounded ${
+                            isWeightLost ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'
+                          }`}
+                        >
+                          {isWeightLost ? `-${absWeightDiff} lbs` : `+${absWeightDiff} lbs`}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                      <div 
+                        className="h-full rounded-full transition-all duration-500" 
+                        style={{ 
+                          width: `${Math.min(100, Math.max(15, weightProgress || 100))}%`, 
+                          backgroundColor: '#82bc41' 
+                        }} 
+                      />
+                    </div>
+                    <div className="flex justify-between text-[10px] font-bold text-slate-500 pt-0.5">
+                      <span>Goal: {weightData.goal} lbs</span>
+                      <span style={{ color: isWeightLost ? '#82bc41' : '#e11d48' }}>
+                        {weightProgress}% of goal reached
                       </span>
                     </div>
                   </div>
-                  <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                    <div 
-                      className="h-full rounded-full transition-all duration-500" 
-                      style={{ 
-                        width: `${Math.min(100, Math.max(15, weightProgress || 100))}%`, 
-                        backgroundColor: '#82bc41' 
-                      }} 
-                    />
-                  </div>
-                  <div className="flex justify-between text-[10px] font-bold text-slate-500 pt-0.5">
-                    <span>Goal: {weightData.goal} lbs</span>
-                    <span style={{ color: isWeightLost ? '#82bc41' : '#e11d48' }}>
-                      {weightProgress}% of goal reached
-                    </span>
-                  </div>
-                </div>
 
-                {weightHistory.length > 0 && (
-                  <div className="pt-3 border-t border-[#eaeaea] space-y-2">
-                    <span className="text-[9px] font-black uppercase tracking-wider text-slate-400 block">
-                      Past Weigh-in History
-                    </span>
-                    <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
-                      {weightHistory.map((item, idx) => (
-                        <div key={item.id || idx} className="flex items-center justify-between text-xs bg-[#fafafa] p-2 rounded-xl border border-[#eaeaea]">
-                          <span className="text-slate-600 font-bold">{item.date}</span>
-                          <div className="flex items-center gap-2">
-                            <span className="text-slate-900 font-black">{item.weight} lbs</span>
-                            {item.diff !== undefined && item.diff !== 0 && (
-                              <span className={`text-[10px] font-black ${item.diff < 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
-                                {item.diff < 0 ? `${item.diff} lbs` : `+${item.diff} lbs`}
-                              </span>
-                            )}
+                  {weightHistory.length > 0 && (
+                    <div className="pt-3 border-t border-[#eaeaea] space-y-2">
+                      <span className="text-[9px] font-black uppercase tracking-wider text-slate-400 block">
+                        Past Weigh-in History
+                      </span>
+                      <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
+                        {weightHistory.map((item, idx) => (
+                          <div key={item.id || idx} className="flex items-center justify-between text-xs bg-[#fafafa] p-2 rounded-xl border border-[#eaeaea]">
+                            <span className="text-slate-600 font-bold">{item.date}</span>
+                            <div className="flex items-center gap-2">
+                              <span className="text-slate-900 font-black">{item.weight} lbs</span>
+                              {item.diff !== undefined && item.diff !== 0 && (
+                                <span className={`text-[10px] font-black ${item.diff < 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                                  {item.diff < 0 ? `${item.diff} lbs` : `+${item.diff} lbs`}
+                                </span>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
-              </div>
+                  )}
+                </div>
+              ) : (
+                <div className="p-6 text-center text-xs text-slate-400 bg-[#fafafa] rounded-2xl border border-dashed border-[#eaeaea]">
+                  No weight profile set yet. Tap <strong>"+ Log Weight"</strong> above to establish your starting baseline.
+                </div>
+              )}
             </div>
 
             {/* Fasting Endurance Metrics */}
@@ -2920,7 +2918,7 @@ export default function App() {
         </div>
       )}
 
-      {/* 5. Weight Tracker Modal */}
+      {/* 5. Weight Tracker Modal (No Hardcoded 205/198, Pure Clean Inputs) */}
       {modalType === 'weight' && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-xs z-50 flex items-end sm:items-center justify-center p-4">
           <div className="bg-white rounded-2xl p-5 w-full max-w-sm border border-[#eaeaea] shadow-xl">
@@ -2935,7 +2933,8 @@ export default function App() {
                 <label className="text-[10px] font-bold text-slate-500 uppercase">Starting Weight (lbs)</label>
                 <input 
                   type="number" 
-                  value={weightData.start}
+                  placeholder="e.g. 215"
+                  value={weightData.start === 0 ? '' : weightData.start}
                   onChange={(e) => {
                     const updated = { ...weightData, start: parseFloat(e.target.value) || 0 };
                     setWeightData(updated);
@@ -2949,24 +2948,28 @@ export default function App() {
                 <input 
                   type="number" 
                   step="0.1"
-                  value={weightData.current}
+                  placeholder="e.g. 213"
+                  value={weightData.current === 0 ? '' : weightData.current}
                   onChange={(e) => {
                     const newCurrent = parseFloat(e.target.value) || 0;
                     const updated = { ...weightData, current: newCurrent };
                     setWeightData(updated);
 
-                    const lastEntry = weightHistory[0];
-                    const diff = lastEntry ? Number((newCurrent - lastEntry.weight).toFixed(1)) : 0;
-                    const newEntry = {
-                      id: `wh-${Date.now()}`,
-                      date: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
-                      weight: newCurrent,
-                      diff: diff
-                    };
-                    const updatedHistory = [newEntry, ...weightHistory.filter(h => h.id !== newEntry.id).slice(0, 9)];
-                    setWeightHistory(updatedHistory);
-
-                    syncToCloudAndLocal({ weightData: updated, weightHistory: updatedHistory });
+                    if (newCurrent > 0) {
+                      const lastEntry = weightHistory[0];
+                      const diff = lastEntry ? Number((newCurrent - lastEntry.weight).toFixed(1)) : 0;
+                      const newEntry = {
+                        id: `wh-${Date.now()}`,
+                        date: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+                        weight: newCurrent,
+                        diff: diff
+                      };
+                      const updatedHistory = [newEntry, ...weightHistory.filter(h => h.id !== newEntry.id).slice(0, 9)];
+                      setWeightHistory(updatedHistory);
+                      syncToCloudAndLocal({ weightData: updated, weightHistory: updatedHistory });
+                    } else {
+                      syncToCloudAndLocal({ weightData: updated });
+                    }
                   }}
                   className="w-full p-2.5 rounded-xl border border-slate-200 bg-[#fafafa] font-bold text-slate-900 text-xs mt-1 focus:outline-none" 
                 />
@@ -2975,7 +2978,8 @@ export default function App() {
                 <label className="text-[10px] font-bold text-slate-500 uppercase">Goal Weight (lbs)</label>
                 <input 
                   type="number" 
-                  value={weightData.goal}
+                  placeholder="e.g. 185"
+                  value={weightData.goal === 0 ? '' : weightData.goal}
                   onChange={(e) => {
                     const updated = { ...weightData, goal: parseFloat(e.target.value) || 0 };
                     setWeightData(updated);
@@ -2988,22 +2992,12 @@ export default function App() {
                 <button 
                   type="button"
                   onClick={() => {
-                    const resetWeight = {
-                      ...weightData,
-                      start: weightData.current
-                    };
-                    const resetHistory = [
-                      {
-                        id: `wh-${Date.now()}`,
-                        date: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
-                        weight: weightData.current,
-                        diff: 0
-                      }
-                    ];
+                    const resetWeight = { start: 0, current: 0, goal: 0 };
+                    const resetHistory = [];
                     setWeightData(resetWeight);
                     setWeightHistory(resetHistory);
                     syncToCloudAndLocal({ weightData: resetWeight, weightHistory: resetHistory });
-                    setToastMessage(`Baseline reset to ${weightData.current} lbs.`);
+                    setToastMessage('Weight profile reset to 0.');
                     setTimeout(() => setToastMessage(null), 3000);
                     setModalType(null);
                   }}
