@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
+const db = getFirestore(app, "(default)");
 const googleProvider = new GoogleAuthProvider();
 
 export default function App() {
@@ -24,19 +24,22 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [appData, setAppData] = useState(null);
 
-  // 1. Listen for Auth State Changes
+  // Listen for Auth State Changes & Sync Firestore Profile
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
         try {
-          // 2. Only fetch Firestore once user is verified & logged in
           const docRef = doc(db, "users", currentUser.uid);
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
             setAppData(docSnap.data());
           } else {
-            const defaultData = { initializedAt: new Date().toISOString() };
+            const defaultData = { 
+              email: currentUser.email,
+              displayName: currentUser.displayName || "User",
+              initializedAt: new Date().toISOString() 
+            };
             await setDoc(docRef, defaultData);
             setAppData(defaultData);
           }
@@ -75,7 +78,7 @@ export default function App() {
     );
   }
 
-  // If not logged in, show high-contrast Google Sign-In Gate
+  // Google Sign-In Gate
   if (!user) {
     return (
       <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center justify-center p-6 font-sans">
@@ -95,26 +98,28 @@ export default function App() {
     );
   }
 
-  // Main Authenticated Dashboard Shell
+  // Main Authenticated App View
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 p-6 font-sans">
       <header className="max-w-5xl mx-auto flex items-center justify-between pb-6 border-b border-slate-800 mb-8">
         <div>
-          <h1 className="text-xl font-bold text-white">Keto Shred Tracker</h1>
-          <p className="text-xs text-slate-400">Connected as: {user.email}</p>
+          <h1 className="text-xl font-bold text-white tracking-tight">Keto Shred Tracker</h1>
+          <p className="text-xs text-slate-400 mt-0.5">Connected as: <span className="text-slate-300 font-medium">{user.email}</span></p>
         </div>
         <button
           onClick={handleSignOut}
-          className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-medium rounded-lg transition-all"
+          className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-medium rounded-lg transition-all border border-slate-700"
         >
           Sign Out
         </button>
       </header>
 
       <main className="max-w-5xl mx-auto space-y-6">
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
-          <h2 className="text-lg font-semibold text-white mb-2">Dashboard Active</h2>
-          <p className="text-sm text-slate-400">Cloud synchronization via Firestore is active and secure.</p>
+        <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl">
+          <h2 className="text-lg font-semibold text-white mb-2">Cloud Database Active</h2>
+          <p className="text-sm text-slate-400">
+            Firestore cloud synchronization is live. Your profile data and shred logs are securely tied to your Google account.
+          </p>
         </div>
       </main>
     </div>
