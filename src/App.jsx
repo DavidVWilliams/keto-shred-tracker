@@ -160,7 +160,7 @@ const INITIAL_RECIPES = [
     instructions: 'Mix beef, egg, almond flour, and seasonings. Shape into a mini loaf, wrap with bacon, glaze lightly, and bake at 375°F for 35 mins.' 
   },
   { 
-    id: 'beef-8', name: 'Classic New York Strip with Herb Butter', category: 'Beef', cals: 630, protein: 60, carbs: 0, fat: 42, 
+    id: 'beef-8', name: 'Classic弁当 New York Strip with Herb Butter', category: 'Beef', cals: 630, protein: 60, carbs: 0, fat: 42, 
     ingredients: ['10 oz NY Strip steak', '2 tbsp compound herb butter', 'Sea salt & cracked pepper'], 
     instructions: 'Pan-sear NY strip to medium-rare. Rest for 5 minutes, then top immediately with a melting pat of herb butter.' 
   },
@@ -322,6 +322,7 @@ const FASTING_PRESETS = [
 const METABOLIC_PHASES = [
   {
     id: 'phase_1',
+    phaseNumber: 1,
     range: '0 – 12 Hours',
     minHours: 0,
     maxHours: 12,
@@ -332,11 +333,12 @@ const METABOLIC_PHASES = [
     insights: [
       { maxH: 4, tip: 'Digestion active. Stomach emptying, blood glucose gradually stabilizing.' },
       { maxH: 8, tip: 'Insulin falling toward baseline. Liver tapping stored glycogen for cellular energy.' },
-      { maxH: 12, tip: 'Liver glycogen ~70% depleted. Mild ghrelin peaks may occur as fat adaptation begins.' }
+      { maxH: 12, tip: 'Liver glycogen ~70% depleted. Mild hunger waves may occur as fat adaptation begins.' }
     ]
   },
   {
     id: 'phase_2',
+    phaseNumber: 2,
     range: '12 – 18 Hours',
     minHours: 12,
     maxHours: 18,
@@ -345,12 +347,13 @@ const METABOLIC_PHASES = [
     summary: 'Liver glycogen is substantially depleted. The liver accelerates the conversion of stored fat into ketones (acetoacetate & beta-hydroxybutyrate) for cellular fuel.',
     biomarkers: 'Ketones ↑ | Lipolysis (Fat Burning) Active',
     insights: [
-      { maxH: 15, tip: 'The metabolic flip switch: Fatty acids mobilize into the bloodstream at high velocity.' },
+      { maxH: 15, tip: 'The metabolic switch: Fatty acids mobilize into the bloodstream at high velocity.' },
       { maxH: 18, tip: 'Blood ketone concentrations reach ~0.5–1.0 mmol/L. Brain switches to ketone metabolism.' }
     ]
   },
   {
     id: 'phase_3',
+    phaseNumber: 3,
     range: '18 – 24 Hours',
     minHours: 18,
     maxHours: 24,
@@ -365,6 +368,7 @@ const METABOLIC_PHASES = [
   },
   {
     id: 'phase_4',
+    phaseNumber: 4,
     range: '24 – 48 Hours',
     minHours: 24,
     maxHours: 48,
@@ -374,11 +378,12 @@ const METABOLIC_PHASES = [
     biomarkers: 'HGH ↑↑↑ | Peak Systemic De-inflammation',
     insights: [
       { maxH: 36, tip: 'Peak cellular rejuvenation. HGH surge preserves joint collagen and muscular integrity.' },
-      { maxH: 48, tip: 'Deep systemic de-inflammation. BDNF (Brain-Derived Neurotrophic Factor) supports mental acuity.' }
+      { maxH: 48, tip: 'Deep systemic de-inflammation. BDNF supports mental clarity and neuroplasticity.' }
     ]
   },
   {
     id: 'phase_5',
+    phaseNumber: 5,
     range: '48 – 72+ Hours',
     minHours: 48,
     maxHours: 120,
@@ -711,19 +716,27 @@ export default function App() {
   // Current Fasting Elapsed Hours (Decimal)
   const currentElapsedHours = fastingElapsed / (1000 * 60 * 60);
 
-  // Dynamic Metabolic Phase Calculations
-  const currentPhaseIndex = METABOLIC_PHASES.findIndex(
+  // Dynamic Metabolic Phase Calculations (Only 1 Phase Active at a time)
+  let currentPhaseIndex = METABOLIC_PHASES.findIndex(
     p => currentElapsedHours >= p.minHours && currentElapsedHours < p.maxHours
   );
-  const activePhase = currentPhaseIndex !== -1 
-    ? METABOLIC_PHASES[currentPhaseIndex] 
-    : (currentElapsedHours >= 72 ? METABOLIC_PHASES[METABOLIC_PHASES.length - 1] : METABOLIC_PHASES[0]);
+  if (currentPhaseIndex === -1) {
+    currentPhaseIndex = currentElapsedHours >= 72 ? METABOLIC_PHASES.length - 1 : 0;
+  }
+  const activePhase = METABOLIC_PHASES[currentPhaseIndex];
 
-  // Dynamic Tip for Current Hour
+  // Progress through the active phase (0% - 100%)
+  const phaseSpan = activePhase.maxHours - activePhase.minHours;
+  const hoursIntoCurrentPhase = Math.max(0, currentElapsedHours - activePhase.minHours);
+  const activePhaseProgress = fastingState.active
+    ? Math.min(100, Math.max(0, Math.round((hoursIntoCurrentPhase / phaseSpan) * 100)))
+    : 0;
+
+  // Dynamic Tip for Current Hour within this active phase
   const activeTip = activePhase.insights.find(ins => currentElapsedHours <= ins.maxH)?.tip 
     || activePhase.insights[activePhase.insights.length - 1]?.tip;
 
-  // Time remaining to next phase
+  // Next phase countdown
   const nextPhase = METABOLIC_PHASES[currentPhaseIndex + 1];
   const msToNextPhase = nextPhase ? Math.max(0, (nextPhase.minHours * 3600 * 1000) - fastingElapsed) : null;
 
@@ -1431,7 +1444,7 @@ export default function App() {
           </div>
         )}
 
-        {/* FASTING TAB - DYNAMIC METABOLIC TIMELINE */}
+        {/* FASTING TAB - ONLY ACTIVE METABOLIC PHASE SHOWN (ONE REPLACES THE OTHER) */}
         {activeTab === 'fasting' && (
           <div className="space-y-4">
             
@@ -1472,7 +1485,7 @@ export default function App() {
                 </div>
               )}
 
-              {/* 8 Presets */}
+              {/* 8 Fasting Presets */}
               <div className="pt-2">
                 <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 block mb-2">
                   Select Fasting Preset
@@ -1555,149 +1568,76 @@ export default function App() {
               </div>
             )}
 
-            {/* DYNAMIC METABOLIC PHASE SPOTLIGHT (When Fasting is Active) */}
-            {fastingState.active && (
-              <div className="bg-slate-900 text-white rounded-3xl p-5 shadow-lg border border-slate-800 space-y-3">
-                <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full animate-ping" style={{ backgroundColor: '#82bc41' }} />
-                    <span className="text-[10px] font-black uppercase tracking-widest text-emerald-400">
-                      Live Cellular Stage • {activePhase.range}
-                    </span>
-                  </div>
-                  <span className="text-xs font-mono font-bold text-slate-400">
-                    {currentElapsedHours.toFixed(1)}h Elapsed
+            {/* SINGLE DYNAMIC METABOLIC PHASE CARD (One Replaces the Other) */}
+            <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-[#eaeaea]">
+                <div>
+                  <span className="text-[10px] font-black uppercase tracking-wider block" style={{ color: '#82bc41' }}>
+                    Metabolic Stage {activePhase.phaseNumber} of 5
                   </span>
-                </div>
-
-                <div>
-                  <h4 className="text-sm font-black text-white">{activePhase.name}</h4>
-                  <p className="text-xs text-slate-300 leading-relaxed mt-1">
-                    {activeTip}
-                  </p>
-                </div>
-
-                {/* Milestone Countdown to Next Phase */}
-                {nextPhase && msToNextPhase > 0 && (
-                  <div className="bg-slate-950 p-3 rounded-xl border border-slate-800/80 flex items-center justify-between">
-                    <div className="flex items-center gap-1.5 text-xs text-slate-300">
-                      <Icons.ArrowRight size={14} className="text-emerald-400" />
-                      <span>Next: <strong className="text-white">{nextPhase.shortStatus}</strong></span>
-                    </div>
-                    <span className="text-xs font-black font-mono" style={{ color: '#82bc41' }}>
-                      in {formatDurationDisplay(msToNextPhase)}
-                    </span>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* INTERACTIVE FULL METABOLIC TIMELINE */}
-            <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-3">
-              <div className="flex items-center justify-between pb-2 border-b border-[#eaeaea]">
-                <div>
-                  <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                    <Icons.Activity size={14} style={{ color: '#82bc41' }} /> 
-                    Fasting Metabolic Timeline
+                  <h3 className="text-sm font-black text-slate-900 mt-0.5">
+                    {activePhase.name}
                   </h3>
-                  <p className="text-[10px] text-slate-500">Biological milestones mapped as your fast progresses</p>
                 </div>
-                {fastingState.active && (
-                  <span className="text-[10px] font-black text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                    Phase {currentPhaseIndex + 1} of 5
+                <div className="text-right">
+                  <span 
+                    className={`text-[10px] font-black px-2.5 py-1 rounded-lg inline-block ${
+                      fastingState.active 
+                        ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' 
+                        : 'bg-slate-100 text-slate-600 border border-slate-200'
+                    }`}
+                  >
+                    {fastingState.active ? activePhase.range : 'Standby'}
                   </span>
+                </div>
+              </div>
+
+              {/* Live Stage Progress Bar */}
+              {fastingState.active && (
+                <div className="space-y-1.5">
+                  <div className="flex justify-between text-[10px] font-bold text-slate-600">
+                    <span>Stage Progress</span>
+                    <span className="text-slate-900 font-extrabold">{activePhaseProgress}%</span>
+                  </div>
+                  <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full rounded-full transition-all duration-500" 
+                      style={{ width: `${activePhaseProgress}%`, backgroundColor: '#82bc41' }} 
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Detailed Physiological Summary for This Phase */}
+              <div className="bg-[#fafafa] p-3.5 rounded-2xl border border-[#eaeaea] space-y-2">
+                <p className="text-xs text-slate-700 leading-relaxed font-medium">
+                  {activePhase.summary}
+                </p>
+
+                {fastingState.active && (
+                  <div className="text-xs bg-white p-2.5 rounded-xl border border-slate-200/80 text-slate-800 flex items-start gap-2 shadow-2xs">
+                    <Icons.Activity size={14} className="text-emerald-600 shrink-0 mt-0.5" />
+                    <span><strong>Current State:</strong> {activeTip}</span>
+                  </div>
                 )}
               </div>
 
-              <div className="space-y-3 pt-1">
-                {METABOLIC_PHASES.map((phase, idx) => {
-                  const isCurrentPhase = fastingState.active && currentElapsedHours >= phase.minHours && currentElapsedHours < phase.maxHours;
-                  const isCompletedPhase = fastingState.active && currentElapsedHours >= phase.maxHours;
-                  const isUpcoming = !fastingState.active || currentElapsedHours < phase.minHours;
+              {/* Biomarkers & Next Phase Countdown */}
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pt-1">
+                <div className="text-[10px] font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200">
+                  Biomarkers: <span className="text-slate-900 font-extrabold">{activePhase.biomarkers}</span>
+                </div>
 
-                  // Progress through this specific phase
-                  const phaseProgress = isCompletedPhase 
-                    ? 100 
-                    : isCurrentPhase 
-                    ? Math.max(0, Math.min(100, Math.round(((currentElapsedHours - phase.minHours) / (phase.maxHours - phase.minHours)) * 100)))
-                    : 0;
-
-                  return (
-                    <div 
-                      key={phase.id} 
-                      className={`p-3.5 rounded-2xl border transition-all ${
-                        isCurrentPhase
-                          ? 'border-[#82bc41] bg-emerald-50/40 shadow-xs ring-1 ring-emerald-500/30'
-                          : isCompletedPhase
-                          ? 'border-emerald-200 bg-white'
-                          : 'border-[#eaeaea] bg-[#fafafa]'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between mb-1.5">
-                        <div className="flex items-center gap-2">
-                          <span 
-                            className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-md ${
-                              isCurrentPhase
-                                ? 'bg-[#82bc41] text-white'
-                                : isCompletedPhase
-                                ? 'bg-emerald-100 text-emerald-800'
-                                : 'bg-slate-200 text-slate-600'
-                            }`}
-                          >
-                            {phase.range}
-                          </span>
-                          <span className={`text-xs font-black ${isCurrentPhase ? 'text-slate-900 font-extrabold' : 'text-slate-800'}`}>
-                            {phase.name}
-                          </span>
-                        </div>
-
-                        {isCurrentPhase && (
-                          <span className="text-[9px] font-black text-emerald-600 uppercase tracking-wider flex items-center gap-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" /> Active
-                          </span>
-                        )}
-                        {isCompletedPhase && (
-                          <span className="text-[10px] font-black text-emerald-600">
-                            ✓ Complete
-                          </span>
-                        )}
-                        {isUpcoming && fastingState.active && (
-                          <span className="text-[9px] font-bold text-slate-400">
-                            in {Math.max(0, Math.round(phase.minHours - currentElapsedHours))}h
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Phase Specific Progress Bar */}
-                      {fastingState.active && (
-                        <div className="w-full bg-slate-200/80 h-1.5 rounded-full overflow-hidden my-2">
-                          <div 
-                            className="h-full rounded-full transition-all duration-500"
-                            style={{ 
-                              width: `${phaseProgress}%`, 
-                              backgroundColor: isCurrentPhase ? '#82bc41' : '#10b981' 
-                            }} 
-                          />
-                        </div>
-                      )}
-                      
-                      <p className="text-[11px] text-slate-600 leading-relaxed mt-1">
-                        {phase.summary}
-                      </p>
-
-                      <div className="mt-2.5 flex items-center justify-between flex-wrap gap-1.5">
-                        <div className="text-[9px] font-bold text-slate-500 bg-white p-1.5 rounded-lg border border-slate-200/60">
-                          Markers: <span className="text-slate-800">{phase.biomarkers}</span>
-                        </div>
-                        {isCurrentPhase && (
-                          <span className="text-[9px] font-black text-emerald-700">
-                            {phaseProgress}% of this stage
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
+                {fastingState.active && nextPhase && msToNextPhase > 0 ? (
+                  <div className="flex items-center gap-1.5 text-xs text-slate-600 ml-auto">
+                    <span>Next: <strong>{nextPhase.shortStatus}</strong></span>
+                    <span className="font-black text-emerald-600">({formatDurationDisplay(msToNextPhase)})</span>
+                  </div>
+                ) : fastingState.active && !nextPhase ? (
+                  <span className="text-xs font-black text-emerald-600 ml-auto">
+                    ✓ Maximum Regeneration Stage
+                  </span>
+                ) : null}
               </div>
             </div>
 
