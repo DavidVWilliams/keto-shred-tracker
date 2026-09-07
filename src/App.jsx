@@ -366,6 +366,7 @@ export default function App() {
     }
   });
 
+  // Shopping List States
   const [activeShoppingWeek, setActiveShoppingWeek] = useState('upcoming'); // 'current' | 'upcoming'
   const [customGroceries, setCustomGroceries] = useState(() => {
     try {
@@ -382,6 +383,11 @@ export default function App() {
     }
   });
   const [newCustomGroceryText, setNewCustomGroceryText] = useState('');
+
+  // Selected Recipe for Direct "Plan Meal" Action
+  const [selectedRecipeForPlan, setSelectedRecipeForPlan] = useState(null);
+  const [planTargetWeek, setPlanTargetWeek] = useState('upcoming'); // 'current' | 'upcoming'
+  const [planTargetDay, setPlanTargetDay] = useState('Monday');
 
   // Toast feedback state
   const [toastMessage, setToastMessage] = useState(null);
@@ -650,7 +656,7 @@ export default function App() {
     return total;
   }, 0);
 
-  // --- Analytical Calculations ---
+  // Analytical Calculations
   const totalFastingHours = fastingHistory.reduce((sum, f) => sum + (f.durationHours || 0), 0);
   const avgFastHours = fastingHistory.length > 0 ? (totalFastingHours / fastingHistory.length).toFixed(1) : 0;
   const longestFastHours = fastingHistory.length > 0 ? Math.max(...fastingHistory.map(f => f.durationHours || 0)).toFixed(1) : 0;
@@ -817,6 +823,57 @@ export default function App() {
     syncToCloudAndLocal({ nextWeekPlan: updatedPlan });
   };
 
+  // --- Direct "Plan This Recipe" Action Handler ---
+  const handleConfirmPlanRecipeDirect = () => {
+    if (!selectedRecipeForPlan) return;
+
+    if (planTargetWeek === 'current') {
+      // Add directly to current week schedule
+      const targetDayObj = activeSchedule.find(d => d.dayName.toLowerCase() === planTargetDay.toLowerCase()) || activeSchedule[0];
+      const targetDayId = targetDayObj.id;
+      const currentDayMeals = customDays[targetDayId]?.meals || targetDayObj.meals || [];
+      const newMeal = {
+        id: `m-${Date.now()}`,
+        name: selectedRecipeForPlan.name,
+        cals: selectedRecipeForPlan.cals,
+        protein: selectedRecipeForPlan.protein,
+        carbs: selectedRecipeForPlan.carbs,
+        fat: selectedRecipeForPlan.fat
+      };
+      const updatedCustomDays = {
+        ...customDays,
+        [targetDayId]: { ...(customDays[targetDayId] || targetDayObj), meals: [...currentDayMeals, newMeal] }
+      };
+      setCustomDays(updatedCustomDays);
+      syncToCloudAndLocal({ customDays: updatedCustomDays });
+      setToastMessage(`Added to Current Week (${planTargetDay})!`);
+    } else {
+      // Add to Next Week Planner
+      const newPlannedMeal = {
+        id: `plan-${Date.now()}`,
+        recipeId: selectedRecipeForPlan.id,
+        name: selectedRecipeForPlan.name,
+        category: selectedRecipeForPlan.category,
+        cals: selectedRecipeForPlan.cals,
+        protein: selectedRecipeForPlan.protein,
+        carbs: selectedRecipeForPlan.carbs,
+        fat: selectedRecipeForPlan.fat,
+        ingredients: selectedRecipeForPlan.ingredients || []
+      };
+      const updatedPlan = {
+        ...nextWeekPlan,
+        [planTargetDay]: [...(nextWeekPlan[planTargetDay] || []), newPlannedMeal]
+      };
+      setNextWeekPlan(updatedPlan);
+      syncToCloudAndLocal({ nextWeekPlan: updatedPlan });
+      setToastMessage(`Added to Upcoming Week (${planTargetDay})!`);
+    }
+
+    setModalType(null);
+    setSelectedRecipeForPlan(null);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
   // --- Shopping List Handlers & Aggregator ---
   const handleToggleGroceryCheck = (itemId) => {
     const updated = {
@@ -867,12 +924,10 @@ export default function App() {
     setTimeout(() => setToastMessage(null), 3000);
   };
 
-  // Compute Aggregated Ingredients for Shopping List
   const getAggregatedShoppingList = () => {
     const recipeIngredients = [];
 
     if (activeShoppingWeek === 'current') {
-      // Pull from active current week schedule
       activeSchedule.forEach(day => {
         const dayMeals = customDays[day.id]?.meals || day.meals || [];
         dayMeals.forEach(m => {
@@ -880,7 +935,7 @@ export default function App() {
           if (matchRecipe && matchRecipe.ingredients) {
             matchRecipe.ingredients.forEach(ing => {
               recipeIngredients.push({
-                id: `current-${m.name}-${ing}`,
+                id: `current-${day.dayName}-${m.name}-${ing}`,
                 name: ing,
                 source: m.name,
                 day: day.dayName
@@ -890,14 +945,13 @@ export default function App() {
         });
       });
     } else {
-      // Pull from next week planner
       PLANNER_DAYS.forEach(dayName => {
         const dayMeals = nextWeekPlan[dayName] || [];
         dayMeals.forEach(m => {
           if (m.ingredients && Array.isArray(m.ingredients)) {
             m.ingredients.forEach(ing => {
               recipeIngredients.push({
-                id: `upcoming-${m.name}-${ing}`,
+                id: `upcoming-${dayName}-${m.name}-${ing}`,
                 name: ing,
                 source: m.name,
                 day: dayName
@@ -911,7 +965,7 @@ export default function App() {
     const customItems = (customGroceries[activeShoppingWeek] || []).map(item => ({
       id: `${activeShoppingWeek}-${item.id}`,
       name: item.name,
-      source: 'Custom Item',
+      source: 'Custom Entry',
       custom: true,
       originalId: item.id
     }));
@@ -1056,7 +1110,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* Tab Navigation - Fixed 5 Columns, No Scroll, Stats Placed Last */}
+        {/* Tab Navigation */}
         <div className="grid grid-cols-5 border-b border-[#eaeaea] -mx-5 px-2">
           {[
             { id: 'dashboard', icon: Icons.Activity, label: 'Dash' },
@@ -1460,7 +1514,7 @@ export default function App() {
         {activeTab === 'recipes' && (
           <div className="space-y-4">
             
-            {/* Sub-Navigation: Catalog | Next Week Plan | Shopping List */}
+            {/* Sub-Navigation: Cookbook | Next Week Plan | Shopping List */}
             <div className="bg-white p-1 rounded-2xl border border-[#eaeaea] shadow-2xs grid grid-cols-3 gap-1">
               {[
                 { id: 'catalog', label: 'Cookbook' },
@@ -1510,7 +1564,19 @@ export default function App() {
                           </span>
                           <h3 className="text-xs font-black text-slate-900">{recipe.name}</h3>
                         </div>
-                        <div className="flex items-center gap-2">
+                        
+                        {/* Recipe Action Buttons with NEW + Plan feature */}
+                        <div className="flex items-center gap-1.5">
+                          <button 
+                            onClick={() => {
+                              setSelectedRecipeForPlan(recipe);
+                              setModalType('planRecipeDirect');
+                            }}
+                            className="text-slate-700 hover:text-slate-950 p-1 bg-slate-100 hover:bg-slate-200 rounded-lg border border-slate-200 text-[10px] font-extrabold px-2 py-1 flex items-center gap-1 transition-all"
+                            title="Add to Meal Plan"
+                          >
+                            <Icons.Plus size={11} style={{ color: '#82bc41' }} /> Plan
+                          </button>
                           <button 
                             onClick={() => setActiveRecipeModal(recipe)}
                             className="text-slate-700 hover:text-slate-900 p-1 bg-slate-100 rounded-lg border border-slate-200 text-[10px] font-bold px-2 py-1 flex items-center gap-1"
@@ -1563,7 +1629,6 @@ export default function App() {
                     </button>
                   </div>
 
-                  {/* Day Picker Pill Buttons */}
                   <div className="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar">
                     {PLANNER_DAYS.map(day => {
                       const count = (nextWeekPlan[day] || []).length;
@@ -1589,7 +1654,6 @@ export default function App() {
                     })}
                   </div>
 
-                  {/* Selected Day's Planned Dishes */}
                   <div className="pt-2 space-y-2">
                     <div className="flex justify-between items-center">
                       <span className="text-xs font-black text-slate-900 uppercase tracking-tight">
@@ -1629,13 +1693,13 @@ export default function App() {
               </div>
             )}
 
-            {/* SUB-TAB 3: INTEGRATED GROCERY & SHOPPING LIST */}
+            {/* SUB-TAB 3: INTEGRATED GROCERY & SHOPPING LIST (OVERFLOW FIXED) */}
             {recipeSubTab === 'shopping' && (
               <div className="space-y-4">
                 <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-4">
                   
-                  {/* Shopping Header & Week Switcher Toggle */}
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pb-3 border-b border-[#eaeaea]">
+                  {/* Shopping Header & Robust Full-Width Week Switcher */}
+                  <div className="space-y-3 pb-3 border-b border-[#eaeaea]">
                     <div>
                       <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
                         <Icons.ShoppingCart size={14} style={{ color: '#82bc41' }} />
@@ -1644,11 +1708,12 @@ export default function App() {
                       <p className="text-[10px] text-slate-500">Auto-compiled from your active ketogenic schedule & plan</p>
                     </div>
 
-                    {/* Week Toggle: Current vs Upcoming */}
-                    <div className="bg-[#fafafa] p-1 rounded-xl border border-[#eaeaea] flex gap-1 self-stretch sm:self-auto">
+                    {/* Zero-Overflow Full-Width Segmented Button */}
+                    <div className="bg-[#fafafa] p-1 rounded-2xl border border-[#eaeaea] grid grid-cols-2 gap-1 w-full">
                       <button
+                        type="button"
                         onClick={() => setActiveShoppingWeek('current')}
-                        className={`flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-[10px] font-black transition-all ${
+                        className={`py-2 text-center rounded-xl text-xs font-black transition-all ${
                           activeShoppingWeek === 'current'
                             ? 'bg-slate-900 text-white shadow-xs'
                             : 'text-slate-600 hover:text-slate-900'
@@ -1657,8 +1722,9 @@ export default function App() {
                         Current Week
                       </button>
                       <button
+                        type="button"
                         onClick={() => setActiveShoppingWeek('upcoming')}
-                        className={`flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-[10px] font-black transition-all ${
+                        className={`py-2 text-center rounded-xl text-xs font-black transition-all ${
                           activeShoppingWeek === 'upcoming'
                             ? 'bg-slate-900 text-white shadow-xs'
                             : 'text-slate-600 hover:text-slate-900'
@@ -1673,10 +1739,10 @@ export default function App() {
                   <form onSubmit={handleAddCustomGrocery} className="flex gap-2">
                     <input
                       type="text"
-                      placeholder={`Add item to ${activeShoppingWeek} shopping list...`}
+                      placeholder={`Add item to ${activeShoppingWeek === 'current' ? 'current' : 'upcoming'} list...`}
                       value={newCustomGroceryText}
                       onChange={(e) => setNewCustomGroceryText(e.target.value)}
-                      className="flex-1 p-2.5 rounded-xl border border-slate-200 bg-[#fafafa] text-xs text-slate-900 font-bold focus:outline-none"
+                      className="flex-1 min-w-0 p-2.5 rounded-xl border border-slate-200 bg-[#fafafa] text-xs text-slate-900 font-bold focus:outline-none"
                     />
                     <button
                       type="submit"
@@ -2056,11 +2122,11 @@ export default function App() {
                   </div>
                   <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
                     <div 
-                      className="h-full rounded-full transition-all duration-500"
+                      className="h-full rounded-full transition-all duration-500" 
                       style={{ 
                         width: `${Math.min(100, Math.max(15, weightProgress || 100))}%`, 
                         backgroundColor: '#82bc41' 
-                      }}
+                      }} 
                     />
                   </div>
                   <div className="flex justify-between text-[10px] font-bold text-slate-500 pt-0.5">
@@ -2198,6 +2264,90 @@ export default function App() {
       </main>
 
       {/* --- MODALS --- */}
+
+      {/* Direct Plan Recipe from Cookbook Modal */}
+      {modalType === 'planRecipeDirect' && selectedRecipeForPlan && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 flex items-end sm:items-center justify-center p-4">
+          <div className="bg-white rounded-3xl p-5 w-full max-w-sm border border-[#eaeaea] shadow-2xl space-y-4">
+            <div className="flex justify-between items-start pb-2 border-b border-[#eaeaea]">
+              <div>
+                <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block">
+                  Add to Meal Plan
+                </span>
+                <h3 className="text-sm font-black text-slate-900">{selectedRecipeForPlan.name}</h3>
+                <span className="text-[10px] text-slate-500 font-bold">
+                  {selectedRecipeForPlan.cals} kcal • {selectedRecipeForPlan.protein}g Protein
+                </span>
+              </div>
+              <button 
+                onClick={() => {
+                  setModalType(null);
+                  setSelectedRecipeForPlan(null);
+                }} 
+                className="text-slate-400 hover:text-slate-900"
+              >
+                <Icons.X size={16} />
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              {/* Select Target Week */}
+              <div>
+                <label className="text-[10px] font-bold text-slate-500 uppercase block mb-1">Target Week</label>
+                <div className="grid grid-cols-2 gap-1.5 bg-[#fafafa] p-1 rounded-xl border border-[#eaeaea]">
+                  <button
+                    type="button"
+                    onClick={() => setPlanTargetWeek('current')}
+                    className={`py-1.5 text-center rounded-lg text-xs font-black transition-all ${
+                      planTargetWeek === 'current'
+                        ? 'bg-slate-900 text-white shadow-xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    Current Week
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPlanTargetWeek('upcoming')}
+                    className={`py-1.5 text-center rounded-lg text-xs font-black transition-all ${
+                      planTargetWeek === 'upcoming'
+                        ? 'bg-slate-900 text-white shadow-xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    Upcoming Week
+                  </button>
+                </div>
+              </div>
+
+              {/* Select Day */}
+              <div>
+                <label className="text-[10px] font-bold text-slate-500 uppercase block mb-1">Select Day</label>
+                <select
+                  value={planTargetDay}
+                  onChange={(e) => setPlanTargetDay(e.target.value)}
+                  className="w-full p-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-900 bg-[#fafafa] focus:outline-none"
+                >
+                  {PLANNER_DAYS.map(d => (
+                    <option key={d} value={d}>{d}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={handleConfirmPlanRecipeDirect}
+                  className="w-full py-3 text-white font-black text-xs rounded-xl shadow-xs transition-all"
+                  style={{ backgroundColor: '#82bc41' }}
+                >
+                  Confirm & Add to {planTargetWeek === 'current' ? 'Current Schedule' : 'Upcoming Plan'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Add Recipe to Next Week Planner Modal */}
       {modalType === 'addPlanMeal' && (
@@ -2338,7 +2488,20 @@ export default function App() {
               </div>
             </div>
 
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedRecipeForPlan(activeRecipeModal);
+                  setActiveRecipeModal(null);
+                  setModalType('planRecipeDirect');
+                }}
+                className="flex-1 py-3 text-white text-xs font-black rounded-xl shadow-xs"
+                style={{ backgroundColor: '#82bc41' }}
+              >
+                + Add to Meal Plan
+              </button>
+
               {!recipes.some(r => r.name === activeRecipeModal.name) && (
                 <button 
                   onClick={() => {
@@ -2349,15 +2512,14 @@ export default function App() {
                     setTimeout(() => setToastMessage(null), 3000);
                     setActiveRecipeModal(null);
                   }}
-                  className="flex-1 py-3 text-white text-xs font-black rounded-xl shadow-sm"
-                  style={{ backgroundColor: '#82bc41' }}
+                  className="flex-1 py-3 bg-slate-800 text-white text-xs font-black rounded-xl shadow-sm"
                 >
                   Save to Library
                 </button>
               )}
               <button 
                 onClick={() => setActiveRecipeModal(null)}
-                className="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-bold rounded-xl border border-slate-200"
+                className="py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-bold rounded-xl border border-slate-200"
               >
                 Close
               </button>
