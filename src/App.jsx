@@ -19,45 +19,9 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const googleProvider = new GoogleAuthProvider();
 
-// SVG Icons
-const Icon = ({ path, size = 20, className = "", fill = "none" }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill={fill}
-    stroke="currentColor"
-    strokeWidth="2.4"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-    dangerouslySetInnerHTML={{ __html: path }}
-  />
-);
-
-const Icons = {
-  Flame: (p) => <Icon {...p} path='<path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z"/>' />,
-  Calendar: (p) => <Icon {...p} path='<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>' />,
-  BookOpen: (p) => <Icon {...p} path='<path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>' />,
-  Activity: (p) => <Icon {...p} path='<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>' />,
-  Clock: (p) => <Icon {...p} path='<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>' />,
-  Settings: (p) => <Icon {...p} path='<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l-.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06-.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>' />,
-  X: (p) => <Icon {...p} path='<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>' />,
-  Plus: (p) => <Icon {...p} path='<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>' />,
-  Trash: (p) => <Icon {...p} path='<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>' />,
-  Youtube: (p) => <Icon {...p} fill="currentColor" path='<path d="M22.54 6.42a2.78 2.78 0 00-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 00-1.94 2A29 29 0 001 11.75a29 29 0 00.46 5.33 2.78 2.78 0 001.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 001.94-2 29 29 0 00.46-5.33 29 29 0 00-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="white"/>' />,
-  ExternalLink: (p) => <Icon {...p} path='<path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>' />,
-  Check: (p) => <Icon {...p} path='<polyline points="20 6 9 17 4 12"/>' />,
-  LogOut: (p) => <Icon {...p} path='<path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>' />,
-  Cloud: (p) => <Icon {...p} path='<path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z"/>' />,
-  Sliders: (p) => <Icon {...p} path='<line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/>' />,
-  Zap: (p) => <Icon {...p} path='<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>' />,
-  Award: (p) => <Icon {...p} path='<circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>' />,
-  TrendingUp: (p) => <Icon {...p} path='<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>' />,
-  Clipboard: (p) => <Icon {...p} path='<path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>' />,
-  RotateCcw: (p) => <Icon {...p} path='<polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/>' />,
-  ShoppingCart: (p) => <Icon {...p} path='<circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>' />
-};
+// ==========================================
+// 1. BASE DATA & CONSTANTS (Strictly Hoisted)
+// ==========================================
 
 const INITIAL_WORKOUTS = [
   { id: 'lib-bdp', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' },
@@ -272,7 +236,6 @@ const METABOLIC_PHASES = [
   }
 ];
 
-// Standard Week 1 Current Meals
 const WEEK_1_MEAL_PLAN = [
   { dayId: 1, dayName: 'Monday', meals: [
     { id: 'm-mon-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 },
@@ -292,35 +255,12 @@ const WEEK_1_MEAL_PLAN = [
     { id: 'm-sat-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 },
     { id: 'm-sat-2', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }
   ]},
-  { dayId: 0, dayName: 'Sunday', meals: [
+  { id: 0, dayName: 'Sunday', meals: [
     { id: 'm-sun-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 },
     { id: 'm-sun-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }
   ]}
 ];
 
-// Helper to assemble the initial imported plan
-const createInitialImportedPlan = () => {
-  const plan = { Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: [], Saturday: [], Sunday: [] };
-  WEEK_1_MEAL_PLAN.forEach(day => {
-    plan[day.dayName] = day.meals.map(m => {
-      const matchRecipe = INITIAL_RECIPES.find(r => r.name.toLowerCase() === m.name.toLowerCase());
-      return {
-        id: `plan-init-${day.dayName}-${m.id}`,
-        recipeId: matchRecipe?.id || m.id,
-        name: m.name,
-        category: matchRecipe?.category || 'Keto',
-        cals: m.cals,
-        protein: m.protein,
-        carbs: m.carbs,
-        fat: m.fat,
-        ingredients: matchRecipe?.ingredients || []
-      };
-    });
-  });
-  return plan;
-};
-
-// Protocols Definition with Week 1 Workouts
 const PROTOCOLS = {
   adf: {
     id: 'adf',
@@ -406,12 +346,44 @@ const PROTOCOLS = {
 
 const PLANNER_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-// --- Intelligent Food Item Cleaner (Strips quantities, measurements, and prep words) ---
-const cleanFoodItem = (raw) => {
+const FOOD_CATEGORY_ORDER = [
+  'Proteins & Meats',
+  'Produce & Veggies',
+  'Dairy & Cheeses',
+  'Fats & Oils',
+  'Pantry & Seasonings',
+  'Other Items'
+];
+
+// ==========================================
+// 2. HELPER FUNCTIONS
+// ==========================================
+
+function createInitialImportedPlan() {
+  const plan = { Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: [], Saturday: [], Sunday: [] };
+  WEEK_1_MEAL_PLAN.forEach(day => {
+    plan[day.dayName] = day.meals.map(m => {
+      const matchRecipe = INITIAL_RECIPES.find(r => r.name.toLowerCase() === m.name.toLowerCase());
+      return {
+        id: `plan-init-${day.dayName}-${m.id}`,
+        recipeId: matchRecipe?.id || m.id,
+        name: m.name,
+        category: matchRecipe?.category || 'Keto',
+        cals: m.cals,
+        protein: m.protein,
+        carbs: m.carbs,
+        fat: m.fat,
+        ingredients: matchRecipe?.ingredients || []
+      };
+    });
+  });
+  return plan;
+}
+
+function cleanFoodItem(raw) {
   if (!raw) return '';
   const str = raw.toLowerCase().trim();
 
-  // 1. Precise mappings for recipe staples
   if (str.includes('ribeye')) return 'Ribeye Steak';
   if (str.includes('sirloin')) return 'Sirloin Steak';
   if (str.includes('flank steak')) return 'Flank Steak';
@@ -496,7 +468,6 @@ const cleanFoodItem = (raw) => {
   if (str.includes('hot sauce') || str.includes('buffalo')) return 'Buffalo Hot Sauce';
   if (str.includes('pickle')) return 'Pickles';
 
-  // Fallback: Strip measurement units and numbers
   let cleaned = raw.replace(/\([^)]*\)/g, '');
   cleaned = cleaned.replace(/^(a\s+|pinch of\s+|dash of\s+)/i, '');
   cleaned = cleaned.replace(/^[\d\s\/\.\-\–]+/g, '');
@@ -505,10 +476,9 @@ const cleanFoodItem = (raw) => {
   cleaned = cleaned.replace(/\s+/g, ' ').trim();
   if (!cleaned) return raw;
   return cleaned.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
-};
+}
 
-// Helper function to intelligently classify items by food type
-const getFoodCategory = (itemName) => {
+function getFoodCategory(itemName) {
   const l = (itemName || '').toLowerCase();
   
   if (
@@ -564,21 +534,16 @@ const getFoodCategory = (itemName) => {
   }
 
   return 'Other Items';
-};
+}
 
-const FOOD_CATEGORY_ORDER = [
-  'Proteins & Meats',
-  'Produce & Veggies',
-  'Dairy & Cheeses',
-  'Fats & Oils',
-  'Pantry & Seasonings',
-  'Other Items'
-];
+// ==========================================
+// 3. MAIN COMPONENT
+// ==========================================
 
 export default function App() {
   const [user, setUser] = useState(null);
 
-  const [activeTab, setActiveTab] = useState('schedule');
+  const [activeTab, setActiveTab] = useState('dashboard');
   const todayId = new Date().getDay();
   const [selectedDay, setSelectedDay] = useState(todayId);
 
@@ -633,16 +598,16 @@ export default function App() {
     try { return JSON.parse(localStorage.getItem('ks_recipes') || JSON.stringify(INITIAL_RECIPES)); } catch { return INITIAL_RECIPES; }
   });
 
-  // --- Recipe Sub-Tabs & Meal Planning / Shopping State (Preloaded with One-Time Import) ---
+  // --- Recipe Sub-Tabs & Meal Planning / Shopping State ---
   const [recipeSubTab, setRecipeSubTab] = useState('catalog');
   const [selectedPlanDay, setSelectedPlanDay] = useState('Monday');
+  
   const [nextWeekPlan, setNextWeekPlan] = useState(() => {
     try {
       const saved = localStorage.getItem('ks_next_week_plan');
-      return saved ? JSON.parse(saved) : createInitialImportedPlan();
-    } catch {
-      return createInitialImportedPlan();
-    }
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return createInitialImportedPlan();
   });
 
   // Shopping List States
@@ -1315,7 +1280,6 @@ export default function App() {
       });
     }
 
-    // Add Custom Groceries
     (customGroceries[activeShoppingWeek] || []).forEach(item => {
       addOrIncrement(item.name, 'Custom Item', true);
     });
@@ -1330,7 +1294,6 @@ export default function App() {
   const currentShoppingItems = getAggregatedShoppingList();
   const checkedShoppingCount = currentShoppingItems.filter(item => checkedGroceries[item.id]).length;
 
-  // Group shopping items by category
   const groupedShoppingItems = FOOD_CATEGORY_ORDER.reduce((acc, cat) => {
     const items = currentShoppingItems.filter(item => item.category === cat);
     if (items.length > 0) {
@@ -1344,7 +1307,6 @@ export default function App() {
     ? recipes 
     : recipes.filter(r => r.category === recipeCategory);
 
-  // Dynamic Weight Delta & Progress Calculations
   const isWeightConfigured = weightData.start > 0 && weightData.current > 0;
   const weightDiff = isWeightConfigured ? weightData.start - weightData.current : 0;
   const isWeightLost = weightDiff >= 0;
@@ -1354,7 +1316,6 @@ export default function App() {
     ? Math.max(0, Math.min(100, Math.round((weightDiff / totalToLose) * 100)))
     : 0;
 
-  // Reset Weight Baseline Handler
   const handleResetWeightProgress = () => {
     const confirmed = window.confirm(
       `Reset weight profile and history?\n\nThis will reset your starting baseline and clear historical progression logs.`
@@ -1371,7 +1332,6 @@ export default function App() {
     setTimeout(() => setToastMessage(null), 3000);
   };
 
-  // End Fast Handler
   const handleStopFast = () => {
     const confirmed = window.confirm("Are you ready to stop your fast and record your duration?");
     if (!confirmed) return;
@@ -1464,13 +1424,13 @@ export default function App() {
           </div>
         </div>
 
-        {/* Tab Navigation */}
+        {/* Tab Navigation: Dashboard is opening page, Fasting is next to Stats */}
         <div className="grid grid-cols-5 border-b border-[#eaeaea] -mx-5 px-2">
           {[
             { id: 'dashboard', icon: Icons.Activity, label: 'Dash' },
             { id: 'schedule', icon: Icons.Calendar, label: 'Schedule' },
-            { id: 'fasting', icon: Icons.Clock, label: 'Fasting' },
             { id: 'recipes', icon: Icons.BookOpen, label: 'Recipes' },
+            { id: 'fasting', icon: Icons.Clock, label: 'Fasting' },
             { id: 'stats', icon: Icons.TrendingUp, label: 'Stats' }
           ].map(tab => (
             <button
@@ -1737,7 +1697,7 @@ export default function App() {
           </div>
         )}
 
-        {/* DASHBOARD TAB */}
+        {/* DASHBOARD TAB (Default Opening Page) */}
         {activeTab === 'dashboard' && (
           <div className="space-y-3">
             <div className="bg-white rounded-2xl border border-[#eaeaea] p-4 shadow-xs flex items-center justify-between">
@@ -1817,7 +1777,7 @@ export default function App() {
               </div>
 
               <h3 className="text-sm font-black text-white mb-1">{currentFeaturedDish.name}</h3>
-              <p className="text-xs text-slate-300 leading-relaxed mb-3">{currentFeaturedDish.ingredients.join(', ')}</p>
+              <p className="text-xs text-slate-300 leading-relaxed mb-3">{currentFeaturedDish.ingredients.map(ing => cleanFoodItem(ing)).join(', ')}</p>
 
               <div className="flex items-center justify-between pt-2 border-t border-slate-800">
                 <button 
@@ -2183,7 +2143,7 @@ export default function App() {
               </div>
             )}
 
-            {/* SUB-TAB 4: INTEGRATED GROCERY & SHOPPING LIST (SIMPLIFIED FOOD ITEMS + QUANTITIES) */}
+            {/* SUB-TAB 4: INTEGRATED GROCERY & SHOPPING LIST */}
             {recipeSubTab === 'shopping' && (
               <div className="space-y-4">
                 <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-4">
@@ -2353,6 +2313,443 @@ export default function App() {
                 </div>
               </div>
             )}
+
+          </div>
+        )}
+
+        {/* FASTING TAB (Next to Stats) */}
+        {activeTab === 'fasting' && (
+          <div className="space-y-4">
+            
+            {/* Main Timer Display Card */}
+            <div className="bg-white rounded-3xl border border-[#eaeaea] p-6 shadow-xs text-center space-y-4">
+              <div className="flex items-center justify-center gap-2">
+                <Icons.Clock className={`w-6 h-6 text-slate-400 ${fastingState.active ? 'animate-pulse' : ''}`} style={fastingState.active ? { color: '#82bc41' } : {}} />
+                <span className="text-[11px] font-black uppercase tracking-widest text-slate-500">
+                  {fastingState.active ? 'Fast In Progress' : 'Fast Not Started'}
+                </span>
+              </div>
+              
+              <div className="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight tabular-nums font-mono py-1">
+                {formatTime(fastingElapsed)}
+              </div>
+
+              <div className="flex items-center justify-center gap-2">
+                <span className="text-xs font-bold text-slate-600">
+                  Target Window: <strong className="text-slate-900">{fastingState.preset} Hours</strong>
+                </span>
+                {fastingState.active && (
+                  <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    {Math.min(100, Math.round((currentElapsedHours / fastingState.preset) * 100))}% Completed
+                  </span>
+                )}
+              </div>
+
+              {fastingState.active && (
+                <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full rounded-full transition-all duration-500" 
+                    style={{ 
+                      width: `${Math.min(100, (currentElapsedHours / fastingState.preset) * 100)}%`, 
+                      backgroundColor: '#82bc41' 
+                    }} 
+                  />
+                </div>
+              )}
+
+              {/* 8 Fasting Presets */}
+              <div className="pt-2">
+                <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 block mb-2">
+                  Select Fasting Preset
+                </span>
+                <div className="grid grid-cols-4 gap-2">
+                  {FASTING_PRESETS.map(preset => (
+                    <button
+                      key={preset.id}
+                      onClick={() => {
+                        const updated = { ...fastingState, preset: preset.hours };
+                        setFastingState(updated);
+                        syncToCloudAndLocal({ fastingState: updated });
+                      }}
+                      className={`py-2 px-1 rounded-xl text-xs font-black border transition-all ${
+                        fastingState.preset === preset.hours && !fastingState.active
+                          ? 'text-white border-transparent shadow-xs'
+                          : fastingState.preset === preset.hours && fastingState.active
+                          ? 'border-[#82bc41] text-emerald-700 bg-emerald-50 font-black'
+                          : 'bg-white text-slate-700 border-[#eaeaea] hover:bg-slate-50'
+                      }`}
+                      style={fastingState.preset === preset.hours && !fastingState.active ? { backgroundColor: '#82bc41' } : {}}
+                    >
+                      {preset.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Start and Stop Buttons */}
+              <div className="pt-2">
+                {!fastingState.active ? (
+                  <button 
+                    onClick={() => {
+                      const updated = { ...fastingState, active: true, startTime: Date.now() };
+                      setFastingState(updated);
+                      syncToCloudAndLocal({ fastingState: updated });
+                      setToastMessage(`Fast started! Target: ${fastingState.preset}h`);
+                      setTimeout(() => setToastMessage(null), 3000);
+                    }}
+                    className="w-full py-3.5 text-white rounded-2xl font-black text-sm tracking-wide shadow-md transition-all hover:opacity-95 flex items-center justify-center gap-2"
+                    style={{ backgroundColor: '#82bc41' }}
+                  >
+                    <Icons.Zap size={16} /> START FAST
+                  </button>
+                ) : (
+                  <button 
+                    onClick={handleStopFast}
+                    className="w-full py-3.5 bg-rose-600 hover:bg-rose-700 text-white rounded-2xl font-black text-sm tracking-wide shadow-md transition-all flex items-center justify-center gap-2"
+                  >
+                    <Icons.X size={16} /> STOP FAST
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Last Completed Fast Banner */}
+            {fastingState.lastCompletedFast && !fastingState.active && (
+              <div className="bg-emerald-50/60 border border-emerald-200 rounded-2xl p-4 shadow-xs flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white shrink-0" style={{ backgroundColor: '#82bc41' }}>
+                    <Icons.Award size={18} />
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-black uppercase tracking-wider text-emerald-800 block">
+                      Last Fast Completed
+                    </span>
+                    <span className="text-base font-black text-slate-900">
+                      {formatDurationDisplay(fastingState.lastCompletedFast.durationMs)}
+                    </span>
+                    <span className="text-[10px] text-slate-600 block mt-0.5">
+                      Target was {fastingState.lastCompletedFast.preset}h • {fastingState.lastCompletedFast.completedAtDate} at {fastingState.lastCompletedFast.completedAtTime}
+                    </span>
+                  </div>
+                </div>
+                {fastingState.lastCompletedFast.hitGoal && (
+                  <span className="text-[10px] font-black px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-800 border border-emerald-300 shrink-0">
+                    Goal Reached!
+                  </span>
+                )}
+              </div>
+            )}
+
+            {/* SINGLE DYNAMIC METABOLIC PHASE CARD */}
+            <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-[#eaeaea]">
+                <div>
+                  <span className="text-[10px] font-black uppercase tracking-wider block" style={{ color: '#82bc41' }}>
+                    Metabolic Stage {activePhase.phaseNumber} of 5
+                  </span>
+                  <h3 className="text-sm font-black text-slate-900 mt-0.5">
+                    {activePhase.name}
+                  </h3>
+                </div>
+                <div className="text-right">
+                  <span 
+                    className={`text-[10px] font-black px-2.5 py-1 rounded-lg inline-block ${
+                      fastingState.active 
+                        ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' 
+                        : 'bg-slate-100 text-slate-600 border border-slate-200'
+                    }`}
+                  >
+                    {fastingState.active ? activePhase.range : 'Standby'}
+                  </span>
+                </div>
+              </div>
+
+              {fastingState.active && (
+                <div className="space-y-1.5">
+                  <div className="flex justify-between text-[10px] font-bold text-slate-600">
+                    <span>Stage Progress</span>
+                    <span className="text-slate-900 font-extrabold">{activePhaseProgress}%</span>
+                  </div>
+                  <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full rounded-full transition-all duration-500" 
+                      style={{ width: `${activePhaseProgress}%`, backgroundColor: '#82bc41' }} 
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div className="bg-[#fafafa] p-3.5 rounded-2xl border border-[#eaeaea] space-y-2">
+                <p className="text-xs text-slate-700 leading-relaxed font-medium">
+                  {activePhase.summary}
+                </p>
+
+                {fastingState.active && (
+                  <div className="text-xs bg-white p-2.5 rounded-xl border border-slate-200/80 text-slate-800 flex items-start gap-2 shadow-2xs">
+                    <Icons.Activity size={14} className="text-emerald-600 shrink-0 mt-0.5" />
+                    <span><strong>Current State:</strong> {activeTip}</span>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pt-1">
+                <div className="text-[10px] font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200">
+                  Biomarkers: <span className="text-slate-900 font-extrabold">{activePhase.biomarkers}</span>
+                </div>
+
+                {fastingState.active && nextPhase && msToNextPhase > 0 ? (
+                  <div className="flex items-center gap-1.5 text-xs text-slate-600 ml-auto">
+                    <span>Next: <strong>{nextPhase.shortStatus}</strong></span>
+                    <span className="font-black text-emerald-600">({formatDurationDisplay(msToNextPhase)})</span>
+                  </div>
+                ) : fastingState.active && !nextPhase ? (
+                  <span className="text-xs font-black text-emerald-600 ml-auto">
+                    ✓ Maximum Regeneration Stage
+                  </span>
+                ) : null}
+              </div>
+            </div>
+
+            {/* Refeed Helper */}
+            <div className="bg-white rounded-2xl border border-[#eaeaea] p-4 shadow-xs">
+              <div className="flex items-center gap-1.5 mb-1.5">
+                <Icons.Flame className="w-4 h-4" style={{ color: '#82bc41' }} />
+                <span className="text-xs font-black text-slate-900">Refeed Protocol Guide</span>
+              </div>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Break prolonged 36h/48h/72h fasts with warm bone broth or easily digestible lean protein 45 minutes prior to whole meals to safeguard gut integrity and avoid blood sugar rushes.
+              </p>
+            </div>
+
+          </div>
+        )}
+
+        {/* STATS & PROGRESS TAB */}
+        {activeTab === 'stats' && (
+          <div className="space-y-4">
+            
+            {/* Top Stat KPI Highlights */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              <div className="bg-white p-3.5 rounded-2xl border border-[#eaeaea] shadow-xs text-center">
+                <span className="text-[9px] font-black uppercase tracking-wider text-slate-500 block">Total Fasting</span>
+                <span className="text-lg font-black text-slate-900">{totalFastingHours.toFixed(0)}h</span>
+                <span className="text-[9px] text-slate-500 block mt-0.5">{fastingHistory.length} sessions</span>
+              </div>
+              <div className="bg-white p-3.5 rounded-2xl border border-[#eaeaea] shadow-xs text-center">
+                <span className="text-[9px] font-black uppercase tracking-wider text-slate-500 block">Avg Fast</span>
+                <span className="text-lg font-black text-slate-900">{avgFastHours}h</span>
+                <span className="text-[9px] text-emerald-600 font-bold block mt-0.5">{fastSuccessRate}% hit goal</span>
+              </div>
+              <div className="bg-white p-3.5 rounded-2xl border border-[#eaeaea] shadow-xs text-center">
+                <span className="text-[9px] font-black uppercase tracking-wider text-slate-500 block">Net Weight</span>
+                <span className="text-lg font-black text-slate-900" style={{ color: isWeightLost ? '#82bc41' : '#e11d48' }}>
+                  {isWeightConfigured ? (isWeightLost ? `-${absWeightDiff}` : `+${absWeightDiff}`) : '0.0'} lbs
+                </span>
+                <span className="text-[9px] text-slate-500 block mt-0.5">Goal: {weightData.goal > 0 ? `${weightData.goal} lbs` : '--'}</span>
+              </div>
+              <div className="bg-white p-3.5 rounded-2xl border border-[#eaeaea] shadow-xs text-center">
+                <span className="text-[9px] font-black uppercase tracking-wider text-slate-500 block">Consistency</span>
+                <span className="text-lg font-black text-slate-900">{workoutConsistencyRate}%</span>
+                <span className="text-[9px] text-slate-500 block mt-0.5">{totalCompletedWorkouts} workouts</span>
+              </div>
+            </div>
+
+            {/* Historical Weight Trend Card */}
+            <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-4">
+              <div className="flex items-center justify-between pb-2 border-b border-[#eaeaea]">
+                <div>
+                  <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                    <Icons.TrendingUp size={14} style={{ color: '#82bc41' }} />
+                    Weight Progression Trend
+                  </h3>
+                  <p className="text-[10px] text-slate-500">Live baseline synchronized with your profile</p>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <button
+                    onClick={handleResetWeightProgress}
+                    className="px-2.5 py-1 text-[10px] font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg transition-all flex items-center gap-1"
+                    title="Reset starting baseline to current weight"
+                  >
+                    <Icons.RotateCcw size={11} /> Reset
+                  </button>
+                  <button
+                    onClick={() => setModalType('weight')}
+                    className="px-2.5 py-1 text-[10px] font-black text-white rounded-lg shadow-xs"
+                    style={{ backgroundColor: '#82bc41' }}
+                  >
+                    + Log Weight
+                  </button>
+                </div>
+              </div>
+
+              {isWeightConfigured ? (
+                <div className="space-y-3 pt-1">
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-xs font-bold text-slate-700">
+                      <span className="text-slate-500">Starting Baseline</span>
+                      <span className="text-slate-900 font-extrabold">{weightData.start} lbs</span>
+                    </div>
+                    <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                      <div className="h-full rounded-full bg-slate-400 w-full" />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-xs font-bold text-slate-700">
+                      <span className="text-slate-900 font-black">Current Weight</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-slate-900 font-black text-sm">{weightData.current} lbs</span>
+                        <span 
+                          className={`text-[10px] font-black px-1.5 py-0.5 rounded ${
+                            isWeightLost ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'
+                          }`}
+                        >
+                          {isWeightLost ? `-${absWeightDiff} lbs` : `+${absWeightDiff} lbs`}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                      <div 
+                        className="h-full rounded-full transition-all duration-500" 
+                        style={{ 
+                          width: `${Math.min(100, Math.max(15, weightProgress || 100))}%`, 
+                          backgroundColor: '#82bc41' 
+                        }} 
+                      />
+                    </div>
+                    <div className="flex justify-between text-[10px] font-bold text-slate-500 pt-0.5">
+                      <span>Goal: {weightData.goal} lbs</span>
+                      <span style={{ color: isWeightLost ? '#82bc41' : '#e11d48' }}>
+                        {weightProgress}% of goal reached
+                      </span>
+                    </div>
+                  </div>
+
+                  {weightHistory.length > 0 && (
+                    <div className="pt-3 border-t border-[#eaeaea] space-y-2">
+                      <span className="text-[9px] font-black uppercase tracking-wider text-slate-400 block">
+                        Past Weigh-in History
+                      </span>
+                      <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
+                        {weightHistory.map((item, idx) => (
+                          <div key={item.id || idx} className="flex items-center justify-between text-xs bg-[#fafafa] p-2 rounded-xl border border-[#eaeaea]">
+                            <span className="text-slate-600 font-bold">{item.date}</span>
+                            <div className="flex items-center gap-2">
+                              <span className="text-slate-900 font-black">{item.weight} lbs</span>
+                              {item.diff !== undefined && item.diff !== 0 && (
+                                <span className={`text-[10px] font-black ${item.diff < 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                                  {item.diff < 0 ? `${item.diff} lbs` : `+${item.diff} lbs`}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="p-6 text-center text-xs text-slate-400 bg-[#fafafa] rounded-2xl border border-dashed border-[#eaeaea]">
+                  No weight profile set yet. Tap <strong>"+ Log Weight"</strong> above to establish your starting baseline.
+                </div>
+              )}
+            </div>
+
+            {/* Fasting Endurance Metrics */}
+            <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-3">
+              <div className="flex items-center justify-between pb-2 border-b border-[#eaeaea]">
+                <div>
+                  <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                    <Icons.Clock size={14} style={{ color: '#82bc41' }} />
+                    Fasting Endurance Stats
+                  </h3>
+                  <p className="text-[10px] text-slate-500">Cumulative metabolic endurance</p>
+                </div>
+                <span className="text-[10px] font-black text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+                  Longest: {longestFastHours}h
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 pt-1">
+                <div className="bg-[#fafafa] p-3 rounded-2xl border border-[#eaeaea]">
+                  <span className="text-[9px] font-black text-slate-500 uppercase block">Weekly BDP Burpees</span>
+                  <span className="text-base font-black text-slate-900">{weeklyBdpMinutes} / 80 Mins</span>
+                  <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden mt-1.5">
+                    <div 
+                      className="h-full rounded-full" 
+                      style={{ width: `${Math.min(100, (weeklyBdpMinutes / 80) * 100)}%`, backgroundColor: '#82bc41' }} 
+                    />
+                  </div>
+                </div>
+
+                <div className="bg-[#fafafa] p-3 rounded-2xl border border-[#eaeaea]">
+                  <span className="text-[9px] font-black text-slate-500 uppercase block">Fasting Target Rate</span>
+                  <span className="text-base font-black text-slate-900">{fastSuccessRate}% On-Target</span>
+                  <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden mt-1.5">
+                    <div 
+                      className="h-full rounded-full" 
+                      style={{ width: `${fastSuccessRate}%`, backgroundColor: '#82bc41' }} 
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Daily Journal & Notes Section */}
+            <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-3">
+              <div className="flex items-center justify-between pb-2 border-b border-[#eaeaea]">
+                <div>
+                  <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                    <Icons.Clipboard size={14} style={{ color: '#82bc41' }} />
+                    Protocol Journal & Check-ins
+                  </h3>
+                  <p className="text-[10px] text-slate-500">Log joint comfort, energy, ketone levels, or refeed notes</p>
+                </div>
+              </div>
+
+              <form onSubmit={handleAddJournalNote} className="space-y-2">
+                <textarea
+                  value={newJournalText}
+                  onChange={(e) => setNewJournalText(e.target.value)}
+                  placeholder="Record today's notes (e.g., Felt sharp during 20m burpees, joints felt pain-free, broken fast with bone broth)..."
+                  className="w-full p-3 rounded-xl border border-slate-200 bg-[#fafafa] text-xs text-slate-900 font-medium focus:outline-none focus:border-slate-400 min-h-[70px]"
+                />
+                <button
+                  type="submit"
+                  className="w-full py-2.5 text-white font-black text-xs rounded-xl shadow-xs transition-all"
+                  style={{ backgroundColor: '#82bc41' }}
+                >
+                  Save Journal Entry
+                </button>
+              </form>
+
+              <div className="space-y-2 pt-2 max-h-48 overflow-y-auto pr-1">
+                {journalNotes.length === 0 ? (
+                  <p className="text-xs text-slate-400 italic text-center py-2">No journal entries logged yet.</p>
+                ) : (
+                  journalNotes.map(item => (
+                    <div key={item.id} className="p-3 bg-[#fafafa] rounded-2xl border border-[#eaeaea] space-y-1">
+                      <div className="flex justify-between items-center text-[10px] font-black text-slate-500">
+                        <span>{item.date} • {item.time}</span>
+                        <button
+                          onClick={() => {
+                            const updated = journalNotes.filter(j => j.id !== item.id);
+                            setJournalNotes(updated);
+                            syncToCloudAndLocal({ journalNotes: updated });
+                          }}
+                          className="text-slate-400 hover:text-red-500"
+                        >
+                          <Icons.Trash size={12} />
+                        </button>
+                      </div>
+                      <p className="text-xs text-slate-800 font-medium leading-relaxed">
+                        {item.text}
+                      </p>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
 
           </div>
         )}
@@ -2569,7 +2966,7 @@ export default function App() {
                 <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 block mb-1">Ingredients</span>
                 <ul className="list-disc pl-4 text-xs text-slate-800 space-y-1 font-medium bg-slate-50 p-3 rounded-2xl border border-slate-200">
                   {activeRecipeModal.ingredients?.map((ing, idx) => (
-                    <li key={idx}>{ing}</li>
+                    <li key={idx}>{cleanFoodItem(ing)}</li>
                   ))}
                 </ul>
               </div>
