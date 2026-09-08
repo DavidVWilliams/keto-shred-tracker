@@ -19,43 +19,9 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const googleProvider = new GoogleAuthProvider();
 
-// SVG Icons
-const Icon = ({ path, size = 20, className = "", fill = "none" }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill={fill}
-    stroke="currentColor"
-    strokeWidth="2.4"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-    dangerouslySetInnerHTML={{ __html: path }}
-  />
-);
-
-const Icons = {
-  Flame: (p) => <Icon {...p} path='<path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z"/>' />,
-  Calendar: (p) => <Icon {...p} path='<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>' />,
-  BookOpen: (p) => <Icon {...p} path='<path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>' />,
-  Activity: (p) => <Icon {...p} path='<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>' />,
-  Clock: (p) => <Icon {...p} path='<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>' />,
-  Settings: (p) => <Icon {...p} path='<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l-.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06-.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>' />,
-  X: (p) => <Icon {...p} path='<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>' />,
-  Plus: (p) => <Icon {...p} path='<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>' />,
-  Trash: (p) => <Icon {...p} path='<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>' />,
-  Youtube: (p) => <Icon {...p} fill="currentColor" path='<path d="M22.54 6.42a2.78 2.78 0 00-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 00-1.94 2A29 29 0 001 11.75a29 29 0 00.46 5.33 2.78 2.78 0 001.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 001.94-2 29 29 0 00.46-5.33 29 29 0 00-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="white"/>' />,
-  ExternalLink: (p) => <Icon {...p} path='<path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>' />,
-  Check: (p) => <Icon {...p} path='<polyline points="20 6 9 17 4 12"/>' />,
-  LogOut: (p) => <Icon {...p} path='<path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>' />,
-  Cloud: (p) => <Icon {...p} path='<path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z"/>' />,
-  Sliders: (p) => <Icon {...p} path='<line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/>' />,
-  Zap: (p) => <Icon {...p} path='<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>' />,
-  Award: (p) => <Icon {...p} path='<circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>' />,
-  TrendingUp: (p) => <Icon {...p} path='<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>' />,
-  Clipboard: (p) => <Icon {...p} path='<path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>' />
-};
+// ==========================================
+// 1. BASE DATA & CONSTANTS (Strictly Hoisted)
+// ==========================================
 
 const INITIAL_WORKOUTS = [
   { id: 'lib-bdp', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' },
@@ -115,7 +81,71 @@ const INITIAL_RECIPES = [
   { id: 'poultry-12', name: 'Chicken Thigh & Avocado Salad', category: 'Poultry', cals: 570, protein: 49, carbs: 4, fat: 39, ingredients: ['2 grilled chicken thighs (sliced)', '2 cups mixed greens', '1/2 sliced avocado', 'Olive oil & lime dressing'], instructions: 'Lay warm grilled chicken thigh slices over a bed of mixed greens and fresh avocado. Dress with olive oil and lime.' }
 ];
 
-// --- 8 Fasting Presets ---
+const KETO_FRIENDLY_FOODS = [
+  {
+    category: "Fats & Oils",
+    items: [
+      { name: "Grass-Fed Butter", desc: "Healthy saturated fats, perfect for cooking & scrambles" },
+      { name: "Extra Virgin Olive Oil", desc: "Monounsaturated fat, ideal for cold salads & dressings" },
+      { name: "Avocado Oil", desc: "High smoke point for high-heat searing and pan-frying" },
+      { name: "Pure Ghee (Clarified Butter)", desc: "Zero lactose, casein-free high smoke point fat" },
+      { name: "Pure MCT Oil", desc: "Rapidly converts into ketone bodies for quick energy" },
+      { name: "Organic Coconut Oil", desc: "Clean medium-chain fatty acids for cooking" }
+    ]
+  },
+  {
+    category: "Proteins & Meats",
+    items: [
+      { name: "Pasture-Raised Eggs", desc: "Choline-rich complete protein and healthy fats" },
+      { name: "80/20 Ground Beef", desc: "Optimal keto fat-to-protein ratio" },
+      { name: "Ribeye Steak", desc: "Premium nutrient-dense marbling for refeeds" },
+      { name: "Sirloin Steak", desc: "Lean, clean high-protein staple" },
+      { name: "Wild Alaskan Salmon", desc: "Loaded with joint-friendly anti-inflammatory Omega-3s" },
+      { name: "Wild Canned Tuna in Olive Oil", desc: "Zero-carb, shelf-stable high protein staple" },
+      { name: "Packed Sardines in Olive Oil", desc: "Calcium, Vitamin D, and essential fatty acids" },
+      { name: "Boneless Chicken Thighs", desc: "Rich flavor and healthy monounsaturated fat" },
+      { name: "Thick-Cut Nitrate-Free Bacon", desc: "Zero carb crunch and savory fat source" }
+    ]
+  },
+  {
+    category: "Low-Carb Veggies",
+    items: [
+      { name: "Fresh Baby Spinach", desc: "Magnesium & potassium powerhouse, virtually zero net carbs" },
+      { name: "Green Cabbage", desc: "Crunchy fiber, gut health, and great in skillets" },
+      { name: "Fresh Asparagus Spears", desc: "Prebiotic fiber, folate, and joint support" },
+      { name: "Hass Avocados", desc: "High in potassium, fiber, and heart-healthy oleic acid" },
+      { name: "Broccoli Crowns", desc: "Sulforaphane, Vitamin C, and clean fiber" },
+      { name: "Cauliflower Florets", desc: "Versatile rice & mash replacement with minimal carbs" },
+      { name: "Zucchini", desc: "Hydrating, versatile for noodle substitutes" },
+      { name: "Sliced Button Mushrooms", desc: "Rich in selenium and savory umami flavors" }
+    ]
+  },
+  {
+    category: "Dairy & Cheeses",
+    items: [
+      { name: "Sharp Cheddar Cheese", desc: "Zero carb aged cheese with bold flavor" },
+      { name: "Full-Fat Cream Cheese", desc: "Creamy fat builder for fluffy scrambles" },
+      { name: "Crumbled Feta Cheese", desc: "Tangy sheep/goat milk cheese, easy on digestion" },
+      { name: "Swiss Cheese", desc: "High calcium, melty low-carb classic" },
+      { name: "Fresh Mozzarella", desc: "High protein, creamy whole-milk cheese" },
+      { name: "Grated Parmesan Cheese", desc: "Savory crusting and sodium source" },
+      { name: "Heavy Whipping Cream", desc: "Zero carb fat source for pan sauces" }
+    ]
+  },
+  {
+    category: "Electrolytes & Pantry",
+    items: [
+      { name: "Grass-Fed Beef Bone Broth", desc: "Collagen, gelatin, and electrolytes for fast-breaking" },
+      { name: "Chicken Bone Broth", desc: "Gentle gut-healing hydration" },
+      { name: "Pink Himalayan Sea Salt", desc: "Essential sodium replenishment during deep ketosis" },
+      { name: "Zero-Sugar Electrolyte Packets", desc: "Prevents keto fatigue, leg cramps, and headaches" },
+      { name: "Organic Black Coffee Beans", desc: "Appetite suppressant & autophagy stimulant" },
+      { name: "Dijon Mustard", desc: "Zero sugar flavor booster for meats and dressings" },
+      { name: "Basil Pesto", desc: "Pine nut & olive oil savory topping" }
+    ]
+  }
+];
+
 const FASTING_PRESETS = [
   { id: '16_8', label: '16:8', hours: 16 },
   { id: '20_4', label: '20:4', hours: 20 },
@@ -127,7 +157,6 @@ const FASTING_PRESETS = [
   { id: '72h', label: '72H', hours: 72 }
 ];
 
-// --- 5 Dynamic Metabolic Stages of Fasting ---
 const METABOLIC_PHASES = [
   {
     id: 'phase_1',
@@ -207,6 +236,32 @@ const METABOLIC_PHASES = [
   }
 ];
 
+// Defined FIRST so PROTOCOLS can reference it without reference errors
+const WEEK_1_MEAL_PLAN = [
+  { dayId: 1, dayName: 'Monday', meals: [
+    { id: 'm-mon-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 },
+    { id: 'm-mon-2', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }
+  ]},
+  { dayId: 2, dayName: 'Tuesday', meals: [] },
+  { dayId: 3, dayName: 'Wednesday', meals: [
+    { id: 'm-wed-1', name: 'Anti-Inflammatory Turmeric Eggs', cals: 480, protein: 38, carbs: 3, fat: 34 },
+    { id: 'm-wed-2', name: 'Ginger Salmon & Avo Bowl', cals: 620, protein: 46, carbs: 5, fat: 42 }
+  ]},
+  { dayId: 4, dayName: 'Thursday', meals: [] },
+  { dayId: 5, dayName: 'Friday', meals: [
+    { id: 'm-fri-1', name: 'Crispy Chicken & Avocado Wrap', cals: 590, protein: 48, carbs: 4, fat: 40 },
+    { id: 'm-fri-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }
+  ]},
+  { dayId: 6, dayName: 'Saturday', meals: [
+    { id: 'm-sat-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 },
+    { id: 'm-sat-2', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }
+  ]},
+  { dayId: 0, dayName: 'Sunday', meals: [
+    { id: 'm-sun-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 },
+    { id: 'm-sun-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }
+  ]}
+];
+
 const PROTOCOLS = {
   adf: {
     id: 'adf',
@@ -215,13 +270,13 @@ const PROTOCOLS = {
     tagline: 'Alternate Day Fasting • 36h Fasting / Feast Cycle',
     defaultPreset: 36,
     schedule: [
-      { id: 1, dayName: 'Monday', dayType: 'standard', cals: 1650, protein: 155, carbs: 20, fat: 120, workouts: [{ id: 'w-mon-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-mon-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-mon-2', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }] },
+      { id: 1, dayName: 'Monday', dayType: 'standard', cals: 1650, protein: 155, carbs: 20, fat: 120, workouts: [{ id: 'w-mon-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[0].meals },
       { id: 2, dayName: 'Tuesday', dayType: 'fasting', cals: 0, protein: 0, carbs: 0, fat: 0, workouts: [{ id: 'w-tue-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-tue-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
-      { id: 3, dayName: 'Wednesday', dayType: 'adf-eat', cals: 2000, protein: 175, carbs: 25, fat: 140, workouts: [{ id: 'w-wed-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-wed-1', name: 'Anti-Inflammatory Turmeric Eggs', cals: 480, protein: 38, carbs: 3, fat: 34 }, { id: 'm-wed-2', name: 'Ginger Salmon & Avo Bowl', cals: 620, protein: 46, carbs: 5, fat: 42 }] },
+      { id: 3, dayName: 'Wednesday', dayType: 'adf-eat', cals: 2000, protein: 175, carbs: 25, fat: 140, workouts: [{ id: 'w-wed-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[2].meals },
       { id: 4, dayName: 'Thursday', dayType: 'fasting', cals: 0, protein: 0, carbs: 0, fat: 0, workouts: [{ id: 'w-thu-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-thu-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
-      { id: 5, dayName: 'Friday', dayType: 'adf-eat', cals: 2000, protein: 175, carbs: 25, fat: 140, workouts: [{ id: 'w-fri-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-fri-1', name: 'Crispy Chicken & Avocado Wrap', cals: 590, protein: 48, carbs: 4, fat: 40 }, { id: 'm-fri-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }] },
-      { id: 6, dayName: 'Saturday', dayType: 'standard', cals: 1650, protein: 155, carbs: 20, fat: 120, workouts: [{ id: 'w-sat-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-sat-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-sat-2', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }] },
-      { id: 0, dayName: 'Sunday', dayType: 'standard', cals: 1650, protein: 155, carbs: 20, fat: 120, workouts: [{ id: 'w-sun-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: [{ id: 'm-sun-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-sun-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }] }
+      { id: 5, dayName: 'Friday', dayType: 'adf-eat', cals: 2000, protein: 175, carbs: 25, fat: 140, workouts: [{ id: 'w-fri-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[4].meals },
+      { id: 6, dayName: 'Saturday', dayType: 'standard', cals: 1650, protein: 155, carbs: 20, fat: 120, workouts: [{ id: 'w-sat-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[5].meals },
+      { id: 0, dayName: 'Sunday', dayType: 'standard', cals: 1650, protein: 155, carbs: 20, fat: 120, workouts: [{ id: 'w-sun-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[6].meals }
     ]
   },
   '16_8': {
@@ -231,13 +286,13 @@ const PROTOCOLS = {
     tagline: 'Daily Time-Restricted Eating • 16h Fast / 8h Eating Window',
     defaultPreset: 16,
     schedule: [
-      { id: 1, dayName: 'Monday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-mon-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-mon-1', name: 'Bacon & Cheddar Omelet', cals: 550, protein: 42, carbs: 2, fat: 41 }, { id: 'm-mon-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }] },
-      { id: 2, dayName: 'Tuesday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-tue-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-tue-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [{ id: 'm-tue-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-tue-2', name: 'Garlic Butter Steak Bites', cals: 640, protein: 56, carbs: 1, fat: 45 }] },
-      { id: 3, dayName: 'Wednesday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-wed-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-wed-1', name: 'Anti-Inflammatory Turmeric Eggs', cals: 480, protein: 38, carbs: 3, fat: 34 }, { id: 'm-wed-2', name: 'Ginger Salmon & Avo Bowl', cals: 620, protein: 46, carbs: 5, fat: 42 }] },
-      { id: 4, dayName: 'Thursday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-thu-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-thu-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [{ id: 'm-thu-1', name: 'Spinach & Feta Frittata Slice', cals: 460, protein: 36, carbs: 4, fat: 32 }, { id: 'm-thu-2', name: 'Keto Cheeseburger Bowl', cals: 620, protein: 52, carbs: 4, fat: 43 }] },
-      { id: 5, dayName: 'Friday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-fri-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-fri-1', name: 'Crispy Chicken & Avocado Wrap', cals: 590, protein: 48, carbs: 4, fat: 40 }, { id: 'm-fri-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }] },
-      { id: 6, dayName: 'Saturday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-sat-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-sat-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-sat-2', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }] },
-      { id: 0, dayName: 'Sunday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-sun-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: [{ id: 'm-sun-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-sun-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }] }
+      { id: 1, dayName: 'Monday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-mon-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[0].meals },
+      { id: 2, dayName: 'Tuesday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-tue-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-tue-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
+      { id: 3, dayName: 'Wednesday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-wed-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[2].meals },
+      { id: 4, dayName: 'Thursday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-thu-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-thu-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
+      { id: 5, dayName: 'Friday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-fri-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[4].meals },
+      { id: 6, dayName: 'Saturday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-sat-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[5].meals },
+      { id: 0, dayName: 'Sunday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-sun-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[6].meals }
     ]
   },
   omad: {
@@ -247,13 +302,13 @@ const PROTOCOLS = {
     tagline: 'One Meal A Day • 23h Fast / High-Density Keto Feast',
     defaultPreset: 23,
     schedule: [
-      { id: 1, dayName: 'Monday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-mon-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-mon-1', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }, { id: 'm-mon-2', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }] },
-      { id: 2, dayName: 'Tuesday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-tue-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-tue-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [{ id: 'm-tue-1', name: 'Ginger Salmon & Avo Bowl', cals: 620, protein: 46, carbs: 5, fat: 42 }, { id: 'm-tue-2', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }] },
-      { id: 3, dayName: 'Wednesday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-wed-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-wed-1', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }, { id: 'm-wed-2', name: 'Anti-Inflammatory Turmeric Eggs', cals: 480, protein: 38, carbs: 3, fat: 34 }] },
-      { id: 4, dayName: 'Thursday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-thu-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-thu-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [{ id: 'm-thu-1', name: 'Keto Cheeseburger Bowl', cals: 620, protein: 52, carbs: 4, fat: 43 }, { id: 'm-thu-2', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }] },
-      { id: 5, dayName: 'Friday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-fri-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-fri-1', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }, { id: 'm-fri-2', name: 'Crispy Chicken & Avocado Wrap', cals: 590, protein: 48, carbs: 4, fat: 40 }] },
-      { id: 6, dayName: 'Saturday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-sat-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-sat-1', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }, { id: 'm-sat-2', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }] },
-      { id: 0, dayName: 'Sunday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-sun-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: [{ id: 'm-sun-1', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }, { id: 'm-sun-2', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }] }
+      { id: 1, dayName: 'Monday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-mon-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[0].meals },
+      { id: 2, dayName: 'Tuesday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-tue-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-tue-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
+      { id: 3, dayName: 'Wednesday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-wed-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[2].meals },
+      { id: 4, dayName: 'Thursday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-thu-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-thu-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
+      { id: 5, dayName: 'Friday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-fri-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[4].meals },
+      { id: 6, dayName: 'Saturday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-sat-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[5].meals },
+      { id: 0, dayName: 'Sunday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-sun-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[6].meals }
     ]
   },
   '2day_fast': {
@@ -263,13 +318,13 @@ const PROTOCOLS = {
     tagline: '48h Autophagy Fast • Tue-Wed Complete Fast',
     defaultPreset: 48,
     schedule: [
-      { id: 1, dayName: 'Monday', dayType: 'pre-fast load', cals: 1800, protein: 165, carbs: 20, fat: 130, workouts: [{ id: 'w-mon-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-mon-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-mon-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }] },
+      { id: 1, dayName: 'Monday', dayType: 'pre-fast load', cals: 1800, protein: 165, carbs: 20, fat: 130, workouts: [{ id: 'w-mon-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[0].meals },
       { id: 2, dayName: 'Tuesday', dayType: 'fasting (48h)', cals: 0, protein: 0, carbs: 0, fat: 0, workouts: [{ id: 'w-tue-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-tue-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
       { id: 3, dayName: 'Wednesday', dayType: 'fasting (48h)', cals: 0, protein: 0, carbs: 0, fat: 0, workouts: [{ id: 'w-wed-1', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
-      { id: 4, dayName: 'Thursday', dayType: 'bone broth refeed', cals: 1900, protein: 170, carbs: 22, fat: 135, workouts: [{ id: 'w-thu-1', name: '30-45m Jog', minutes: 35, url: '' }], meals: [{ id: 'm-thu-1', name: 'Slow-Simmered Beef Bone Broth Stew', cals: 540, protein: 58, carbs: 5, fat: 32 }, { id: 'm-thu-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }] },
-      { id: 5, dayName: 'Friday', dayType: 'standard', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-fri-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-fri-1', name: 'Crispy Chicken & Avocado Wrap', cals: 590, protein: 48, carbs: 4, fat: 40 }, { id: 'm-fri-2', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }] },
-      { id: 6, dayName: 'Saturday', dayType: 'standard', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-sat-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-sat-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-sat-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }] },
-      { id: 0, dayName: 'Sunday', dayType: 'standard', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-sun-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: [{ id: 'm-sun-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-sun-2', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }] }
+      { id: 4, dayName: 'Thursday', dayType: 'bone broth refeed', cals: 1900, protein: 170, carbs: 22, fat: 135, workouts: [{ id: 'w-thu-1', name: '30-45m Jog', minutes: 35, url: '' }], meals: [] },
+      { id: 5, dayName: 'Friday', dayType: 'standard', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-fri-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[4].meals },
+      { id: 6, dayName: 'Saturday', dayType: 'standard', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-sat-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[5].meals },
+      { id: 0, dayName: 'Sunday', dayType: 'standard', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-sun-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[6].meals }
     ]
   },
   '3day_fast': {
@@ -279,21 +334,217 @@ const PROTOCOLS = {
     tagline: '72h Deep Fast • Tue-Thu Autophagy & Stem Cell Renewal',
     defaultPreset: 72,
     schedule: [
-      { id: 1, dayName: 'Monday', dayType: 'pre-fast load', cals: 1850, protein: 170, carbs: 20, fat: 135, workouts: [{ id: 'w-mon-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-mon-1', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }, { id: 'm-mon-2', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }] },
+      { id: 1, dayName: 'Monday', dayType: 'pre-fast load', cals: 1850, protein: 170, carbs: 20, fat: 135, workouts: [{ id: 'w-mon-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[0].meals },
       { id: 2, dayName: 'Tuesday', dayType: 'fasting (day 1)', cals: 0, protein: 0, carbs: 0, fat: 0, workouts: [{ id: 'w-tue-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-tue-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
       { id: 3, dayName: 'Wednesday', dayType: 'fasting (day 2)', cals: 0, protein: 0, carbs: 0, fat: 0, workouts: [{ id: 'w-wed-1', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
       { id: 4, dayName: 'Thursday', dayType: 'fasting (day 3)', cals: 0, protein: 0, carbs: 0, fat: 0, workouts: [{ id: 'w-thu-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: [] },
-      { id: 5, dayName: 'Friday', dayType: 'gentle refeed', cals: 1500, protein: 140, carbs: 15, fat: 100, workouts: [{ id: 'w-fri-1', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [{ id: 'm-fri-1', name: 'Slow-Simmered Beef Bone Broth Stew', cals: 540, protein: 58, carbs: 5, fat: 32 }, { id: 'm-fri-2', name: 'Spinach & Feta Frittata Slice', cals: 460, protein: 36, carbs: 4, fat: 32 }] },
-      { id: 6, dayName: 'Saturday', dayType: 'refeed build', cals: 1850, protein: 170, carbs: 20, fat: 135, workouts: [{ id: 'w-sat-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: [{ id: 'm-sat-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-sat-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }] },
-      { id: 0, dayName: 'Sunday', dayType: 'standard', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-sun-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: [{ id: 'm-sun-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 }, { id: 'm-sun-2', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }] }
+      { id: 5, dayName: 'Friday', dayType: 'gentle refeed', cals: 1500, protein: 140, carbs: 15, fat: 100, workouts: [{ id: 'w-fri-1', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
+      { id: 6, dayName: 'Saturday', dayType: 'refeed build', cals: 1850, protein: 170, carbs: 20, fat: 135, workouts: [{ id: 'w-sat-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[5].meals },
+      { id: 0, dayName: 'Sunday', dayType: 'standard', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-sun-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[6].meals }
     ]
   }
 };
 
+const PLANNER_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+const FOOD_CATEGORY_ORDER = [
+  'Proteins & Meats',
+  'Produce & Veggies',
+  'Dairy & Cheeses',
+  'Fats & Oils',
+  'Pantry & Seasonings',
+  'Other Items'
+];
+
+// ==========================================
+// 2. HELPER FUNCTIONS
+// ==========================================
+
+function createInitialImportedPlan() {
+  const plan = { Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: [], Saturday: [], Sunday: [] };
+  WEEK_1_MEAL_PLAN.forEach(day => {
+    plan[day.dayName] = day.meals.map(m => {
+      const matchRecipe = INITIAL_RECIPES.find(r => r.name.toLowerCase() === m.name.toLowerCase());
+      return {
+        id: `plan-init-${day.dayName}-${m.id}`,
+        recipeId: matchRecipe?.id || m.id,
+        name: m.name,
+        category: matchRecipe?.category || 'Keto',
+        cals: m.cals,
+        protein: m.protein,
+        carbs: m.carbs,
+        fat: m.fat,
+        ingredients: matchRecipe?.ingredients || []
+      };
+    });
+  });
+  return plan;
+}
+
+function cleanFoodItem(raw) {
+  if (!raw) return '';
+  const str = raw.toLowerCase().trim();
+
+  if (str.includes('ribeye')) return 'Ribeye Steak';
+  if (str.includes('sirloin')) return 'Sirloin Steak';
+  if (str.includes('flank steak')) return 'Flank Steak';
+  if (str.includes('ny strip')) return 'NY Strip Steak';
+  if (str.includes('steak') || str.includes('chuck roast')) return 'Steak / Beef';
+  if (str.includes('ground beef')) return 'Ground Beef';
+  if (str.includes('egg') && !str.includes('plant')) return 'Eggs';
+  if (str.includes('bacon')) return 'Bacon';
+  if (str.includes('chicken breast')) return 'Chicken Breast';
+  if (str.includes('chicken thigh')) return 'Chicken Thighs';
+  if (str.includes('chicken wing')) return 'Chicken Wings';
+  if (str.includes('chicken')) return 'Chicken';
+  if (str.includes('turkey thigh')) return 'Turkey Thigh';
+  if (str.includes('turkey')) return 'Turkey';
+  if (str.includes('salmon')) return 'Salmon';
+  if (str.includes('tuna')) return 'Canned Tuna';
+  if (str.includes('shrimp')) return 'Shrimp';
+  if (str.includes('scallop')) return 'Scallops';
+  if (str.includes('mahi mahi')) return 'Mahi Mahi';
+  if (str.includes('trout')) return 'Trout';
+  if (str.includes('cod') || str.includes('halibut') || str.includes('white fish')) return 'White Fish (Cod/Halibut)';
+  if (str.includes('sardine')) return 'Sardines';
+  if (str.includes('ham')) return 'Deli Ham';
+  if (str.includes('prosciutto')) return 'Prosciutto';
+
+  if (str.includes('spinach')) return 'Spinach';
+  if (str.includes('cabbage')) return 'Green Cabbage';
+  if (str.includes('asparagus')) return 'Asparagus';
+  if (str.includes('avocado') && !str.includes('oil')) return 'Avocado';
+  if (str.includes('mushroom')) return 'Mushrooms';
+  if (str.includes('celery')) return 'Celery';
+  if (str.includes('lettuce')) return 'Romaine Lettuce';
+  if (str.includes('bell pepper') || str.includes('peppers & onion')) return 'Bell Peppers';
+  if (str.includes('garlic')) return 'Garlic';
+  if (str.includes('chive')) return 'Chives';
+  if (str.includes('scallion')) return 'Scallions';
+  if (str.includes('basil')) return 'Fresh Basil';
+  if (str.includes('rosemary')) return 'Fresh Rosemary';
+  if (str.includes('dill')) return 'Fresh Dill';
+  if (str.includes('parsley')) return 'Fresh Parsley';
+  if (str.includes('ginger')) return 'Fresh Ginger';
+  if (str.includes('lemon')) return 'Lemon';
+  if (str.includes('lime')) return 'Lime';
+  if (str.includes('greens') || str.includes('baby greens')) return 'Mixed Greens';
+  if (str.includes('tomato')) return 'Crushed Tomatoes';
+  if (str.includes('zucchini')) return 'Zucchini';
+  if (str.includes('broccoli')) return 'Broccoli';
+  if (str.includes('cauliflower')) return 'Cauliflower';
+
+  if (str.includes('cheddar')) return 'Cheddar Cheese';
+  if (str.includes('cream cheese')) return 'Cream Cheese';
+  if (str.includes('feta')) return 'Feta Cheese';
+  if (str.includes('swiss')) return 'Swiss Cheese';
+  if (str.includes('mozzarella')) return 'Mozzarella Cheese';
+  if (str.includes('parmesan')) return 'Parmesan Cheese';
+  if (str.includes('goat cheese')) return 'Goat Cheese';
+  if (str.includes('blue cheese')) return 'Blue Cheese';
+  if (str.includes('heavy cream')) return 'Heavy Cream';
+  if (str.includes('sour cream')) return 'Sour Cream';
+
+  if (str.includes('butter') && !str.includes('garlic butter steak')) return 'Grass-Fed Butter';
+  if (str.includes('ghee')) return 'Ghee';
+  if (str.includes('olive oil')) return 'Olive Oil';
+  if (str.includes('avocado oil') && !str.includes('mayo')) return 'Avocado Oil';
+  if (str.includes('mct oil')) return 'MCT Oil';
+  if (str.includes('coconut oil')) return 'Coconut Oil';
+  if (str.includes('mayo')) return 'Avocado Oil Mayo';
+  if (str.includes('pesto')) return 'Basil Pesto';
+
+  if (str.includes('bone broth')) return 'Bone Broth';
+  if (str.includes('sea salt') || str.includes('salt & pepper') || str.includes('salt')) return 'Sea Salt';
+  if (str.includes('black pepper') || str.includes('pepper flakes')) return 'Black Pepper';
+  if (str.includes('turmeric')) return 'Turmeric';
+  if (str.includes('mustard') || str.includes('dijon')) return 'Dijon Mustard';
+  if (str.includes('tamari')) return 'Tamari Soy Sauce';
+  if (str.includes('almond flour')) return 'Almond Flour';
+  if (str.includes('sesame')) return 'Sesame Seeds';
+  if (str.includes('ranch seasoning')) return 'Ranch Seasoning';
+  if (str.includes('taco seasoning')) return 'Taco Seasoning';
+  if (str.includes('cajun')) return 'Cajun Seasoning';
+  if (str.includes('fajita')) return 'Fajita Seasoning';
+  if (str.includes('hot sauce') || str.includes('buffalo')) return 'Buffalo Hot Sauce';
+  if (str.includes('pickle')) return 'Pickles';
+
+  let cleaned = raw.replace(/\([^)]*\)/g, '');
+  cleaned = cleaned.replace(/^(a\s+|pinch of\s+|dash of\s+)/i, '');
+  cleaned = cleaned.replace(/^[\d\s\/\.\-\–]+/g, '');
+  cleaned = cleaned.replace(/^(oz|tbsp|tsp|tablespoon|teaspoon|cup|cups|spears|spear|cloves|clove|cans|can|strips|strip|slices|slice|pieces|piece|sprigs|sprig|heads|head|stalks|stalk|fillets|fillet|crowns|crown|spears)\s+(of\s+)?/i, '');
+  cleaned = cleaned.replace(/\b(large|small|medium|sliced|diced|chopped|shredded|cooked|minced|crushed|peeled|torn)\b/gi, '');
+  cleaned = cleaned.replace(/\s+/g, ' ').trim();
+  if (!cleaned) return raw;
+  return cleaned.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+}
+
+function getFoodCategory(itemName) {
+  const l = (itemName || '').toLowerCase();
+  
+  if (
+    l.includes('beef') || l.includes('steak') || l.includes('salmon') || 
+    l.includes('chicken') || l.includes('turkey') || l.includes('bacon') || 
+    l.includes('egg') || l.includes('tuna') || l.includes('shrimp') || 
+    l.includes('pork') || l.includes('ham') || l.includes('prosciutto') || 
+    l.includes('sardine') || l.includes('cod') || l.includes('halibut') || 
+    l.includes('scallop') || l.includes('meat') || l.includes('wings')
+  ) {
+    return 'Proteins & Meats';
+  }
+
+  if (
+    l.includes('spinach') || l.includes('cabbage') || l.includes('asparagus') || 
+    l.includes('avocado') || l.includes('mushroom') || l.includes('celery') || 
+    l.includes('tomato') || l.includes('lettuce') || l.includes('bell pepper') || 
+    l.includes('onion') || l.includes('garlic') || l.includes('chive') || 
+    l.includes('scallion') || l.includes('parsley') || l.includes('dill') || 
+    l.includes('basil') || l.includes('ginger') || l.includes('lemon') || 
+    l.includes('lime') || l.includes('greens') || l.includes('zucchini') || 
+    l.includes('broccoli') || l.includes('cauliflower') || l.includes('romaine') ||
+    l.includes('sage')
+  ) {
+    return 'Produce & Veggies';
+  }
+
+  if (
+    l.includes('cheese') || l.includes('cheddar') || l.includes('feta') || 
+    l.includes('swiss') || l.includes('mozzarella') || l.includes('parmesan') || 
+    l.includes('heavy cream') || l.includes('cream cheese') || l.includes('sour cream') ||
+    l.includes('goat') || l.includes('blue')
+  ) {
+    return 'Dairy & Cheeses';
+  }
+
+  if (
+    l.includes('butter') || l.includes('ghee') || l.includes('oil') || 
+    l.includes('mct') || l.includes('mayo') || l.includes('pesto')
+  ) {
+    return 'Fats & Oils';
+  }
+
+  if (
+    l.includes('broth') || l.includes('salt') || l.includes('pepper') || 
+    l.includes('seasoning') || l.includes('rub') || l.includes('mustard') || 
+    l.includes('tamari') || l.includes('vinegar') || l.includes('almond flour') || 
+    l.includes('sesame') || l.includes('electrolyte') || l.includes('coffee') || 
+    l.includes('turmeric') || l.includes('chipotle') || l.includes('dijon') ||
+    l.includes('pickle') || l.includes('sauce')
+  ) {
+    return 'Pantry & Seasonings';
+  }
+
+  return 'Other Items';
+}
+
+// ==========================================
+// 4. MAIN COMPONENT
+// ==========================================
+
 export default function App() {
   const [user, setUser] = useState(null);
 
-  const [activeTab, setActiveTab] = useState('schedule');
+  const [activeTab, setActiveTab] = useState('dashboard');
   const todayId = new Date().getDay();
   const [selectedDay, setSelectedDay] = useState(todayId);
 
@@ -317,16 +568,14 @@ export default function App() {
     try { return JSON.parse(localStorage.getItem('ks_fasting_history') || '[]'); } catch { return []; }
   });
 
+  // Weight Tracker State
+  const [weightData, setWeightData] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('ks_weight') || '{"start":0, "current":0, "goal":0}'); } catch { return { start: 0, current: 0, goal: 0 }; }
+  });
+
   // Weight History State
   const [weightHistory, setWeightHistory] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem('ks_weight_history') || JSON.stringify([
-        { id: 'wh-init-1', date: 'Start', weight: 205, diff: 0 },
-        { id: 'wh-init-2', date: 'Current', weight: 198, diff: -7.0 }
-      ]));
-    } catch {
-      return [{ id: 'wh-init-1', date: 'Start', weight: 205, diff: 0 }];
-    }
+    try { return JSON.parse(localStorage.getItem('ks_weight_history') || '[]'); } catch { return []; }
   });
 
   // Historical Daily Journal Notes
@@ -345,15 +594,48 @@ export default function App() {
     try { return JSON.parse(localStorage.getItem('ks_workout_library') || JSON.stringify(INITIAL_WORKOUTS)); } catch { return INITIAL_WORKOUTS; }
   });
 
-  // Weight Tracker State
-  const [weightData, setWeightData] = useState(() => {
-    try { return JSON.parse(localStorage.getItem('ks_weight') || '{"start":205, "current":198, "goal":180}'); } catch { return { start: 205, current: 198, goal: 180 }; }
-  });
-
-  // Recipes State
+  // Recipes Master Catalog State
   const [recipes, setRecipes] = useState(() => {
     try { return JSON.parse(localStorage.getItem('ks_recipes') || JSON.stringify(INITIAL_RECIPES)); } catch { return INITIAL_RECIPES; }
   });
+
+  // --- Recipe Sub-Tabs & Meal Planning / Shopping State ---
+  const [recipeSubTab, setRecipeSubTab] = useState('catalog');
+  const [selectedPlanDay, setSelectedPlanDay] = useState('Monday');
+  
+  const [nextWeekPlan, setNextWeekPlan] = useState(() => {
+    try {
+      const saved = localStorage.getItem('ks_next_week_plan');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return createInitialImportedPlan();
+  });
+
+  // Shopping List States
+  const [activeShoppingWeek, setActiveShoppingWeek] = useState('upcoming');
+  const [customGroceries, setCustomGroceries] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('ks_custom_groceries') || '{"current":[],"upcoming":[]}');
+    } catch {
+      return { current: [], upcoming: [] };
+    }
+  });
+  const [checkedGroceries, setCheckedGroceries] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('ks_checked_groceries') || '{}');
+    } catch {
+      return {};
+    }
+  });
+  const [newCustomGroceryText, setNewCustomGroceryText] = useState('');
+
+  // Selected Recipe for Direct "Plan Meal" Action
+  const [selectedRecipeForPlan, setSelectedRecipeForPlan] = useState(null);
+  const [planTargetWeek, setPlanTargetWeek] = useState('upcoming');
+  const [planTargetDay, setPlanTargetDay] = useState('Monday');
+
+  // Keto Foods Category Filter
+  const [ketoFoodCategoryFilter, setKetoFoodCategoryFilter] = useState('All');
 
   // Toast feedback state
   const [toastMessage, setToastMessage] = useState(null);
@@ -369,6 +651,7 @@ export default function App() {
   const [newLibWorkoutMins, setNewLibWorkoutMins] = useState(20);
   const [newLibWorkoutUrl, setNewLibWorkoutUrl] = useState('');
   const [selectedRecipeToAdd, setSelectedRecipeToAdd] = useState(recipes[0]?.id || '');
+  const [selectedPlannerRecipeToAdd, setSelectedPlannerRecipeToAdd] = useState(recipes[0]?.id || '');
 
   // Active Protocol Object
   const currentProtocol = PROTOCOLS[activeProtocolKey] || PROTOCOLS.adf;
@@ -395,6 +678,9 @@ export default function App() {
             if (data.workoutLibrary) { setWorkoutLibrary(data.workoutLibrary); localStorage.setItem('ks_workout_library', JSON.stringify(data.workoutLibrary)); }
             if (data.weightData) { setWeightData(data.weightData); localStorage.setItem('ks_weight', JSON.stringify(data.weightData)); }
             if (data.recipes) { setRecipes(data.recipes); localStorage.setItem('ks_recipes', JSON.stringify(data.recipes)); }
+            if (data.nextWeekPlan) { setNextWeekPlan(data.nextWeekPlan); localStorage.setItem('ks_next_week_plan', JSON.stringify(data.nextWeekPlan)); }
+            if (data.customGroceries) { setCustomGroceries(data.customGroceries); localStorage.setItem('ks_custom_groceries', JSON.stringify(data.customGroceries)); }
+            if (data.checkedGroceries) { setCheckedGroceries(data.checkedGroceries); localStorage.setItem('ks_checked_groceries', JSON.stringify(data.checkedGroceries)); }
           } else {
             const initialData = {
               email: currentUser.email,
@@ -408,6 +694,9 @@ export default function App() {
               workoutLibrary,
               weightData,
               recipes,
+              nextWeekPlan,
+              customGroceries,
+              checkedGroceries,
               initializedAt: new Date().toISOString()
             };
             await setDoc(userDocRef, initialData);
@@ -432,6 +721,9 @@ export default function App() {
       if (updatedState.workoutLibrary !== undefined) localStorage.setItem('ks_workout_library', JSON.stringify(updatedState.workoutLibrary));
       if (updatedState.weightData !== undefined) localStorage.setItem('ks_weight', JSON.stringify(updatedState.weightData));
       if (updatedState.recipes !== undefined) localStorage.setItem('ks_recipes', JSON.stringify(updatedState.recipes));
+      if (updatedState.nextWeekPlan !== undefined) localStorage.setItem('ks_next_week_plan', JSON.stringify(updatedState.nextWeekPlan));
+      if (updatedState.customGroceries !== undefined) localStorage.setItem('ks_custom_groceries', JSON.stringify(updatedState.customGroceries));
+      if (updatedState.checkedGroceries !== undefined) localStorage.setItem('ks_checked_groceries', JSON.stringify(updatedState.checkedGroceries));
     } catch (e) {}
 
     if (user) {
@@ -448,6 +740,9 @@ export default function App() {
           workoutLibrary: updatedState.workoutLibrary !== undefined ? updatedState.workoutLibrary : workoutLibrary,
           weightData: updatedState.weightData !== undefined ? updatedState.weightData : weightData,
           recipes: updatedState.recipes !== undefined ? updatedState.recipes : recipes,
+          nextWeekPlan: updatedState.nextWeekPlan !== undefined ? updatedState.nextWeekPlan : nextWeekPlan,
+          customGroceries: updatedState.customGroceries !== undefined ? updatedState.customGroceries : customGroceries,
+          checkedGroceries: updatedState.checkedGroceries !== undefined ? updatedState.checkedGroceries : checkedGroceries,
           updatedAt: new Date().toISOString()
         }, { merge: true });
       } catch (err) {
@@ -544,10 +839,9 @@ export default function App() {
     return `${h} hr${h > 1 ? 's' : ''} ${m > 0 ? `${m} min${m > 1 ? 's' : ''}` : ''}`;
   };
 
-  // Current Fasting Elapsed Hours
   const currentElapsedHours = fastingElapsed / (1000 * 60 * 60);
 
-  // Dynamic Metabolic Phase Calculations (Only 1 Phase Active)
+  // Dynamic Metabolic Phase Calculations
   let currentPhaseIndex = METABOLIC_PHASES.findIndex(
     p => currentElapsedHours >= p.minHours && currentElapsedHours < p.maxHours
   );
@@ -610,7 +904,7 @@ export default function App() {
     return total;
   }, 0);
 
-  // --- Analytical Calculations ---
+  // Analytical Calculations
   const totalFastingHours = fastingHistory.reduce((sum, f) => sum + (f.durationHours || 0), 0);
   const avgFastHours = fastingHistory.length > 0 ? (totalFastingHours / fastingHistory.length).toFixed(1) : 0;
   const longestFastHours = fastingHistory.length > 0 ? Math.max(...fastingHistory.map(f => f.durationHours || 0)).toFixed(1) : 0;
@@ -741,21 +1035,304 @@ export default function App() {
     setTimeout(() => setToastMessage(null), 3000);
   };
 
+  // --- Next Week Planner Handlers ---
+  const handleAddPlannedRecipeToNextWeek = () => {
+    const r = recipes.find(item => item.id === selectedPlannerRecipeToAdd);
+    if (!r) return;
+    const newPlannedMeal = {
+      id: `plan-${Date.now()}`,
+      recipeId: r.id,
+      name: r.name,
+      category: r.category,
+      cals: r.cals,
+      protein: r.protein,
+      carbs: r.carbs,
+      fat: r.fat,
+      ingredients: r.ingredients || []
+    };
+    const updatedPlan = {
+      ...nextWeekPlan,
+      [selectedPlanDay]: [...(nextWeekPlan[selectedPlanDay] || []), newPlannedMeal]
+    };
+    setNextWeekPlan(updatedPlan);
+    syncToCloudAndLocal({ nextWeekPlan: updatedPlan });
+    setModalType(null);
+    setToastMessage(`Added to ${selectedPlanDay}'s plan!`);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
+  const handleRemovePlannedRecipe = (dayName, mealId) => {
+    const updatedDayMeals = (nextWeekPlan[dayName] || []).filter(m => m.id !== mealId);
+    const updatedPlan = {
+      ...nextWeekPlan,
+      [dayName]: updatedDayMeals
+    };
+    setNextWeekPlan(updatedPlan);
+    syncToCloudAndLocal({ nextWeekPlan: updatedPlan });
+  };
+
+  // --- Direct "Plan This Recipe" Action Handler ---
+  const handleConfirmPlanRecipeDirect = () => {
+    if (!selectedRecipeForPlan) return;
+
+    if (planTargetWeek === 'current') {
+      const targetDayObj = activeSchedule.find(d => d.dayName.toLowerCase() === planTargetDay.toLowerCase()) || activeSchedule[0];
+      const targetDayId = targetDayObj.id;
+      const currentDayMeals = customDays[targetDayId]?.meals || targetDayObj.meals || [];
+      const newMeal = {
+        id: `m-${Date.now()}`,
+        name: selectedRecipeForPlan.name,
+        cals: selectedRecipeForPlan.cals,
+        protein: selectedRecipeForPlan.protein,
+        carbs: selectedRecipeForPlan.carbs,
+        fat: selectedRecipeForPlan.fat
+      };
+      const updatedCustomDays = {
+        ...customDays,
+        [targetDayId]: { ...(customDays[targetDayId] || targetDayObj), meals: [...currentDayMeals, newMeal] }
+      };
+      setCustomDays(updatedCustomDays);
+      syncToCloudAndLocal({ customDays: updatedCustomDays });
+      setToastMessage(`Added to Current Week (${planTargetDay})!`);
+    } else {
+      const newPlannedMeal = {
+        id: `plan-${Date.now()}`,
+        recipeId: selectedRecipeForPlan.id,
+        name: selectedRecipeForPlan.name,
+        category: selectedRecipeForPlan.category,
+        cals: selectedRecipeForPlan.cals,
+        protein: selectedRecipeForPlan.protein,
+        carbs: selectedRecipeForPlan.carbs,
+        fat: selectedRecipeForPlan.fat,
+        ingredients: selectedRecipeForPlan.ingredients || []
+      };
+      const updatedPlan = {
+        ...nextWeekPlan,
+        [planTargetDay]: [...(nextWeekPlan[planTargetDay] || []), newPlannedMeal]
+      };
+      setNextWeekPlan(updatedPlan);
+      syncToCloudAndLocal({ nextWeekPlan: updatedPlan });
+      setToastMessage(`Added to Upcoming Week (${planTargetDay})!`);
+    }
+
+    setModalType(null);
+    setSelectedRecipeForPlan(null);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
+  // --- ONE-TIME IMPORT: Current Week's Meal Plan into Shopping List ---
+  const handleOneTimeImportCurrentWeekToShopping = () => {
+    const updatedCustom = { ...customDays };
+    WEEK_1_MEAL_PLAN.forEach(day => {
+      if (!updatedCustom[day.dayId]?.meals || updatedCustom[day.dayId].meals.length === 0) {
+        updatedCustom[day.dayId] = {
+          ...(updatedCustom[day.dayId] || activeSchedule.find(d => d.id === day.dayId) || {}),
+          meals: day.meals
+        };
+      }
+    });
+
+    const importedPlan = createInitialImportedPlan();
+
+    setCustomDays(updatedCustom);
+    setNextWeekPlan(importedPlan);
+    syncToCloudAndLocal({
+      customDays: updatedCustom,
+      nextWeekPlan: importedPlan
+    });
+
+    setToastMessage("One-time import completed! All ingredients added to shopping list.");
+    setTimeout(() => setToastMessage(null), 3500);
+  };
+
+  // --- Add Keto Staple Directly to Shopping List ---
+  const handleAddStapleToShoppingList = (foodName) => {
+    const targetWeek = activeShoppingWeek;
+    const currentList = customGroceries[targetWeek] || [];
+    
+    const alreadyExists = currentList.some(item => cleanFoodItem(item.name).toLowerCase() === cleanFoodItem(foodName).toLowerCase());
+    if (alreadyExists) {
+      setToastMessage(`${cleanFoodItem(foodName)} is already on your ${targetWeek === 'current' ? 'Current' : 'Upcoming'} list!`);
+      setTimeout(() => setToastMessage(null), 2500);
+      return;
+    }
+
+    const newItem = {
+      id: `staple-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+      name: cleanFoodItem(foodName),
+      custom: true
+    };
+    const updated = {
+      ...customGroceries,
+      [targetWeek]: [newItem, ...currentList]
+    };
+    setCustomGroceries(updated);
+    syncToCloudAndLocal({ customGroceries: updated });
+    setToastMessage(`Added ${cleanFoodItem(foodName)} to ${targetWeek === 'current' ? 'Current' : 'Upcoming'} list!`);
+    setTimeout(() => setToastMessage(null), 2500);
+  };
+
+  const isStapleInShoppingList = (foodName) => {
+    const currentList = customGroceries[activeShoppingWeek] || [];
+    return currentList.some(item => cleanFoodItem(item.name).toLowerCase() === cleanFoodItem(foodName).toLowerCase());
+  };
+
+  // --- Shopping List Handlers & Aggregator ---
+  const handleToggleGroceryCheck = (itemId) => {
+    const updated = {
+      ...checkedGroceries,
+      [itemId]: !checkedGroceries[itemId]
+    };
+    setCheckedGroceries(updated);
+    syncToCloudAndLocal({ checkedGroceries: updated });
+  };
+
+  const handleAddCustomGrocery = (e) => {
+    e.preventDefault();
+    if (!newCustomGroceryText.trim()) return;
+    const cleanName = cleanFoodItem(newCustomGroceryText.trim());
+    const newItem = {
+      id: `cg-${Date.now()}`,
+      name: cleanName,
+      custom: true
+    };
+    const updated = {
+      ...customGroceries,
+      [activeShoppingWeek]: [newItem, ...(customGroceries[activeShoppingWeek] || [])]
+    };
+    setCustomGroceries(updated);
+    syncToCloudAndLocal({ customGroceries: updated });
+    setNewCustomGroceryText('');
+  };
+
+  const handleDeleteCustomGrocery = (foodKey) => {
+    const updatedWeekList = (customGroceries[activeShoppingWeek] || []).filter(item => cleanFoodItem(item.name).toLowerCase() !== foodKey);
+    const updated = {
+      ...customGroceries,
+      [activeShoppingWeek]: updatedWeekList
+    };
+    setCustomGroceries(updated);
+    syncToCloudAndLocal({ customGroceries: updated });
+  };
+
+  const handleClearCheckedGroceries = () => {
+    const updatedChecked = { ...checkedGroceries };
+    Object.keys(updatedChecked).forEach(key => {
+      if (key.startsWith(`${activeShoppingWeek}-`)) {
+        delete updatedChecked[key];
+      }
+    });
+    setCheckedGroceries(updatedChecked);
+    syncToCloudAndLocal({ checkedGroceries: updatedChecked });
+    setToastMessage('Checked items cleared.');
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
+  // --- Compute Aggregated, Cleaned, & Quantified Food Items for Shopping List ---
+  const getAggregatedShoppingList = () => {
+    const itemMap = {};
+
+    const addOrIncrement = (rawName, sourceInfo, isCustom = false) => {
+      const cleanName = cleanFoodItem(rawName);
+      if (!cleanName) return;
+      const key = cleanName.toLowerCase();
+
+      if (!itemMap[key]) {
+        itemMap[key] = {
+          id: `${activeShoppingWeek}-${key}`,
+          key: key,
+          name: cleanName,
+          quantity: 0,
+          sources: [],
+          category: getFoodCategory(cleanName),
+          hasRecipeSource: false
+        };
+      }
+
+      itemMap[key].quantity += 1;
+      if (sourceInfo && !itemMap[key].sources.includes(sourceInfo)) {
+        itemMap[key].sources.push(sourceInfo);
+      }
+      if (!isCustom) {
+        itemMap[key].hasRecipeSource = true;
+      }
+    };
+
+    if (activeShoppingWeek === 'current') {
+      activeSchedule.forEach(day => {
+        const dayMeals = customDays[day.id]?.meals || day.meals || [];
+        dayMeals.forEach(m => {
+          const matchRecipe = recipes.find(r => r.name.toLowerCase() === m.name.toLowerCase());
+          const ingredients = matchRecipe?.ingredients || m.ingredients || [];
+          ingredients.forEach(ing => {
+            addOrIncrement(ing, `${m.name} (${day.dayName.slice(0, 3)})`, false);
+          });
+        });
+      });
+    } else {
+      PLANNER_DAYS.forEach(dayName => {
+        const dayMeals = nextWeekPlan[dayName] || [];
+        dayMeals.forEach(m => {
+          const ingredients = m.ingredients || [];
+          ingredients.forEach(ing => {
+            addOrIncrement(ing, `${m.name} (${dayName.slice(0, 3)})`, false);
+          });
+        });
+      });
+    }
+
+    (customGroceries[activeShoppingWeek] || []).forEach(item => {
+      addOrIncrement(item.name, 'Custom Item', true);
+    });
+
+    return Object.values(itemMap).map(item => ({
+      ...item,
+      displayName: item.quantity > 1 ? `${item.name} x ${item.quantity}` : item.name,
+      sourceLabel: item.sources.length > 0 ? `Used in: ${item.sources.join(', ')}` : ''
+    }));
+  };
+
+  const currentShoppingItems = getAggregatedShoppingList();
+  const checkedShoppingCount = currentShoppingItems.filter(item => checkedGroceries[item.id]).length;
+
+  const groupedShoppingItems = FOOD_CATEGORY_ORDER.reduce((acc, cat) => {
+    const items = currentShoppingItems.filter(item => item.category === cat);
+    if (items.length > 0) {
+      acc[cat] = items;
+    }
+    return acc;
+  }, {});
+
   const categories = ['All', 'Eggs', 'Beef', 'Fish', 'Poultry'];
   const filteredRecipes = recipeCategory === 'All' 
     ? recipes 
     : recipes.filter(r => r.category === recipeCategory);
 
-  // Weight Calculations
-  const weightDiff = weightData.start - weightData.current;
+  const isWeightConfigured = weightData.start > 0 && weightData.current > 0;
+  const weightDiff = isWeightConfigured ? weightData.start - weightData.current : 0;
   const isWeightLost = weightDiff >= 0;
   const absWeightDiff = Math.abs(weightDiff).toFixed(1);
   const totalToLose = weightData.start - weightData.goal;
-  const weightProgress = totalToLose > 0 
+  const weightProgress = (isWeightConfigured && totalToLose > 0)
     ? Math.max(0, Math.min(100, Math.round((weightDiff / totalToLose) * 100)))
     : 0;
 
-  // End Fast Handler
+  const handleResetWeightProgress = () => {
+    const confirmed = window.confirm(
+      `Reset weight profile and history?\n\nThis will reset your starting baseline and clear historical progression logs.`
+    );
+    if (!confirmed) return;
+
+    const resetWeight = { start: 0, current: 0, goal: 0 };
+    const resetHistory = [];
+
+    setWeightData(resetWeight);
+    setWeightHistory(resetHistory);
+    syncToCloudAndLocal({ weightData: resetWeight, weightHistory: resetHistory });
+    setToastMessage(`Weight tracker reset.`);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
   const handleStopFast = () => {
     const confirmed = window.confirm("Are you ready to stop your fast and record your duration?");
     if (!confirmed) return;
@@ -811,7 +1388,7 @@ export default function App() {
         <div className="flex items-center justify-between mb-3">
           <div>
             <h1 className="text-lg font-black tracking-tight text-slate-900 m-0 uppercase">Keto Shred Tracker</h1>
-            <p className="text-[10px] font-bold tracking-wider mt-0.5 text-slate-500">Joint-Friendly Fat Loss • 61yo Protocol</p>
+            <p className="text-[10px] font-bold tracking-wider mt-0.5 text-slate-500">Keto, Fitness and Fasting</p>
           </div>
           
           <div className="flex items-center gap-2">
@@ -820,10 +1397,10 @@ export default function App() {
               className="text-right px-3 py-1.5 rounded-xl border border-[#e2e2e2] bg-white transition-all hover:bg-slate-50 shadow-xs"
             >
               <span className="block text-sm font-black leading-none" style={{ color: '#82bc41' }}>
-                {absWeightDiff} lbs
+                {isWeightConfigured ? `${absWeightDiff} lbs` : '0.0 lbs'}
               </span>
               <span className="text-[8px] text-slate-500 font-bold uppercase tracking-wider">
-                {isWeightLost ? 'Lost' : 'Gained'}
+                {isWeightConfigured ? (isWeightLost ? 'Lost' : 'Gained') : 'Lost'}
               </span>
             </button>
 
@@ -848,13 +1425,13 @@ export default function App() {
           </div>
         </div>
 
-        {/* Tab Navigation - Fixed 5 Columns, No Scroll, Stats Placed Last */}
+        {/* Tab Navigation: Dashboard is opening page, Fasting is next to Stats */}
         <div className="grid grid-cols-5 border-b border-[#eaeaea] -mx-5 px-2">
           {[
             { id: 'dashboard', icon: Icons.Activity, label: 'Dash' },
             { id: 'schedule', icon: Icons.Calendar, label: 'Schedule' },
-            { id: 'fasting', icon: Icons.Clock, label: 'Fasting' },
             { id: 'recipes', icon: Icons.BookOpen, label: 'Recipes' },
+            { id: 'fasting', icon: Icons.Clock, label: 'Fasting' },
             { id: 'stats', icon: Icons.TrendingUp, label: 'Stats' }
           ].map(tab => (
             <button
@@ -1105,8 +1682,8 @@ export default function App() {
                           );
                         })}
                         {currentMeals.length === 0 && (
-                          <div className="p-3 text-center text-xs text-slate-500 bg-[#fafafa] rounded-xl border border-dashed border-[#eaeaea]">
-                            No meals assigned.
+                          <div className="p-4 text-center text-xs text-slate-400 bg-[#fafafa] rounded-2xl border border-dashed border-[#eaeaea]">
+                            No meals assigned for today. Tap <strong>"+ Add Meal"</strong> above or plan meals in the Recipes tab.
                           </div>
                         )}
                       </div>
@@ -1136,31 +1713,39 @@ export default function App() {
               </button>
             </div>
 
+            {/* Weight Goal Progress Card */}
             <div className="bg-white rounded-2xl border border-[#eaeaea] p-5 shadow-xs">
               <div className="flex justify-between items-center mb-3">
                 <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Weight Goal Progress</span>
-                <button onClick={() => setModalType('weight')} className="text-[10px] font-bold hover:underline" style={{ color: '#82bc41' }}>Update</button>
+                <button onClick={() => setModalType('weight')} className="text-[10px] font-bold hover:underline" style={{ color: '#82bc41' }}>
+                  {isWeightConfigured ? 'Update' : 'Set Baseline'}
+                </button>
               </div>
               <div className="flex items-baseline justify-between mb-2">
                 <div>
-                  <span className="text-2xl font-black text-slate-900">{weightData.current}</span>
+                  <span className="text-2xl font-black text-slate-900">
+                    {isWeightConfigured ? weightData.current : '--'}
+                  </span>
                   <span className="text-xs text-slate-500 font-bold ml-1">lbs</span>
                 </div>
                 <div className="text-xs text-slate-600 font-bold">
-                  Target: {weightData.goal} lbs
+                  Target: {weightData.goal > 0 ? `${weightData.goal} lbs` : '-- lbs'}
                 </div>
               </div>
               <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden mb-2">
                 <div className="h-full rounded-full transition-all duration-500" style={{ width: `${weightProgress}%`, backgroundColor: '#82bc41' }} />
               </div>
               <div className="flex justify-between text-[10px] font-bold text-slate-500">
-                <span>Start: {weightData.start} lbs</span>
+                <span>Start: {weightData.start > 0 ? `${weightData.start} lbs` : '-- lbs'}</span>
                 <span style={{ color: isWeightLost ? '#82bc41' : '#e11d48' }}>
-                  {isWeightLost ? `${weightProgress}% completed (${absWeightDiff} lbs lost)` : `${absWeightDiff} lbs gained`}
+                  {isWeightConfigured
+                    ? (isWeightLost ? `${weightProgress}% completed (${absWeightDiff} lbs lost)` : `${absWeightDiff} lbs gained`)
+                    : 'Tap Set Baseline to begin'}
                 </span>
               </div>
             </div>
 
+            {/* Weekly BDP Burpee Progress */}
             <div className="bg-white rounded-2xl border border-[#eaeaea] p-5 shadow-xs">
               <div className="flex justify-between items-center mb-2">
                 <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Weekly BDP Goal</span>
@@ -1168,7 +1753,7 @@ export default function App() {
               </div>
               <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden mb-2">
                 <div 
-                  className="h-full rounded-full transition-all duration-500"
+                  className="h-full rounded-full transition-all duration-500" 
                   style={{ width: `${Math.min(100, (weeklyBdpMinutes / 80) * 100)}%`, backgroundColor: '#82bc41' }} 
                 />
               </div>
@@ -1179,6 +1764,7 @@ export default function App() {
               )}
             </div>
 
+            {/* Featured Joint-Health Dish */}
             <div className="bg-slate-900 text-white rounded-2xl border border-slate-800 p-5 shadow-md">
               <div className="flex justify-between items-start mb-1">
                 <span className="text-[9px] font-black uppercase tracking-widest text-emerald-400">
@@ -1190,7 +1776,7 @@ export default function App() {
               </div>
 
               <h3 className="text-sm font-black text-white mb-1">{currentFeaturedDish.name}</h3>
-              <p className="text-xs text-slate-300 leading-relaxed mb-3">{currentFeaturedDish.ingredients.join(', ')}</p>
+              <p className="text-xs text-slate-300 leading-relaxed mb-3">{currentFeaturedDish.ingredients.map(ing => cleanFoodItem(ing)).join(', ')}</p>
 
               <div className="flex items-center justify-between pt-2 border-t border-slate-800">
                 <button 
@@ -1245,67 +1831,492 @@ export default function App() {
           </div>
         )}
 
-        {/* RECIPES TAB */}
+        {/* RECIPES, KETO FOODS, NEXT WEEK PLANNER & SHOPPING LIST TAB */}
         {activeTab === 'recipes' && (
-          <div className="space-y-3">
-            <div className="flex gap-1 overflow-x-auto pb-1 no-scrollbar">
-              {categories.map(cat => (
+          <div className="space-y-4">
+            
+            {/* Sub-Navigation */}
+            <div className="bg-white p-1 rounded-2xl border border-[#eaeaea] shadow-2xs grid grid-cols-4 gap-1">
+              {[
+                { id: 'catalog', label: 'Cookbook' },
+                { id: 'foods', label: 'Keto Foods' },
+                { id: 'planner', label: 'Planner' },
+                { id: 'shopping', label: 'Shopping' }
+              ].map(sub => (
                 <button
-                  key={cat}
-                  onClick={() => setRecipeCategory(cat)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
-                    recipeCategory === cat ? 'text-white shadow-xs' : 'bg-white border border-[#eaeaea] text-slate-700 hover:bg-slate-50'
+                  key={sub.id}
+                  onClick={() => setRecipeSubTab(sub.id)}
+                  className={`py-2 text-[10px] sm:text-[11px] font-black rounded-xl transition-all text-center ${
+                    recipeSubTab === sub.id
+                      ? 'text-white shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                   }`}
-                  style={recipeCategory === cat ? { backgroundColor: '#82bc41' } : {}}
+                  style={recipeSubTab === sub.id ? { backgroundColor: '#82bc41' } : {}}
                 >
-                  {cat}
+                  {sub.label}
                 </button>
               ))}
             </div>
 
-            <div className="space-y-2.5">
-              {filteredRecipes.map(recipe => (
-                <div key={recipe.id} className="bg-white rounded-2xl border border-[#eaeaea] p-4 shadow-xs">
-                  <div className="flex justify-between items-start mb-1.5">
+            {/* SUB-TAB 1: COOKBOOK / RECIPE CATALOG */}
+            {recipeSubTab === 'catalog' && (
+              <div className="space-y-3">
+                <div className="flex gap-1 overflow-x-auto pb-1 no-scrollbar">
+                  {categories.map(cat => (
+                    <button
+                      key={cat}
+                      onClick={() => setRecipeCategory(cat)}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
+                        recipeCategory === cat ? 'text-white shadow-xs' : 'bg-white border border-[#eaeaea] text-slate-700 hover:bg-slate-50'
+                      }`}
+                      style={recipeCategory === cat ? { backgroundColor: '#82bc41' } : {}}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="space-y-2.5">
+                  {filteredRecipes.map(recipe => (
+                    <div key={recipe.id} className="bg-white rounded-2xl border border-[#eaeaea] p-4 shadow-xs">
+                      <div className="flex justify-between items-start mb-1.5">
+                        <div>
+                          <span className="text-[9px] font-black uppercase tracking-wider text-slate-500 block mb-0.5">
+                            {recipe.category}
+                          </span>
+                          <h3 className="text-xs font-black text-slate-900">{recipe.name}</h3>
+                        </div>
+                        
+                        <div className="flex items-center gap-1.5">
+                          <button 
+                            onClick={() => {
+                              setSelectedRecipeForPlan(recipe);
+                              setModalType('planRecipeDirect');
+                            }}
+                            className="text-slate-700 hover:text-slate-950 p-1 bg-slate-100 hover:bg-slate-200 rounded-lg border border-slate-200 text-[10px] font-extrabold px-2 py-1 flex items-center gap-1 transition-all"
+                            title="Add to Meal Plan"
+                          >
+                            <Icons.Plus size={11} style={{ color: '#82bc41' }} /> Plan
+                          </button>
+                          <button 
+                            onClick={() => setActiveRecipeModal(recipe)}
+                            className="text-slate-700 hover:text-slate-900 p-1 bg-slate-100 rounded-lg border border-slate-200 text-[10px] font-bold px-2 py-1 flex items-center gap-1"
+                          >
+                            View <Icons.ExternalLink size={11} />
+                          </button>
+                          <button 
+                            onClick={() => handleDeleteRecipe(recipe.id)}
+                            className="text-slate-400 hover:text-red-600 p-1 bg-slate-100 rounded-lg border border-slate-200"
+                            title="Delete Recipe"
+                          >
+                            <Icons.Trash size={12} />
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">
+                        <span style={{ color: '#82bc41' }}>{recipe.cals} KCAL</span>
+                        <span>• {recipe.protein}g PRO</span>
+                        <span>• {recipe.carbs}g CARB</span>
+                      </div>
+
+                      <p className="text-xs text-slate-600 bg-[#fafafa] p-2.5 rounded-xl border border-[#eaeaea] leading-relaxed line-clamp-2">
+                        {recipe.instructions}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* SUB-TAB 2: KETO-FRIENDLY FOODS */}
+            {recipeSubTab === 'foods' && (
+              <div className="space-y-3">
+                <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-4">
+                  
+                  <div className="space-y-3 pb-3 border-b border-[#eaeaea]">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                          <Icons.Flame size={14} style={{ color: '#82bc41' }} />
+                          Keto-Friendly Whole Foods
+                        </h3>
+                        <p className="text-[10px] text-slate-500">Essential staples ready to add directly to your shopping cart</p>
+                      </div>
+                    </div>
+
+                    <div className="bg-[#fafafa] p-1 rounded-2xl border border-[#eaeaea] grid grid-cols-2 gap-1 w-full">
+                      <button
+                        type="button"
+                        onClick={() => setActiveShoppingWeek('current')}
+                        className={`py-1.5 text-center rounded-xl text-[11px] font-black transition-all ${
+                          activeShoppingWeek === 'current'
+                            ? 'bg-slate-900 text-white shadow-xs'
+                            : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        Adding to: Current Week
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setActiveShoppingWeek('upcoming')}
+                        className={`py-1.5 text-center rounded-xl text-[11px] font-black transition-all ${
+                          activeShoppingWeek === 'upcoming'
+                            ? 'bg-slate-900 text-white shadow-xs'
+                            : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        Adding to: Upcoming Week
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+                    {['All', 'Fats & Oils', 'Proteins & Meats', 'Low-Carb Veggies', 'Dairy & Cheeses', 'Electrolytes & Pantry'].map(cat => (
+                      <button
+                        key={cat}
+                        onClick={() => setKetoFoodCategoryFilter(cat)}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 border ${
+                          ketoFoodCategoryFilter === cat
+                            ? 'text-white border-transparent shadow-xs'
+                            : 'bg-white text-slate-700 border-[#eaeaea] hover:bg-slate-50'
+                        }`}
+                        style={ketoFoodCategoryFilter === cat ? { backgroundColor: '#82bc41' } : {}}
+                      >
+                        {cat === 'All' ? 'All Staples' : cat.split(' ')[0]}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="space-y-4 pt-1">
+                    {KETO_FRIENDLY_FOODS.filter(group => ketoFoodCategoryFilter === 'All' || group.category === ketoFoodCategoryFilter).map((group, gIdx) => (
+                      <div key={gIdx} className="space-y-2">
+                        <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block px-1">
+                          {group.category}
+                        </span>
+
+                        <div className="space-y-2">
+                          {group.items.map((food, fIdx) => {
+                            const isAdded = isStapleInShoppingList(food.name);
+                            return (
+                              <div
+                                key={fIdx}
+                                className={`p-3 rounded-2xl border transition-all flex items-center justify-between gap-3 ${
+                                  isAdded
+                                    ? 'bg-emerald-50/40 border-emerald-200'
+                                    : 'bg-[#fafafa] border-[#eaeaea] hover:bg-white'
+                                }`}
+                              >
+                                <div>
+                                  <span className="text-xs font-black text-slate-900 block">
+                                    {cleanFoodItem(food.name)}
+                                  </span>
+                                  <span className="text-[10px] text-slate-500 font-medium block">
+                                    {food.desc}
+                                  </span>
+                                </div>
+
+                                <button
+                                  type="button"
+                                  onClick={() => handleAddStapleToShoppingList(food.name)}
+                                  className={`px-3 py-1.5 rounded-xl text-xs font-black shrink-0 transition-all flex items-center gap-1 shadow-2xs ${
+                                    isAdded
+                                      ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                                      : 'text-white hover:opacity-90'
+                                  }`}
+                                  style={!isAdded ? { backgroundColor: '#82bc41' } : {}}
+                                >
+                                  {isAdded ? (
+                                    <>
+                                      <Icons.Check size={12} /> Added
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Icons.Plus size={12} /> List
+                                    </>
+                                  )}
+                                </button>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                </div>
+              </div>
+            )}
+
+            {/* SUB-TAB 3: NEXT WEEK MEAL PLANNER */}
+            {recipeSubTab === 'planner' && (
+              <div className="space-y-3">
+                <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-3">
+                  <div className="flex justify-between items-center pb-2 border-b border-[#eaeaea]">
                     <div>
-                      <span className="text-[9px] font-black uppercase tracking-wider text-slate-500 block mb-0.5">
-                        {recipe.category}
-                      </span>
-                      <h3 className="text-xs font-black text-slate-900">{recipe.name}</h3>
+                      <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                        <Icons.Calendar size={14} style={{ color: '#82bc41' }} />
+                        Upcoming Week Meal Plan
+                      </h3>
+                      <p className="text-[10px] text-slate-500">Planned recipes automatically populate your shopping list</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <button 
-                        onClick={() => setActiveRecipeModal(recipe)}
-                        className="text-slate-700 hover:text-slate-900 p-1 bg-slate-100 rounded-lg border border-slate-200 text-[10px] font-bold px-2 py-1 flex items-center gap-1"
+                      <button
+                        onClick={handleOneTimeImportCurrentWeekToShopping}
+                        className="px-2.5 py-1.5 text-[10px] font-black text-emerald-800 bg-emerald-100 hover:bg-emerald-200 border border-emerald-300 rounded-xl transition-all flex items-center gap-1"
+                        title="Import all recipes from the current week's schedule"
                       >
-                        View <Icons.ExternalLink size={11} />
+                        <Icons.Zap size={11} /> Import Current Plan
                       </button>
-                      <button 
-                        onClick={() => handleDeleteRecipe(recipe.id)}
-                        className="text-slate-400 hover:text-red-600 p-1 bg-slate-100 rounded-lg border border-slate-200"
-                        title="Delete Recipe"
+                      <button
+                        onClick={() => setModalType('addPlanMeal')}
+                        className="px-3 py-1.5 text-[10px] font-black text-white rounded-xl shadow-xs flex items-center gap-1"
+                        style={{ backgroundColor: '#82bc41' }}
                       >
-                        <Icons.Trash size={12} />
+                        <Icons.Plus size={12} /> Add Recipe
                       </button>
                     </div>
                   </div>
 
-                  <div className="flex gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">
-                    <span style={{ color: '#82bc41' }}>{recipe.cals} KCAL</span>
-                    <span>• {recipe.protein}g PRO</span>
-                    <span>• {recipe.carbs}g CARB</span>
+                  <div className="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+                    {PLANNER_DAYS.map(day => {
+                      const count = (nextWeekPlan[day] || []).length;
+                      return (
+                        <button
+                          key={day}
+                          onClick={() => setSelectedPlanDay(day)}
+                          className={`py-1.5 px-3 rounded-xl text-[11px] font-bold shrink-0 transition-all border ${
+                            selectedPlanDay === day
+                              ? 'text-white border-transparent shadow-xs'
+                              : 'bg-white text-slate-700 border-[#eaeaea] hover:bg-slate-50'
+                          }`}
+                          style={selectedPlanDay === day ? { backgroundColor: '#82bc41' } : {}}
+                        >
+                          <span>{day.slice(0, 3)}</span>
+                          {count > 0 && (
+                            <span className="ml-1 text-[9px] px-1.5 py-0.2 rounded-full bg-black/20 text-white font-black">
+                              {count}
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
                   </div>
 
-                  <p className="text-xs text-slate-600 bg-[#fafafa] p-2.5 rounded-xl border border-[#eaeaea] leading-relaxed line-clamp-2">
-                    {recipe.instructions}
-                  </p>
+                  <div className="pt-2 space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs font-black text-slate-900 uppercase tracking-tight">
+                        {selectedPlanDay}'s Planned Meals
+                      </span>
+                      <span className="text-[10px] font-bold text-slate-500">
+                        {(nextWeekPlan[selectedPlanDay] || []).length} Dishes Selected
+                      </span>
+                    </div>
+
+                    {(nextWeekPlan[selectedPlanDay] || []).length === 0 ? (
+                      <div className="p-6 text-center text-xs text-slate-400 bg-[#fafafa] rounded-2xl border border-dashed border-[#eaeaea]">
+                        No recipes planned for {selectedPlanDay} yet. Tap <strong>"+ Add Recipe"</strong> above.
+                      </div>
+                    ) : (
+                      (nextWeekPlan[selectedPlanDay] || []).map(meal => (
+                        <div key={meal.id} className="p-3.5 bg-[#fafafa] rounded-2xl border border-[#eaeaea] flex items-center justify-between">
+                          <div>
+                            <span className="text-[9px] font-black uppercase text-slate-400 block mb-0.5">{meal.category}</span>
+                            <span className="text-xs font-black text-slate-900 block">{meal.name}</span>
+                            <span className="text-[10px] font-bold text-slate-500">
+                              {meal.cals} kcal • {meal.protein}g Protein • {(meal.ingredients || []).length} Ingredients
+                            </span>
+                          </div>
+                          <button
+                            onClick={() => handleRemovePlannedRecipe(selectedPlanDay, meal.id)}
+                            className="text-slate-400 hover:text-red-500 p-1"
+                            title="Remove from plan"
+                          >
+                            <Icons.Trash size={13} />
+                          </button>
+                        </div>
+                      ))
+                    )}
+                  </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            )}
+
+            {/* SUB-TAB 4: INTEGRATED GROCERY & SHOPPING LIST */}
+            {recipeSubTab === 'shopping' && (
+              <div className="space-y-4">
+                <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-4">
+                  
+                  <div className="space-y-3 pb-3 border-b border-[#eaeaea]">
+                    <div>
+                      <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                        <Icons.ShoppingCart size={14} style={{ color: '#82bc41' }} />
+                        Interactive Grocery List
+                      </h3>
+                      <p className="text-[10px] text-slate-500">Clean food items and serving counts consolidated across your meals</p>
+                    </div>
+
+                    <div className="bg-[#fafafa] p-1 rounded-2xl border border-[#eaeaea] grid grid-cols-2 gap-1 w-full">
+                      <button
+                        type="button"
+                        onClick={() => setActiveShoppingWeek('current')}
+                        className={`py-2 text-center rounded-xl text-xs font-black transition-all ${
+                          activeShoppingWeek === 'current'
+                            ? 'bg-slate-900 text-white shadow-xs'
+                            : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        Current Week
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setActiveShoppingWeek('upcoming')}
+                        className={`py-2 text-center rounded-xl text-xs font-black transition-all ${
+                          activeShoppingWeek === 'upcoming'
+                            ? 'bg-slate-900 text-white shadow-xs'
+                            : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        Upcoming Week
+                      </button>
+                    </div>
+                  </div>
+
+                  <form onSubmit={handleAddCustomGrocery} className="flex gap-2">
+                    <input
+                      type="text"
+                      placeholder={`Add food item to ${activeShoppingWeek === 'current' ? 'current' : 'upcoming'} list...`}
+                      value={newCustomGroceryText}
+                      onChange={(e) => setNewCustomGroceryText(e.target.value)}
+                      className="flex-1 min-w-0 p-2.5 rounded-xl border border-slate-200 bg-[#fafafa] text-xs text-slate-900 font-bold focus:outline-none"
+                    />
+                    <button
+                      type="submit"
+                      className="px-4 py-2.5 text-white font-black text-xs rounded-xl shadow-xs shrink-0"
+                      style={{ backgroundColor: '#82bc41' }}
+                    >
+                      + Add
+                    </button>
+                  </form>
+
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs pt-1">
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-wider">
+                      {currentShoppingItems.length} Total Items ({checkedShoppingCount} in basket)
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={handleOneTimeImportCurrentWeekToShopping}
+                        className="text-[10px] font-black px-2.5 py-1 rounded-lg text-emerald-800 bg-emerald-100 hover:bg-emerald-200 border border-emerald-300 transition-all flex items-center gap-1 shadow-2xs"
+                        title="Import all ingredients from Current Week's meal plan into this shopping list"
+                      >
+                        <Icons.Zap size={11} /> Re-Import Week 1 Plan
+                      </button>
+                      {checkedShoppingCount > 0 && (
+                        <button
+                          onClick={handleClearCheckedGroceries}
+                          className="text-[10px] font-bold text-slate-500 hover:text-slate-900 underline"
+                        >
+                          Clear Checked
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Grouped & Simplified Items with Multipliers */}
+                  <div className="space-y-4 max-h-96 overflow-y-auto pr-1">
+                    {currentShoppingItems.length === 0 ? (
+                      <div className="p-8 text-center text-xs text-slate-400 bg-[#fafafa] rounded-2xl border border-dashed border-[#eaeaea] space-y-2">
+                        <p>No items in this list yet.</p>
+                        <button
+                          type="button"
+                          onClick={handleOneTimeImportCurrentWeekToShopping}
+                          className="px-3 py-1.5 rounded-xl text-xs font-black text-white shadow-xs"
+                          style={{ backgroundColor: '#82bc41' }}
+                        >
+                          ⚡ One-Time Import Current Week Plan
+                        </button>
+                      </div>
+                    ) : (
+                      Object.keys(groupedShoppingItems).map((categoryName) => {
+                        const items = groupedShoppingItems[categoryName];
+                        return (
+                          <div key={categoryName} className="space-y-2">
+                            <div className="flex items-center justify-between px-1">
+                              <span className="text-[10px] font-black uppercase tracking-wider text-slate-500">
+                                {categoryName}
+                              </span>
+                              <span className="text-[9px] font-bold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md border border-slate-200">
+                                {items.length}
+                              </span>
+                            </div>
+
+                            <div className="space-y-1.5">
+                              {items.map((item, idx) => {
+                                const isChecked = !!checkedGroceries[item.id];
+                                return (
+                                  <div
+                                    key={item.id || idx}
+                                    className={`flex items-center justify-between p-3 rounded-xl border transition-all ${
+                                      isChecked
+                                        ? 'bg-slate-50 border-slate-200 opacity-60'
+                                        : 'bg-white border-[#eaeaea]'
+                                    }`}
+                                  >
+                                    <label className="flex items-start gap-3 cursor-pointer flex-1 mr-2">
+                                      <input
+                                        type="checkbox"
+                                        checked={isChecked}
+                                        onChange={() => handleToggleGroceryCheck(item.id)}
+                                        className="mt-0.5 w-4 h-4 rounded border-slate-300"
+                                        style={{ accentColor: '#82bc41' }}
+                                      />
+                                      <div>
+                                        <div className="flex items-center gap-2">
+                                          <span className={`text-xs font-black block ${isChecked ? 'line-through text-slate-400' : 'text-slate-900'}`}>
+                                            {item.name}
+                                          </span>
+                                          {item.quantity > 1 && (
+                                            <span className="text-[10px] font-black px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 border border-emerald-300">
+                                              x {item.quantity}
+                                            </span>
+                                          )}
+                                        </div>
+                                        {item.sourceLabel && (
+                                          <span className="text-[9px] text-slate-500 font-medium block mt-0.5 leading-tight">
+                                            {item.sourceLabel}
+                                          </span>
+                                        )}
+                                      </div>
+                                    </label>
+
+                                    {!item.hasRecipeSource && (
+                                      <button
+                                        onClick={() => handleDeleteCustomGrocery(item.key)}
+                                        className="text-slate-400 hover:text-red-500 p-1"
+                                        title="Delete custom item"
+                                      >
+                                        <Icons.Trash size={12} />
+                                      </button>
+                                    )}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+
+                </div>
+              </div>
+            )}
+
           </div>
         )}
 
-        {/* FASTING TAB */}
+        {/* FASTING TAB (Next to Stats) */}
         {activeTab === 'fasting' && (
           <div className="space-y-4">
             
@@ -1531,9 +2542,9 @@ export default function App() {
               <div className="bg-white p-3.5 rounded-2xl border border-[#eaeaea] shadow-xs text-center">
                 <span className="text-[9px] font-black uppercase tracking-wider text-slate-500 block">Net Weight</span>
                 <span className="text-lg font-black text-slate-900" style={{ color: isWeightLost ? '#82bc41' : '#e11d48' }}>
-                  {isWeightLost ? `-${absWeightDiff}` : `+${absWeightDiff}`} lbs
+                  {isWeightConfigured ? (isWeightLost ? `-${absWeightDiff}` : `+${absWeightDiff}`) : '0.0'} lbs
                 </span>
-                <span className="text-[9px] text-slate-500 block mt-0.5">Goal: {weightData.goal} lbs</span>
+                <span className="text-[9px] text-slate-500 block mt-0.5">Goal: {weightData.goal > 0 ? `${weightData.goal} lbs` : '--'}</span>
               </div>
               <div className="bg-white p-3.5 rounded-2xl border border-[#eaeaea] shadow-xs text-center">
                 <span className="text-[9px] font-black uppercase tracking-wider text-slate-500 block">Consistency</span>
@@ -1550,44 +2561,97 @@ export default function App() {
                     <Icons.TrendingUp size={14} style={{ color: '#82bc41' }} />
                     Weight Progression Trend
                   </h3>
-                  <p className="text-[10px] text-slate-500">Historical weigh-ins with delta tracking</p>
+                  <p className="text-[10px] text-slate-500">Live baseline synchronized with your profile</p>
                 </div>
-                <button
-                  onClick={() => setModalType('weight')}
-                  className="px-2.5 py-1 text-[10px] font-black text-white rounded-lg shadow-xs"
-                  style={{ backgroundColor: '#82bc41' }}
-                >
-                  + Log Weight
-                </button>
+                <div className="flex items-center gap-1.5">
+                  <button
+                    onClick={handleResetWeightProgress}
+                    className="px-2.5 py-1 text-[10px] font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg transition-all flex items-center gap-1"
+                    title="Reset starting baseline to current weight"
+                  >
+                    <Icons.RotateCcw size={11} /> Reset
+                  </button>
+                  <button
+                    onClick={() => setModalType('weight')}
+                    className="px-2.5 py-1 text-[10px] font-black text-white rounded-lg shadow-xs"
+                    style={{ backgroundColor: '#82bc41' }}
+                  >
+                    + Log Weight
+                  </button>
+                </div>
               </div>
 
-              {/* Visual Bars for Weight History */}
-              <div className="space-y-2">
-                {weightHistory.map((item, idx) => {
-                  const percentOfGoal = Math.min(100, Math.max(15, Math.round(((215 - item.weight) / (215 - weightData.goal)) * 100)));
-                  return (
-                    <div key={item.id || idx} className="space-y-1">
-                      <div className="flex justify-between text-xs font-bold text-slate-700">
-                        <span>{item.date}</span>
-                        <div className="flex items-center gap-2">
-                          <span className="text-slate-900 font-extrabold">{item.weight} lbs</span>
-                          {item.diff !== undefined && item.diff !== 0 && (
-                            <span className={`text-[10px] font-black ${item.diff < 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
-                              {item.diff < 0 ? `${item.diff} lbs` : `+${item.diff} lbs`}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                      <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                        <div 
-                          className="h-full rounded-full transition-all duration-300"
-                          style={{ width: `${percentOfGoal}%`, backgroundColor: '#82bc41' }}
-                        />
+              {isWeightConfigured ? (
+                <div className="space-y-3 pt-1">
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-xs font-bold text-slate-700">
+                      <span className="text-slate-500">Starting Baseline</span>
+                      <span className="text-slate-900 font-extrabold">{weightData.start} lbs</span>
+                    </div>
+                    <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                      <div className="h-full rounded-full bg-slate-400 w-full" />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-xs font-bold text-slate-700">
+                      <span className="text-slate-900 font-black">Current Weight</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-slate-900 font-black text-sm">{weightData.current} lbs</span>
+                        <span 
+                          className={`text-[10px] font-black px-1.5 py-0.5 rounded ${
+                            isWeightLost ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'
+                          }`}
+                        >
+                          {isWeightLost ? `-${absWeightDiff} lbs` : `+${absWeightDiff} lbs`}
+                        </span>
                       </div>
                     </div>
-                  );
-                })}
-              </div>
+                    <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                      <div 
+                        className="h-full rounded-full transition-all duration-500" 
+                        style={{ 
+                          width: `${Math.min(100, Math.max(15, weightProgress || 100))}%`, 
+                          backgroundColor: '#82bc41' 
+                        }} 
+                      />
+                    </div>
+                    <div className="flex justify-between text-[10px] font-bold text-slate-500 pt-0.5">
+                      <span>Goal: {weightData.goal} lbs</span>
+                      <span style={{ color: isWeightLost ? '#82bc41' : '#e11d48' }}>
+                        {weightProgress}% of goal reached
+                      </span>
+                    </div>
+                  </div>
+
+                  {weightHistory.length > 0 && (
+                    <div className="pt-3 border-t border-[#eaeaea] space-y-2">
+                      <span className="text-[9px] font-black uppercase tracking-wider text-slate-400 block">
+                        Past Weigh-in History
+                      </span>
+                      <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
+                        {weightHistory.map((item, idx) => (
+                          <div key={item.id || idx} className="flex items-center justify-between text-xs bg-[#fafafa] p-2 rounded-xl border border-[#eaeaea]">
+                            <span className="text-slate-600 font-bold">{item.date}</span>
+                            <div className="flex items-center gap-2">
+                              <span className="text-slate-900 font-black">{item.weight} lbs</span>
+                              {item.diff !== undefined && item.diff !== 0 && (
+                                <span className={`text-[10px] font-black ${item.diff < 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                                  {item.diff < 0 ? `${item.diff} lbs` : `+${item.diff} lbs`}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="p-6 text-center text-xs text-slate-400 bg-[#fafafa] rounded-2xl border border-dashed border-[#eaeaea]">
+                  No weight profile set yet. Tap <strong>"+ Log Weight"</strong> above to establish your starting baseline.
+                </div>
+              )}
             </div>
 
             {/* Fasting Endurance Metrics */}
@@ -1693,6 +2757,139 @@ export default function App() {
 
       {/* --- MODALS --- */}
 
+      {/* Direct Plan Recipe from Cookbook Modal */}
+      {modalType === 'planRecipeDirect' && selectedRecipeForPlan && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 flex items-end sm:items-center justify-center p-4">
+          <div className="bg-white rounded-3xl p-5 w-full max-w-sm border border-[#eaeaea] shadow-2xl space-y-4">
+            <div className="flex justify-between items-start pb-2 border-b border-[#eaeaea]">
+              <div>
+                <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block">
+                  Add to Meal Plan
+                </span>
+                <h3 className="text-sm font-black text-slate-900">{selectedRecipeForPlan.name}</h3>
+                <span className="text-[10px] text-slate-500 font-bold">
+                  {selectedRecipeForPlan.cals} kcal • {selectedRecipeForPlan.protein}g Protein
+                </span>
+              </div>
+              <button 
+                onClick={() => {
+                  setModalType(null);
+                  setSelectedRecipeForPlan(null);
+                }} 
+                className="text-slate-400 hover:text-slate-900"
+              >
+                <Icons.X size={16} />
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              <div>
+                <label className="text-[10px] font-bold text-slate-500 uppercase block mb-1">Target Week</label>
+                <div className="grid grid-cols-2 gap-1.5 bg-[#fafafa] p-1 rounded-xl border border-[#eaeaea]">
+                  <button
+                    type="button"
+                    onClick={() => setPlanTargetWeek('current')}
+                    className={`py-1.5 text-center rounded-lg text-xs font-black transition-all ${
+                      planTargetWeek === 'current'
+                        ? 'bg-slate-900 text-white shadow-xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    Current Week
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPlanTargetWeek('upcoming')}
+                    className={`py-1.5 text-center rounded-lg text-xs font-black transition-all ${
+                      planTargetWeek === 'upcoming'
+                        ? 'bg-slate-900 text-white shadow-xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    Upcoming Week
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[10px] font-bold text-slate-500 uppercase block mb-1">Select Day</label>
+                <select
+                  value={planTargetDay}
+                  onChange={(e) => setPlanTargetDay(e.target.value)}
+                  className="w-full p-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-900 bg-[#fafafa] focus:outline-none"
+                >
+                  {PLANNER_DAYS.map(d => (
+                    <option key={d} value={d}>{d}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={handleConfirmPlanRecipeDirect}
+                  className="w-full py-3 text-white font-black text-xs rounded-xl shadow-xs transition-all"
+                  style={{ backgroundColor: '#82bc41' }}
+                >
+                  Confirm & Add to {planTargetWeek === 'current' ? 'Current Schedule' : 'Upcoming Plan'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add Recipe to Next Week Planner Modal */}
+      {modalType === 'addPlanMeal' && (
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-xs z-50 flex items-end sm:items-center justify-center p-4">
+          <div className="bg-white rounded-2xl p-5 w-full max-w-sm border border-[#eaeaea] shadow-xl">
+            <div className="flex justify-between items-center mb-3">
+              <h3 className="text-xs font-black text-slate-900">Add to {selectedPlanDay}'s Plan</h3>
+              <button onClick={() => setModalType(null)} className="text-slate-400 hover:text-slate-900">
+                <Icons.X size={16} />
+              </button>
+            </div>
+            <div className="space-y-3">
+              <div>
+                <label className="text-[10px] font-bold text-slate-500 uppercase block mb-1">Select Day</label>
+                <select
+                  value={selectedPlanDay}
+                  onChange={(e) => setSelectedPlanDay(e.target.value)}
+                  className="w-full p-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-900 bg-[#fafafa] focus:outline-none"
+                >
+                  {PLANNER_DAYS.map(d => (
+                    <option key={d} value={d}>{d}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="text-[10px] font-bold text-slate-500 uppercase block mb-1">Choose Recipe</label>
+                <select
+                  value={selectedPlannerRecipeToAdd}
+                  onChange={(e) => setSelectedPlannerRecipeToAdd(e.target.value)}
+                  className="w-full p-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-900 bg-[#fafafa] focus:outline-none"
+                >
+                  {recipes.map(r => (
+                    <option key={r.id} value={r.id}>
+                      {r.name} ({r.cals} kcal, {r.protein}g P)
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <button
+                onClick={handleAddPlannedRecipeToNextWeek}
+                className="w-full py-2.5 text-white font-bold rounded-xl text-xs tracking-wide shadow-xs mt-2"
+                style={{ backgroundColor: '#82bc41' }}
+              >
+                Add Recipe to Plan
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Protocol Switcher Modal */}
       {modalType === 'protocol' && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 flex items-end sm:items-center justify-center p-4">
@@ -1768,7 +2965,7 @@ export default function App() {
                 <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 block mb-1">Ingredients</span>
                 <ul className="list-disc pl-4 text-xs text-slate-800 space-y-1 font-medium bg-slate-50 p-3 rounded-2xl border border-slate-200">
                   {activeRecipeModal.ingredients?.map((ing, idx) => (
-                    <li key={idx}>{ing}</li>
+                    <li key={idx}>{cleanFoodItem(ing)}</li>
                   ))}
                 </ul>
               </div>
@@ -1781,7 +2978,20 @@ export default function App() {
               </div>
             </div>
 
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedRecipeForPlan(activeRecipeModal);
+                  setActiveRecipeModal(null);
+                  setModalType('planRecipeDirect');
+                }}
+                className="flex-1 py-3 text-white text-xs font-black rounded-xl shadow-xs"
+                style={{ backgroundColor: '#82bc41' }}
+              >
+                + Add to Meal Plan
+              </button>
+
               {!recipes.some(r => r.name === activeRecipeModal.name) && (
                 <button 
                   onClick={() => {
@@ -1792,15 +3002,14 @@ export default function App() {
                     setTimeout(() => setToastMessage(null), 3000);
                     setActiveRecipeModal(null);
                   }}
-                  className="flex-1 py-3 text-white text-xs font-black rounded-xl shadow-sm"
-                  style={{ backgroundColor: '#82bc41' }}
+                  className="flex-1 py-3 bg-slate-800 text-white text-xs font-black rounded-xl shadow-sm"
                 >
                   Save to Library
                 </button>
               )}
               <button 
                 onClick={() => setActiveRecipeModal(null)}
-                className="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-bold rounded-xl border border-slate-200"
+                className="py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-bold rounded-xl border border-slate-200"
               >
                 Close
               </button>
@@ -2005,7 +3214,8 @@ export default function App() {
                 <label className="text-[10px] font-bold text-slate-500 uppercase">Starting Weight (lbs)</label>
                 <input 
                   type="number" 
-                  value={weightData.start}
+                  placeholder="e.g. 215"
+                  value={weightData.start === 0 ? '' : weightData.start}
                   onChange={(e) => {
                     const updated = { ...weightData, start: parseFloat(e.target.value) || 0 };
                     setWeightData(updated);
@@ -2019,25 +3229,28 @@ export default function App() {
                 <input 
                   type="number" 
                   step="0.1"
-                  value={weightData.current}
+                  placeholder="e.g. 213"
+                  value={weightData.current === 0 ? '' : weightData.current}
                   onChange={(e) => {
                     const newCurrent = parseFloat(e.target.value) || 0;
                     const updated = { ...weightData, current: newCurrent };
                     setWeightData(updated);
 
-                    // Auto-record to weight history
-                    const lastEntry = weightHistory[0];
-                    const diff = lastEntry ? Number((newCurrent - lastEntry.weight).toFixed(1)) : 0;
-                    const newEntry = {
-                      id: `wh-${Date.now()}`,
-                      date: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
-                      weight: newCurrent,
-                      diff: diff
-                    };
-                    const updatedHistory = [newEntry, ...weightHistory.slice(0, 9)];
-                    setWeightHistory(updatedHistory);
-
-                    syncToCloudAndLocal({ weightData: updated, weightHistory: updatedHistory });
+                    if (newCurrent > 0) {
+                      const lastEntry = weightHistory[0];
+                      const diff = lastEntry ? Number((newCurrent - lastEntry.weight).toFixed(1)) : 0;
+                      const newEntry = {
+                        id: `wh-${Date.now()}`,
+                        date: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+                        weight: newCurrent,
+                        diff: diff
+                      };
+                      const updatedHistory = [newEntry, ...weightHistory.filter(h => h.id !== newEntry.id).slice(0, 9)];
+                      setWeightHistory(updatedHistory);
+                      syncToCloudAndLocal({ weightData: updated, weightHistory: updatedHistory });
+                    } else {
+                      syncToCloudAndLocal({ weightData: updated });
+                    }
                   }}
                   className="w-full p-2.5 rounded-xl border border-slate-200 bg-[#fafafa] font-bold text-slate-900 text-xs mt-1 focus:outline-none" 
                 />
@@ -2046,7 +3259,8 @@ export default function App() {
                 <label className="text-[10px] font-bold text-slate-500 uppercase">Goal Weight (lbs)</label>
                 <input 
                   type="number" 
-                  value={weightData.goal}
+                  placeholder="e.g. 185"
+                  value={weightData.goal === 0 ? '' : weightData.goal}
                   onChange={(e) => {
                     const updated = { ...weightData, goal: parseFloat(e.target.value) || 0 };
                     setWeightData(updated);
@@ -2059,10 +3273,12 @@ export default function App() {
                 <button 
                   type="button"
                   onClick={() => {
-                    const updated = { start: 205, current: 205, goal: 180 };
-                    setWeightData(updated);
-                    syncToCloudAndLocal({ weightData: updated });
-                    setToastMessage('Weight tracker reset.');
+                    const resetWeight = { start: 0, current: 0, goal: 0 };
+                    const resetHistory = [];
+                    setWeightData(resetWeight);
+                    setWeightHistory(resetHistory);
+                    syncToCloudAndLocal({ weightData: resetWeight, weightHistory: resetHistory });
+                    setToastMessage('Weight profile reset to 0.');
                     setTimeout(() => setToastMessage(null), 3000);
                     setModalType(null);
                   }}
