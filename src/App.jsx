@@ -182,96 +182,6 @@ const KETO_FRIENDLY_FOODS = [
   }
 ];
 
-const FASTING_PRESETS = [
-  { id: '16_8', label: '16:8', hours: 16 },
-  { id: '20_4', label: '20:4', hours: 20 },
-  { id: '23_1', label: '23:1', hours: 23 },
-  { id: 'adf', label: 'ADF', hours: 36 },
-  { id: '24h', label: '24H', hours: 24 },
-  { id: '36h', label: '36H', hours: 36 },
-  { id: '48h', label: '48H', hours: 48 },
-  { id: '72h', label: '72H', hours: 72 }
-];
-
-const METABOLIC_PHASES = [
-  {
-    id: 'phase_1',
-    phaseNumber: 1,
-    range: '0 – 12 Hours',
-    minHours: 0,
-    maxHours: 12,
-    name: 'Blood Sugar Stabilization & Glycogen Depletion',
-    shortStatus: 'Digestion Rest & Glycogen Burn',
-    summary: 'Circulating insulin levels drop sharply as digestion completes. Your body burns through circulating glucose and begins depleting stored liver glycogen.',
-    biomarkers: 'Insulin ↓ | Blood Sugar Normalization',
-    insights: [
-      { maxH: 4, tip: 'Digestion active. Stomach emptying, blood glucose gradually stabilizing.' },
-      { maxH: 8, tip: 'Insulin falling toward baseline. Liver tapping stored glycogen for cellular energy.' },
-      { maxH: 12, tip: 'Liver glycogen ~70% depleted. Mild hunger waves may occur as fat adaptation begins.' }
-    ]
-  },
-  {
-    id: 'phase_2',
-    phaseNumber: 2,
-    range: '12 – 18 Hours',
-    minHours: 12,
-    maxHours: 18,
-    name: 'Metabolic Switch & Ketosis Onset',
-    shortStatus: 'Ketone Production & Active Lipolysis',
-    summary: 'Liver glycogen is substantially depleted. The liver accelerates the conversion of stored fat into ketones (acetoacetate & beta-hydroxybutyrate) for cellular fuel.',
-    biomarkers: 'Ketones ↑ | Lipolysis (Fat Burning) Active',
-    insights: [
-      { maxH: 15, tip: 'The metabolic switch: Fatty acids mobilize into the bloodstream at high velocity.' },
-      { maxH: 18, tip: 'Blood ketone concentrations reach ~0.5–1.0 mmol/L. Brain switches to ketone metabolism.' }
-    ]
-  },
-  {
-    id: 'phase_3',
-    phaseNumber: 3,
-    range: '18 – 24 Hours',
-    minHours: 18,
-    maxHours: 24,
-    name: 'Autophagy Activation',
-    shortStatus: 'Intracellular Cleanup & Recycling',
-    summary: 'Intracellular cleanup protocols ignite. Cells begin breaking down misfolded proteins, dysfunctional mitochondria, and damaged components to recycle amino acids.',
-    biomarkers: 'Autophagy Onset | mTOR Suppression',
-    insights: [
-      { maxH: 21, tip: 'mTOR pathway is suppressed, unleashing intracellular lysosome recycling.' },
-      { maxH: 24, tip: 'Autophagy active in liver, muscle, and brain tissue. Cellular waste is systematically purged.' }
-    ]
-  },
-  {
-    id: 'phase_4',
-    phaseNumber: 4,
-    range: '24 – 48 Hours',
-    minHours: 24,
-    maxHours: 48,
-    name: 'Deep Autophagy & Growth Hormone Surge',
-    shortStatus: 'Peak Autophagy & Muscle Protection',
-    summary: 'Human Growth Hormone (HGH) surges up to 5x baseline to protect lean muscle tissue. Systemic inflammation markers plunge and visceral fat mobilization peaks.',
-    biomarkers: 'HGH ↑↑↑ | Peak Systemic De-inflammation',
-    insights: [
-      { maxH: 36, tip: 'Peak cellular rejuvenation. HGH surge preserves joint collagen and muscular integrity.' },
-      { maxH: 48, tip: 'Deep systemic de-inflammation. BDNF supports mental clarity and neuroplasticity.' }
-    ]
-  },
-  {
-    id: 'phase_5',
-    phaseNumber: 5,
-    range: '48 – 72+ Hours',
-    minHours: 48,
-    maxHours: 120,
-    name: 'Immune Reset & Stem Cell Renewal',
-    shortStatus: 'Hematopoietic Stem Cell Priming',
-    summary: 'Old and senescent white blood cells undergo apoptosis. The depletion of circulating immune cells triggers hematopoietic stem cells to generate a pristine, refreshed immune system upon refeeding.',
-    biomarkers: 'Stem Cell Activation | Cellular Rejuvenation',
-    insights: [
-      { maxH: 60, tip: 'Senescent immune cells dismantled. Stem cell triggers begin activating in bone marrow.' },
-      { maxH: 120, tip: 'Maximum immune renewal primed. Prepare for a gentle, bone-broth centered refeed.' }
-    ]
-  }
-];
-
 const FOOD_CATEGORY_ORDER = [
   'Proteins & Meats',
   'Produce & Veggies',
@@ -280,6 +190,162 @@ const FOOD_CATEGORY_ORDER = [
   'Pantry & Seasonings',
   'Other Items'
 ];
+
+function cleanFoodItem(raw) {
+  if (!raw) return '';
+  const str = raw.toLowerCase().trim();
+
+  if (str.includes('ribeye')) return 'Ribeye Steak';
+  if (str.includes('sirloin')) return 'Sirloin Steak';
+  if (str.includes('flank steak')) return 'Flank Steak';
+  if (str.includes('ny strip')) return 'NY Strip Steak';
+  if (str.includes('steak') || str.includes('chuck roast')) return 'Steak / Beef';
+  if (str.includes('ground beef')) return 'Ground Beef';
+  if (str.includes('egg') && !str.includes('plant')) return 'Eggs';
+  if (str.includes('bacon')) return 'Bacon';
+  if (str.includes('chicken breast')) return 'Chicken Breast';
+  if (str.includes('chicken thigh')) return 'Chicken Thighs';
+  if (str.includes('chicken wing')) return 'Chicken Wings';
+  if (str.includes('chicken')) return 'Chicken';
+  if (str.includes('turkey thigh')) return 'Turkey Thigh';
+  if (str.includes('turkey')) return 'Turkey';
+  if (str.includes('salmon')) return 'Salmon';
+  if (str.includes('tuna')) return 'Canned Tuna';
+  if (str.includes('shrimp')) return 'Shrimp';
+  if (str.includes('scallop')) return 'Scallops';
+  if (str.includes('mahi mahi')) return 'Mahi Mahi';
+  if (str.includes('trout')) return 'Trout';
+  if (str.includes('cod') || str.includes('halibut') || str.includes('white fish')) return 'White Fish (Cod/Halibut)';
+  if (str.includes('sardine')) return 'Sardines';
+  if (str.includes('ham')) return 'Deli Ham';
+  if (str.includes('prosciutto')) return 'Prosciutto';
+
+  if (str.includes('spinach')) return 'Spinach';
+  if (str.includes('cabbage')) return 'Green Cabbage';
+  if (str.includes('asparagus')) return 'Asparagus';
+  if (str.includes('avocado') && !str.includes('oil')) return 'Avocado';
+  if (str.includes('mushroom')) return 'Mushrooms';
+  if (str.includes('celery')) return 'Celery';
+  if (str.includes('lettuce')) return 'Romaine Lettuce';
+  if (str.includes('bell pepper') || str.includes('peppers & onion')) return 'Bell Peppers';
+  if (str.includes('garlic')) return 'Garlic';
+  if (str.includes('chive')) return 'Chives';
+  if (str.includes('scallion')) return 'Scallions';
+  if (str.includes('basil')) return 'Fresh Basil';
+  if (str.includes('rosemary')) return 'Fresh Rosemary';
+  if (str.includes('dill')) return 'Fresh Dill';
+  if (str.includes('parsley')) return 'Fresh Parsley';
+  if (str.includes('ginger')) return 'Fresh Ginger';
+  if (str.includes('lemon')) return 'Lemon';
+  if (str.includes('lime')) return 'Lime';
+  if (str.includes('greens') || str.includes('baby greens')) return 'Mixed Greens';
+  if (str.includes('tomato')) return 'Crushed Tomatoes';
+  if (str.includes('zucchini')) return 'Zucchini';
+  if (str.includes('broccoli')) return 'Broccoli';
+  if (str.includes('cauliflower')) return 'Cauliflower';
+
+  if (str.includes('cheddar')) return 'Cheddar Cheese';
+  if (str.includes('cream cheese')) return 'Cream Cheese';
+  if (str.includes('feta')) return 'Feta Cheese';
+  if (str.includes('swiss')) return 'Swiss Cheese';
+  if (str.includes('mozzarella')) return 'Mozzarella Cheese';
+  if (str.includes('parmesan')) return 'Parmesan Cheese';
+  if (str.includes('goat cheese')) return 'Goat Cheese';
+  if (str.includes('blue cheese')) return 'Blue Cheese';
+  if (str.includes('heavy cream')) return 'Heavy Cream';
+  if (str.includes('sour cream')) return 'Sour Cream';
+
+  if (str.includes('butter') && !str.includes('garlic butter steak')) return 'Grass-Fed Butter';
+  if (str.includes('ghee')) return 'Ghee';
+  if (str.includes('olive oil')) return 'Olive Oil';
+  if (str.includes('avocado oil') && !str.includes('mayo')) return 'Avocado Oil';
+  if (str.includes('mct oil')) return 'MCT Oil';
+  if (str.includes('coconut oil')) return 'Coconut Oil';
+  if (str.includes('mayo')) return 'Avocado Oil Mayo';
+  if (str.includes('pesto')) return 'Basil Pesto';
+
+  if (str.includes('bone broth')) return 'Bone Broth';
+  if (str.includes('sea salt') || str.includes('salt & pepper') || str.includes('salt')) return 'Sea Salt';
+  if (str.includes('black pepper') || str.includes('pepper flakes')) return 'Black Pepper';
+  if (str.includes('turmeric')) return 'Turmeric';
+  if (str.includes('mustard') || str.includes('dijon')) return 'Dijon Mustard';
+  if (str.includes('tamari')) return 'Tamari Soy Sauce';
+  if (str.includes('almond flour')) return 'Almond Flour';
+  if (str.includes('sesame')) return 'Sesame Seeds';
+  if (str.includes('ranch seasoning')) return 'Ranch Seasoning';
+  if (str.includes('taco seasoning')) return 'Taco Seasoning';
+  if (str.includes('cajun')) return 'Cajun Seasoning';
+  if (str.includes('fajita')) return 'Fajita Seasoning';
+  if (str.includes('hot sauce') || str.includes('buffalo')) return 'Buffalo Hot Sauce';
+  if (str.includes('pickle')) return 'Pickles';
+
+  let cleaned = raw.replace(/\([^)]*\)/g, '');
+  cleaned = cleaned.replace(/^(a\s+|pinch of\s+|dash of\s+)/i, '');
+  cleaned = cleaned.replace(/^[\d\s\/\.\-\–]+/g, '');
+  cleaned = cleaned.replace(/^(oz|tbsp|tsp|tablespoon|teaspoon|cup|cups|spears|spear|cloves|clove|cans|can|strips|strip|slices|slice|pieces|piece|sprigs|sprig|heads|head|stalks|stalk|fillets|fillet|crowns|crown|spears)\s+(of\s+)?/i, '');
+  cleaned = cleaned.replace(/\b(large|small|medium|sliced|diced|chopped|shredded|cooked|minced|crushed|peeled|torn)\b/gi, '');
+  cleaned = cleaned.replace(/\s+/g, ' ').trim();
+  if (!cleaned) return raw;
+  return cleaned.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+}
+
+function getFoodCategory(itemName) {
+  const l = (itemName || '').toLowerCase();
+  
+  if (
+    l.includes('beef') || l.includes('steak') || l.includes('salmon') || 
+    l.includes('chicken') || l.includes('turkey') || l.includes('bacon') || 
+    l.includes('egg') || l.includes('tuna') || l.includes('shrimp') || 
+    l.includes('pork') || l.includes('ham') || l.includes('prosciutto') || 
+    l.includes('sardine') || l.includes('cod') || l.includes('halibut') || 
+    l.includes('scallop') || l.includes('meat') || l.includes('wings')
+  ) {
+    return 'Proteins & Meats';
+  }
+
+  if (
+    l.includes('spinach') || l.includes('cabbage') || l.includes('asparagus') || 
+    l.includes('avocado') || l.includes('mushroom') || l.includes('celery') || 
+    l.includes('tomato') || l.includes('lettuce') || l.includes('bell pepper') || 
+    l.includes('onion') || l.includes('garlic') || l.includes('chive') || 
+    l.includes('scallion') || l.includes('parsley') || l.includes('dill') || 
+    l.includes('basil') || l.includes('ginger') || l.includes('lemon') || 
+    l.includes('lime') || l.includes('greens') || l.includes('zucchini') || 
+    l.includes('broccoli') || l.includes('cauliflower') || l.includes('romaine') ||
+    l.includes('sage')
+  ) {
+    return 'Produce & Veggies';
+  }
+
+  if (
+    l.includes('cheese') || l.includes('cheddar') || l.includes('feta') || 
+    l.includes('swiss') || l.includes('mozzarella') || l.includes('parmesan') || 
+    l.includes('heavy cream') || l.includes('cream cheese') || l.includes('sour cream') ||
+    l.includes('goat') || l.includes('blue')
+  ) {
+    return 'Dairy & Cheeses';
+  }
+
+  if (
+    l.includes('butter') || l.includes('ghee') || l.includes('oil') || 
+    l.includes('mct') || l.includes('mayo') || l.includes('pesto')
+  ) {
+    return 'Fats & Oils';
+  }
+
+  if (
+    l.includes('broth') || l.includes('salt') || l.includes('pepper') || 
+    l.includes('seasoning') || l.includes('rub') || l.includes('mustard') || 
+    l.includes('tamari') || l.includes('vinegar') || l.includes('almond flour') || 
+    l.includes('sesame') || l.includes('electrolyte') || l.includes('coffee') || 
+    l.includes('turmeric') || l.includes('chipotle') || l.includes('dijon') ||
+    l.includes('pickle') || l.includes('sauce')
+  ) {
+    return 'Pantry & Seasonings';
+  }
+
+  return 'Other Items';
+}
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -342,13 +408,32 @@ export default function App() {
   // --- Recipe Sub-Tabs & Meal Planning / Shopping State ---
   const [recipeSubTab, setRecipeSubTab] = useState('catalog');
   const [selectedPlanDay, setSelectedPlanDay] = useState('Monday');
+  
+  // Inline Initial Plan State Initialization (Guarantees zero reference errors)
   const [nextWeekPlan, setNextWeekPlan] = useState(() => {
     try {
       const saved = localStorage.getItem('ks_next_week_plan');
-      return saved ? JSON.parse(saved) : createInitialImportedPlan();
-    } catch {
-      return createInitialImportedPlan();
-    }
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    
+    const plan = { Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: [], Saturday: [], Sunday: [] };
+    WEEK_1_MEAL_PLAN.forEach(day => {
+      plan[day.dayName] = day.meals.map(m => {
+        const matchRecipe = INITIAL_RECIPES.find(r => r.name.toLowerCase() === m.name.toLowerCase());
+        return {
+          id: `plan-init-${day.dayName}-${m.id}`,
+          recipeId: matchRecipe?.id || m.id,
+          name: m.name,
+          category: matchRecipe?.category || 'Keto',
+          cals: m.cals,
+          protein: m.protein,
+          carbs: m.carbs,
+          fat: m.fat,
+          ingredients: matchRecipe?.ingredients || []
+        };
+      });
+    });
+    return plan;
   });
 
   // Shopping List States
@@ -2584,7 +2669,7 @@ export default function App() {
       {/* Add Recipe to Next Week Planner Modal */}
       {modalType === 'addPlanMeal' && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-xs z-50 flex items-end sm:items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-5 w-full max-w-sm border border-[#eaeaea] shadow-xl">
+          <div className="bg-white rounded-3xl p-5 w-full max-w-sm border border-[#eaeaea] shadow-xl">
             <div className="flex justify-between items-center mb-3">
               <h3 className="text-xs font-black text-slate-900">Add to {selectedPlanDay}'s Plan</h3>
               <button onClick={() => setModalType(null)} className="text-slate-400 hover:text-slate-900">
