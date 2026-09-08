@@ -272,7 +272,55 @@ const METABOLIC_PHASES = [
   }
 ];
 
-// --- 5 Master Ketogenic Protocols (Only Week 1 Workouts Preset, Zero Preset Meals) ---
+// Standard Week 1 Current Meals
+const WEEK_1_MEAL_PLAN = [
+  { dayId: 1, dayName: 'Monday', meals: [
+    { id: 'm-mon-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 },
+    { id: 'm-mon-2', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }
+  ]},
+  { dayId: 2, dayName: 'Tuesday', meals: [] },
+  { dayId: 3, dayName: 'Wednesday', meals: [
+    { id: 'm-wed-1', name: 'Anti-Inflammatory Turmeric Eggs', cals: 480, protein: 38, carbs: 3, fat: 34 },
+    { id: 'm-wed-2', name: 'Ginger Salmon & Avo Bowl', cals: 620, protein: 46, carbs: 5, fat: 42 }
+  ]},
+  { dayId: 4, dayName: 'Thursday', meals: [] },
+  { dayId: 5, dayName: 'Friday', meals: [
+    { id: 'm-fri-1', name: 'Crispy Chicken & Avocado Wrap', cals: 590, protein: 48, carbs: 4, fat: 40 },
+    { id: 'm-fri-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }
+  ]},
+  { dayId: 6, dayName: 'Saturday', meals: [
+    { id: 'm-sat-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 },
+    { id: 'm-sat-2', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }
+  ]},
+  { dayId: 0, dayName: 'Sunday', meals: [
+    { id: 'm-sun-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 },
+    { id: 'm-sun-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }
+  ]}
+];
+
+// Helper to assemble the initial imported plan
+const createInitialImportedPlan = () => {
+  const plan = { Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: [], Saturday: [], Sunday: [] };
+  WEEK_1_MEAL_PLAN.forEach(day => {
+    plan[day.dayName] = day.meals.map(m => {
+      const matchRecipe = INITIAL_RECIPES.find(r => r.name.toLowerCase() === m.name.toLowerCase());
+      return {
+        id: `plan-init-${day.dayName}-${m.id}`,
+        recipeId: matchRecipe?.id || m.id,
+        name: m.name,
+        category: matchRecipe?.category || 'Keto',
+        cals: m.cals,
+        protein: m.protein,
+        carbs: m.carbs,
+        fat: m.fat,
+        ingredients: matchRecipe?.ingredients || []
+      };
+    });
+  });
+  return plan;
+};
+
+// Protocols Definition with Week 1 Workouts
 const PROTOCOLS = {
   adf: {
     id: 'adf',
@@ -358,10 +406,179 @@ const PROTOCOLS = {
 
 const PLANNER_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
+// --- Intelligent Food Item Cleaner (Strips quantities, measurements, and prep words) ---
+const cleanFoodItem = (raw) => {
+  if (!raw) return '';
+  const str = raw.toLowerCase().trim();
+
+  // 1. Precise mappings for recipe staples
+  if (str.includes('ribeye')) return 'Ribeye Steak';
+  if (str.includes('sirloin')) return 'Sirloin Steak';
+  if (str.includes('flank steak')) return 'Flank Steak';
+  if (str.includes('ny strip')) return 'NY Strip Steak';
+  if (str.includes('steak') || str.includes('chuck roast')) return 'Steak / Beef';
+  if (str.includes('ground beef')) return 'Ground Beef';
+  if (str.includes('egg') && !str.includes('plant')) return 'Eggs';
+  if (str.includes('bacon')) return 'Bacon';
+  if (str.includes('chicken breast')) return 'Chicken Breast';
+  if (str.includes('chicken thigh')) return 'Chicken Thighs';
+  if (str.includes('chicken wing')) return 'Chicken Wings';
+  if (str.includes('chicken')) return 'Chicken';
+  if (str.includes('turkey thigh')) return 'Turkey Thigh';
+  if (str.includes('turkey')) return 'Turkey';
+  if (str.includes('salmon')) return 'Salmon';
+  if (str.includes('tuna')) return 'Canned Tuna';
+  if (str.includes('shrimp')) return 'Shrimp';
+  if (str.includes('scallop')) return 'Scallops';
+  if (str.includes('mahi mahi')) return 'Mahi Mahi';
+  if (str.includes('trout')) return 'Trout';
+  if (str.includes('cod') || str.includes('halibut') || str.includes('white fish')) return 'White Fish (Cod/Halibut)';
+  if (str.includes('sardine')) return 'Sardines';
+  if (str.includes('ham')) return 'Deli Ham';
+  if (str.includes('prosciutto')) return 'Prosciutto';
+
+  if (str.includes('spinach')) return 'Spinach';
+  if (str.includes('cabbage')) return 'Green Cabbage';
+  if (str.includes('asparagus')) return 'Asparagus';
+  if (str.includes('avocado') && !str.includes('oil')) return 'Avocado';
+  if (str.includes('mushroom')) return 'Mushrooms';
+  if (str.includes('celery')) return 'Celery';
+  if (str.includes('lettuce')) return 'Romaine Lettuce';
+  if (str.includes('bell pepper') || str.includes('peppers & onion')) return 'Bell Peppers';
+  if (str.includes('garlic')) return 'Garlic';
+  if (str.includes('chive')) return 'Chives';
+  if (str.includes('scallion')) return 'Scallions';
+  if (str.includes('basil')) return 'Fresh Basil';
+  if (str.includes('rosemary')) return 'Fresh Rosemary';
+  if (str.includes('dill')) return 'Fresh Dill';
+  if (str.includes('parsley')) return 'Fresh Parsley';
+  if (str.includes('ginger')) return 'Fresh Ginger';
+  if (str.includes('lemon')) return 'Lemon';
+  if (str.includes('lime')) return 'Lime';
+  if (str.includes('greens') || str.includes('baby greens')) return 'Mixed Greens';
+  if (str.includes('tomato')) return 'Crushed Tomatoes';
+  if (str.includes('zucchini')) return 'Zucchini';
+  if (str.includes('broccoli')) return 'Broccoli';
+  if (str.includes('cauliflower')) return 'Cauliflower';
+
+  if (str.includes('cheddar')) return 'Cheddar Cheese';
+  if (str.includes('cream cheese')) return 'Cream Cheese';
+  if (str.includes('feta')) return 'Feta Cheese';
+  if (str.includes('swiss')) return 'Swiss Cheese';
+  if (str.includes('mozzarella')) return 'Mozzarella Cheese';
+  if (str.includes('parmesan')) return 'Parmesan Cheese';
+  if (str.includes('goat cheese')) return 'Goat Cheese';
+  if (str.includes('blue cheese')) return 'Blue Cheese';
+  if (str.includes('heavy cream')) return 'Heavy Cream';
+  if (str.includes('sour cream')) return 'Sour Cream';
+
+  if (str.includes('butter') && !str.includes('garlic butter steak')) return 'Grass-Fed Butter';
+  if (str.includes('ghee')) return 'Ghee';
+  if (str.includes('olive oil')) return 'Olive Oil';
+  if (str.includes('avocado oil') && !str.includes('mayo')) return 'Avocado Oil';
+  if (str.includes('mct oil')) return 'MCT Oil';
+  if (str.includes('coconut oil')) return 'Coconut Oil';
+  if (str.includes('mayo')) return 'Avocado Oil Mayo';
+  if (str.includes('pesto')) return 'Basil Pesto';
+
+  if (str.includes('bone broth')) return 'Bone Broth';
+  if (str.includes('sea salt') || str.includes('salt & pepper') || str.includes('salt')) return 'Sea Salt';
+  if (str.includes('black pepper') || str.includes('pepper flakes')) return 'Black Pepper';
+  if (str.includes('turmeric')) return 'Turmeric';
+  if (str.includes('mustard') || str.includes('dijon')) return 'Dijon Mustard';
+  if (str.includes('tamari')) return 'Tamari Soy Sauce';
+  if (str.includes('almond flour')) return 'Almond Flour';
+  if (str.includes('sesame')) return 'Sesame Seeds';
+  if (str.includes('ranch seasoning')) return 'Ranch Seasoning';
+  if (str.includes('taco seasoning')) return 'Taco Seasoning';
+  if (str.includes('cajun')) return 'Cajun Seasoning';
+  if (str.includes('fajita')) return 'Fajita Seasoning';
+  if (str.includes('hot sauce') || str.includes('buffalo')) return 'Buffalo Hot Sauce';
+  if (str.includes('pickle')) return 'Pickles';
+
+  // Fallback: Strip measurement units and numbers
+  let cleaned = raw.replace(/\([^)]*\)/g, '');
+  cleaned = cleaned.replace(/^(a\s+|pinch of\s+|dash of\s+)/i, '');
+  cleaned = cleaned.replace(/^[\d\s\/\.\-\–]+/g, '');
+  cleaned = cleaned.replace(/^(oz|tbsp|tsp|tablespoon|teaspoon|cup|cups|spears|spear|cloves|clove|cans|can|strips|strip|slices|slice|pieces|piece|sprigs|sprig|heads|head|stalks|stalk|fillets|fillet|crowns|crown|spears)\s+(of\s+)?/i, '');
+  cleaned = cleaned.replace(/\b(large|small|medium|sliced|diced|chopped|shredded|cooked|minced|crushed|peeled|torn)\b/gi, '');
+  cleaned = cleaned.replace(/\s+/g, ' ').trim();
+  if (!cleaned) return raw;
+  return cleaned.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+};
+
+// Helper function to intelligently classify items by food type
+const getFoodCategory = (itemName) => {
+  const l = (itemName || '').toLowerCase();
+  
+  if (
+    l.includes('beef') || l.includes('steak') || l.includes('salmon') || 
+    l.includes('chicken') || l.includes('turkey') || l.includes('bacon') || 
+    l.includes('egg') || l.includes('tuna') || l.includes('shrimp') || 
+    l.includes('pork') || l.includes('ham') || l.includes('prosciutto') || 
+    l.includes('sardine') || l.includes('cod') || l.includes('halibut') || 
+    l.includes('scallop') || l.includes('meat') || l.includes('wings')
+  ) {
+    return 'Proteins & Meats';
+  }
+
+  if (
+    l.includes('spinach') || l.includes('cabbage') || l.includes('asparagus') || 
+    l.includes('avocado') || l.includes('mushroom') || l.includes('celery') || 
+    l.includes('tomato') || l.includes('lettuce') || l.includes('bell pepper') || 
+    l.includes('onion') || l.includes('garlic') || l.includes('chive') || 
+    l.includes('scallion') || l.includes('parsley') || l.includes('dill') || 
+    l.includes('basil') || l.includes('ginger') || l.includes('lemon') || 
+    l.includes('lime') || l.includes('greens') || l.includes('zucchini') || 
+    l.includes('broccoli') || l.includes('cauliflower') || l.includes('romaine') ||
+    l.includes('sage')
+  ) {
+    return 'Produce & Veggies';
+  }
+
+  if (
+    l.includes('cheese') || l.includes('cheddar') || l.includes('feta') || 
+    l.includes('swiss') || l.includes('mozzarella') || l.includes('parmesan') || 
+    l.includes('heavy cream') || l.includes('cream cheese') || l.includes('sour cream') ||
+    l.includes('goat') || l.includes('blue')
+  ) {
+    return 'Dairy & Cheeses';
+  }
+
+  if (
+    l.includes('butter') || l.includes('ghee') || l.includes('oil') || 
+    l.includes('mct') || l.includes('mayo') || l.includes('pesto')
+  ) {
+    return 'Fats & Oils';
+  }
+
+  if (
+    l.includes('broth') || l.includes('salt') || l.includes('pepper') || 
+    l.includes('seasoning') || l.includes('rub') || l.includes('mustard') || 
+    l.includes('tamari') || l.includes('vinegar') || l.includes('almond flour') || 
+    l.includes('sesame') || l.includes('electrolyte') || l.includes('coffee') || 
+    l.includes('turmeric') || l.includes('chipotle') || l.includes('dijon') ||
+    l.includes('pickle') || l.includes('sauce')
+  ) {
+    return 'Pantry & Seasonings';
+  }
+
+  return 'Other Items';
+};
+
+const FOOD_CATEGORY_ORDER = [
+  'Proteins & Meats',
+  'Produce & Veggies',
+  'Dairy & Cheeses',
+  'Fats & Oils',
+  'Pantry & Seasonings',
+  'Other Items'
+];
+
 export default function App() {
   const [user, setUser] = useState(null);
 
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState('schedule');
   const todayId = new Date().getDay();
   const [selectedDay, setSelectedDay] = useState(todayId);
 
@@ -416,34 +633,16 @@ export default function App() {
     try { return JSON.parse(localStorage.getItem('ks_recipes') || JSON.stringify(INITIAL_RECIPES)); } catch { return INITIAL_RECIPES; }
   });
 
-  // --- Recipe Sub-Tabs & Meal Planning / Shopping State ---
+  // --- Recipe Sub-Tabs & Meal Planning / Shopping State (Preloaded with One-Time Import) ---
   const [recipeSubTab, setRecipeSubTab] = useState('catalog');
   const [selectedPlanDay, setSelectedPlanDay] = useState('Monday');
-  
   const [nextWeekPlan, setNextWeekPlan] = useState(() => {
     try {
       const saved = localStorage.getItem('ks_next_week_plan');
-      if (saved) return JSON.parse(saved);
-    } catch {}
-    
-    const plan = { Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: [], Saturday: [], Sunday: [] };
-    WEEK_1_MEAL_PLAN.forEach(day => {
-      plan[day.dayName] = day.meals.map(m => {
-        const matchRecipe = INITIAL_RECIPES.find(r => r.name.toLowerCase() === m.name.toLowerCase());
-        return {
-          id: `plan-init-${day.dayName}-${m.id}`,
-          recipeId: matchRecipe?.id || m.id,
-          name: m.name,
-          category: matchRecipe?.category || 'Keto',
-          cals: m.cals,
-          protein: m.protein,
-          carbs: m.carbs,
-          fat: m.fat,
-          ingredients: matchRecipe?.ingredients || []
-        };
-      });
-    });
-    return plan;
+      return saved ? JSON.parse(saved) : createInitialImportedPlan();
+    } catch {
+      return createInitialImportedPlan();
+    }
   });
 
   // Shopping List States
@@ -1116,6 +1315,7 @@ export default function App() {
       });
     }
 
+    // Add Custom Groceries
     (customGroceries[activeShoppingWeek] || []).forEach(item => {
       addOrIncrement(item.name, 'Custom Item', true);
     });
@@ -1130,6 +1330,7 @@ export default function App() {
   const currentShoppingItems = getAggregatedShoppingList();
   const checkedShoppingCount = currentShoppingItems.filter(item => checkedGroceries[item.id]).length;
 
+  // Group shopping items by category
   const groupedShoppingItems = FOOD_CATEGORY_ORDER.reduce((acc, cat) => {
     const items = currentShoppingItems.filter(item => item.category === cat);
     if (items.length > 0) {
@@ -1143,6 +1344,7 @@ export default function App() {
     ? recipes 
     : recipes.filter(r => r.category === recipeCategory);
 
+  // Dynamic Weight Delta & Progress Calculations
   const isWeightConfigured = weightData.start > 0 && weightData.current > 0;
   const weightDiff = isWeightConfigured ? weightData.start - weightData.current : 0;
   const isWeightLost = weightDiff >= 0;
@@ -1152,6 +1354,7 @@ export default function App() {
     ? Math.max(0, Math.min(100, Math.round((weightDiff / totalToLose) * 100)))
     : 0;
 
+  // Reset Weight Baseline Handler
   const handleResetWeightProgress = () => {
     const confirmed = window.confirm(
       `Reset weight profile and history?\n\nThis will reset your starting baseline and clear historical progression logs.`
@@ -1168,6 +1371,7 @@ export default function App() {
     setTimeout(() => setToastMessage(null), 3000);
   };
 
+  // End Fast Handler
   const handleStopFast = () => {
     const confirmed = window.confirm("Are you ready to stop your fast and record your duration?");
     if (!confirmed) return;
@@ -1260,13 +1464,13 @@ export default function App() {
           </div>
         </div>
 
-        {/* Tab Navigation: Dashboard is opening page, Fasting is next to Stats */}
+        {/* Tab Navigation */}
         <div className="grid grid-cols-5 border-b border-[#eaeaea] -mx-5 px-2">
           {[
             { id: 'dashboard', icon: Icons.Activity, label: 'Dash' },
             { id: 'schedule', icon: Icons.Calendar, label: 'Schedule' },
-            { id: 'recipes', icon: Icons.BookOpen, label: 'Recipes' },
             { id: 'fasting', icon: Icons.Clock, label: 'Fasting' },
+            { id: 'recipes', icon: Icons.BookOpen, label: 'Recipes' },
             { id: 'stats', icon: Icons.TrendingUp, label: 'Stats' }
           ].map(tab => (
             <button
@@ -1533,7 +1737,7 @@ export default function App() {
           </div>
         )}
 
-        {/* DASHBOARD TAB (Default Opening Page) */}
+        {/* DASHBOARD TAB */}
         {activeTab === 'dashboard' && (
           <div className="space-y-3">
             <div className="bg-white rounded-2xl border border-[#eaeaea] p-4 shadow-xs flex items-center justify-between">
@@ -1613,7 +1817,7 @@ export default function App() {
               </div>
 
               <h3 className="text-sm font-black text-white mb-1">{currentFeaturedDish.name}</h3>
-              <p className="text-xs text-slate-300 leading-relaxed mb-3">{currentFeaturedDish.ingredients.map(ing => cleanFoodItem(ing)).join(', ')}</p>
+              <p className="text-xs text-slate-300 leading-relaxed mb-3">{currentFeaturedDish.ingredients.join(', ')}</p>
 
               <div className="flex items-center justify-between pt-2 border-t border-slate-800">
                 <button 
@@ -1979,7 +2183,7 @@ export default function App() {
               </div>
             )}
 
-            {/* SUB-TAB 4: INTEGRATED GROCERY & SHOPPING LIST */}
+            {/* SUB-TAB 4: INTEGRATED GROCERY & SHOPPING LIST (SIMPLIFIED FOOD ITEMS + QUANTITIES) */}
             {recipeSubTab === 'shopping' && (
               <div className="space-y-4">
                 <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-4">
@@ -2153,443 +2357,6 @@ export default function App() {
           </div>
         )}
 
-        {/* FASTING TAB (Next to Stats) */}
-        {activeTab === 'fasting' && (
-          <div className="space-y-4">
-            
-            {/* Main Timer Display Card */}
-            <div className="bg-white rounded-3xl border border-[#eaeaea] p-6 shadow-xs text-center space-y-4">
-              <div className="flex items-center justify-center gap-2">
-                <Icons.Clock className={`w-6 h-6 text-slate-400 ${fastingState.active ? 'animate-pulse' : ''}`} style={fastingState.active ? { color: '#82bc41' } : {}} />
-                <span className="text-[11px] font-black uppercase tracking-widest text-slate-500">
-                  {fastingState.active ? 'Fast In Progress' : 'Fast Not Started'}
-                </span>
-              </div>
-              
-              <div className="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight tabular-nums font-mono py-1">
-                {formatTime(fastingElapsed)}
-              </div>
-
-              <div className="flex items-center justify-center gap-2">
-                <span className="text-xs font-bold text-slate-600">
-                  Target Window: <strong className="text-slate-900">{fastingState.preset} Hours</strong>
-                </span>
-                {fastingState.active && (
-                  <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-                    {Math.min(100, Math.round((currentElapsedHours / fastingState.preset) * 100))}% Completed
-                  </span>
-                )}
-              </div>
-
-              {fastingState.active && (
-                <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-                  <div 
-                    className="h-full rounded-full transition-all duration-500" 
-                    style={{ 
-                      width: `${Math.min(100, (currentElapsedHours / fastingState.preset) * 100)}%`, 
-                      backgroundColor: '#82bc41' 
-                    }} 
-                  />
-                </div>
-              )}
-
-              {/* 8 Fasting Presets */}
-              <div className="pt-2">
-                <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 block mb-2">
-                  Select Fasting Preset
-                </span>
-                <div className="grid grid-cols-4 gap-2">
-                  {FASTING_PRESETS.map(preset => (
-                    <button
-                      key={preset.id}
-                      onClick={() => {
-                        const updated = { ...fastingState, preset: preset.hours };
-                        setFastingState(updated);
-                        syncToCloudAndLocal({ fastingState: updated });
-                      }}
-                      className={`py-2 px-1 rounded-xl text-xs font-black border transition-all ${
-                        fastingState.preset === preset.hours && !fastingState.active
-                          ? 'text-white border-transparent shadow-xs'
-                          : fastingState.preset === preset.hours && fastingState.active
-                          ? 'border-[#82bc41] text-emerald-700 bg-emerald-50 font-black'
-                          : 'bg-white text-slate-700 border-[#eaeaea] hover:bg-slate-50'
-                      }`}
-                      style={fastingState.preset === preset.hours && !fastingState.active ? { backgroundColor: '#82bc41' } : {}}
-                    >
-                      {preset.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Start and Stop Buttons */}
-              <div className="pt-2">
-                {!fastingState.active ? (
-                  <button 
-                    onClick={() => {
-                      const updated = { ...fastingState, active: true, startTime: Date.now() };
-                      setFastingState(updated);
-                      syncToCloudAndLocal({ fastingState: updated });
-                      setToastMessage(`Fast started! Target: ${fastingState.preset}h`);
-                      setTimeout(() => setToastMessage(null), 3000);
-                    }}
-                    className="w-full py-3.5 text-white rounded-2xl font-black text-sm tracking-wide shadow-md transition-all hover:opacity-95 flex items-center justify-center gap-2"
-                    style={{ backgroundColor: '#82bc41' }}
-                  >
-                    <Icons.Zap size={16} /> START FAST
-                  </button>
-                ) : (
-                  <button 
-                    onClick={handleStopFast}
-                    className="w-full py-3.5 bg-rose-600 hover:bg-rose-700 text-white rounded-2xl font-black text-sm tracking-wide shadow-md transition-all flex items-center justify-center gap-2"
-                  >
-                    <Icons.X size={16} /> STOP FAST
-                  </button>
-                )}
-              </div>
-            </div>
-
-            {/* Last Completed Fast Banner */}
-            {fastingState.lastCompletedFast && !fastingState.active && (
-              <div className="bg-emerald-50/60 border border-emerald-200 rounded-2xl p-4 shadow-xs flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white shrink-0" style={{ backgroundColor: '#82bc41' }}>
-                    <Icons.Award size={18} />
-                  </div>
-                  <div>
-                    <span className="text-[10px] font-black uppercase tracking-wider text-emerald-800 block">
-                      Last Fast Completed
-                    </span>
-                    <span className="text-base font-black text-slate-900">
-                      {formatDurationDisplay(fastingState.lastCompletedFast.durationMs)}
-                    </span>
-                    <span className="text-[10px] text-slate-600 block mt-0.5">
-                      Target was {fastingState.lastCompletedFast.preset}h • {fastingState.lastCompletedFast.completedAtDate} at {fastingState.lastCompletedFast.completedAtTime}
-                    </span>
-                  </div>
-                </div>
-                {fastingState.lastCompletedFast.hitGoal && (
-                  <span className="text-[10px] font-black px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-800 border border-emerald-300 shrink-0">
-                    Goal Reached!
-                  </span>
-                )}
-              </div>
-            )}
-
-            {/* SINGLE DYNAMIC METABOLIC PHASE CARD */}
-            <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-[#eaeaea]">
-                <div>
-                  <span className="text-[10px] font-black uppercase tracking-wider block" style={{ color: '#82bc41' }}>
-                    Metabolic Stage {activePhase.phaseNumber} of 5
-                  </span>
-                  <h3 className="text-sm font-black text-slate-900 mt-0.5">
-                    {activePhase.name}
-                  </h3>
-                </div>
-                <div className="text-right">
-                  <span 
-                    className={`text-[10px] font-black px-2.5 py-1 rounded-lg inline-block ${
-                      fastingState.active 
-                        ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' 
-                        : 'bg-slate-100 text-slate-600 border border-slate-200'
-                    }`}
-                  >
-                    {fastingState.active ? activePhase.range : 'Standby'}
-                  </span>
-                </div>
-              </div>
-
-              {fastingState.active && (
-                <div className="space-y-1.5">
-                  <div className="flex justify-between text-[10px] font-bold text-slate-600">
-                    <span>Stage Progress</span>
-                    <span className="text-slate-900 font-extrabold">{activePhaseProgress}%</span>
-                  </div>
-                  <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-                    <div 
-                      className="h-full rounded-full transition-all duration-500" 
-                      style={{ width: `${activePhaseProgress}%`, backgroundColor: '#82bc41' }} 
-                    />
-                  </div>
-                </div>
-              )}
-
-              <div className="bg-[#fafafa] p-3.5 rounded-2xl border border-[#eaeaea] space-y-2">
-                <p className="text-xs text-slate-700 leading-relaxed font-medium">
-                  {activePhase.summary}
-                </p>
-
-                {fastingState.active && (
-                  <div className="text-xs bg-white p-2.5 rounded-xl border border-slate-200/80 text-slate-800 flex items-start gap-2 shadow-2xs">
-                    <Icons.Activity size={14} className="text-emerald-600 shrink-0 mt-0.5" />
-                    <span><strong>Current State:</strong> {activeTip}</span>
-                  </div>
-                )}
-              </div>
-
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pt-1">
-                <div className="text-[10px] font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200">
-                  Biomarkers: <span className="text-slate-900 font-extrabold">{activePhase.biomarkers}</span>
-                </div>
-
-                {fastingState.active && nextPhase && msToNextPhase > 0 ? (
-                  <div className="flex items-center gap-1.5 text-xs text-slate-600 ml-auto">
-                    <span>Next: <strong>{nextPhase.shortStatus}</strong></span>
-                    <span className="font-black text-emerald-600">({formatDurationDisplay(msToNextPhase)})</span>
-                  </div>
-                ) : fastingState.active && !nextPhase ? (
-                  <span className="text-xs font-black text-emerald-600 ml-auto">
-                    ✓ Maximum Regeneration Stage
-                  </span>
-                ) : null}
-              </div>
-            </div>
-
-            {/* Refeed Helper */}
-            <div className="bg-white rounded-2xl border border-[#eaeaea] p-4 shadow-xs">
-              <div className="flex items-center gap-1.5 mb-1.5">
-                <Icons.Flame className="w-4 h-4" style={{ color: '#82bc41' }} />
-                <span className="text-xs font-black text-slate-900">Refeed Protocol Guide</span>
-              </div>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Break prolonged 36h/48h/72h fasts with warm bone broth or easily digestible lean protein 45 minutes prior to whole meals to safeguard gut integrity and avoid blood sugar rushes.
-              </p>
-            </div>
-
-          </div>
-        )}
-
-        {/* STATS & PROGRESS TAB */}
-        {activeTab === 'stats' && (
-          <div className="space-y-4">
-            
-            {/* Top Stat KPI Highlights */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-              <div className="bg-white p-3.5 rounded-2xl border border-[#eaeaea] shadow-xs text-center">
-                <span className="text-[9px] font-black uppercase tracking-wider text-slate-500 block">Total Fasting</span>
-                <span className="text-lg font-black text-slate-900">{totalFastingHours.toFixed(0)}h</span>
-                <span className="text-[9px] text-slate-500 block mt-0.5">{fastingHistory.length} sessions</span>
-              </div>
-              <div className="bg-white p-3.5 rounded-2xl border border-[#eaeaea] shadow-xs text-center">
-                <span className="text-[9px] font-black uppercase tracking-wider text-slate-500 block">Avg Fast</span>
-                <span className="text-lg font-black text-slate-900">{avgFastHours}h</span>
-                <span className="text-[9px] text-emerald-600 font-bold block mt-0.5">{fastSuccessRate}% hit goal</span>
-              </div>
-              <div className="bg-white p-3.5 rounded-2xl border border-[#eaeaea] shadow-xs text-center">
-                <span className="text-[9px] font-black uppercase tracking-wider text-slate-500 block">Net Weight</span>
-                <span className="text-lg font-black text-slate-900" style={{ color: isWeightLost ? '#82bc41' : '#e11d48' }}>
-                  {isWeightConfigured ? (isWeightLost ? `-${absWeightDiff}` : `+${absWeightDiff}`) : '0.0'} lbs
-                </span>
-                <span className="text-[9px] text-slate-500 block mt-0.5">Goal: {weightData.goal > 0 ? `${weightData.goal} lbs` : '--'}</span>
-              </div>
-              <div className="bg-white p-3.5 rounded-2xl border border-[#eaeaea] shadow-xs text-center">
-                <span className="text-[9px] font-black uppercase tracking-wider text-slate-500 block">Consistency</span>
-                <span className="text-lg font-black text-slate-900">{workoutConsistencyRate}%</span>
-                <span className="text-[9px] text-slate-500 block mt-0.5">{totalCompletedWorkouts} workouts</span>
-              </div>
-            </div>
-
-            {/* Historical Weight Trend Card */}
-            <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-2 border-b border-[#eaeaea]">
-                <div>
-                  <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                    <Icons.TrendingUp size={14} style={{ color: '#82bc41' }} />
-                    Weight Progression Trend
-                  </h3>
-                  <p className="text-[10px] text-slate-500">Live baseline synchronized with your profile</p>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <button
-                    onClick={handleResetWeightProgress}
-                    className="px-2.5 py-1 text-[10px] font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg transition-all flex items-center gap-1"
-                    title="Reset starting baseline to current weight"
-                  >
-                    <Icons.RotateCcw size={11} /> Reset
-                  </button>
-                  <button
-                    onClick={() => setModalType('weight')}
-                    className="px-2.5 py-1 text-[10px] font-black text-white rounded-lg shadow-xs"
-                    style={{ backgroundColor: '#82bc41' }}
-                  >
-                    + Log Weight
-                  </button>
-                </div>
-              </div>
-
-              {isWeightConfigured ? (
-                <div className="space-y-3 pt-1">
-                  <div className="space-y-1">
-                    <div className="flex justify-between text-xs font-bold text-slate-700">
-                      <span className="text-slate-500">Starting Baseline</span>
-                      <span className="text-slate-900 font-extrabold">{weightData.start} lbs</span>
-                    </div>
-                    <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                      <div className="h-full rounded-full bg-slate-400 w-full" />
-                    </div>
-                  </div>
-
-                  <div className="space-y-1">
-                    <div className="flex justify-between text-xs font-bold text-slate-700">
-                      <span className="text-slate-900 font-black">Current Weight</span>
-                      <div className="flex items-center gap-2">
-                        <span className="text-slate-900 font-black text-sm">{weightData.current} lbs</span>
-                        <span 
-                          className={`text-[10px] font-black px-1.5 py-0.5 rounded ${
-                            isWeightLost ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'
-                          }`}
-                        >
-                          {isWeightLost ? `-${absWeightDiff} lbs` : `+${absWeightDiff} lbs`}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                      <div 
-                        className="h-full rounded-full transition-all duration-500" 
-                        style={{ 
-                          width: `${Math.min(100, Math.max(15, weightProgress || 100))}%`, 
-                          backgroundColor: '#82bc41' 
-                        }} 
-                      />
-                    </div>
-                    <div className="flex justify-between text-[10px] font-bold text-slate-500 pt-0.5">
-                      <span>Goal: {weightData.goal} lbs</span>
-                      <span style={{ color: isWeightLost ? '#82bc41' : '#e11d48' }}>
-                        {weightProgress}% of goal reached
-                      </span>
-                    </div>
-                  </div>
-
-                  {weightHistory.length > 0 && (
-                    <div className="pt-3 border-t border-[#eaeaea] space-y-2">
-                      <span className="text-[9px] font-black uppercase tracking-wider text-slate-400 block">
-                        Past Weigh-in History
-                      </span>
-                      <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
-                        {weightHistory.map((item, idx) => (
-                          <div key={item.id || idx} className="flex items-center justify-between text-xs bg-[#fafafa] p-2 rounded-xl border border-[#eaeaea]">
-                            <span className="text-slate-600 font-bold">{item.date}</span>
-                            <div className="flex items-center gap-2">
-                              <span className="text-slate-900 font-black">{item.weight} lbs</span>
-                              {item.diff !== undefined && item.diff !== 0 && (
-                                <span className={`text-[10px] font-black ${item.diff < 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
-                                  {item.diff < 0 ? `${item.diff} lbs` : `+${item.diff} lbs`}
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className="p-6 text-center text-xs text-slate-400 bg-[#fafafa] rounded-2xl border border-dashed border-[#eaeaea]">
-                  No weight profile set yet. Tap <strong>"+ Log Weight"</strong> above to establish your starting baseline.
-                </div>
-              )}
-            </div>
-
-            {/* Fasting Endurance Metrics */}
-            <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-3">
-              <div className="flex items-center justify-between pb-2 border-b border-[#eaeaea]">
-                <div>
-                  <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                    <Icons.Clock size={14} style={{ color: '#82bc41' }} />
-                    Fasting Endurance Stats
-                  </h3>
-                  <p className="text-[10px] text-slate-500">Cumulative metabolic endurance</p>
-                </div>
-                <span className="text-[10px] font-black text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
-                  Longest: {longestFastHours}h
-                </span>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3 pt-1">
-                <div className="bg-[#fafafa] p-3 rounded-2xl border border-[#eaeaea]">
-                  <span className="text-[9px] font-black text-slate-500 uppercase block">Weekly BDP Burpees</span>
-                  <span className="text-base font-black text-slate-900">{weeklyBdpMinutes} / 80 Mins</span>
-                  <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden mt-1.5">
-                    <div 
-                      className="h-full rounded-full" 
-                      style={{ width: `${Math.min(100, (weeklyBdpMinutes / 80) * 100)}%`, backgroundColor: '#82bc41' }} 
-                    />
-                  </div>
-                </div>
-
-                <div className="bg-[#fafafa] p-3 rounded-2xl border border-[#eaeaea]">
-                  <span className="text-[9px] font-black text-slate-500 uppercase block">Fasting Target Rate</span>
-                  <span className="text-base font-black text-slate-900">{fastSuccessRate}% On-Target</span>
-                  <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden mt-1.5">
-                    <div 
-                      className="h-full rounded-full" 
-                      style={{ width: `${fastSuccessRate}%`, backgroundColor: '#82bc41' }} 
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Daily Journal & Notes Section */}
-            <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-3">
-              <div className="flex items-center justify-between pb-2 border-b border-[#eaeaea]">
-                <div>
-                  <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                    <Icons.Clipboard size={14} style={{ color: '#82bc41' }} />
-                    Protocol Journal & Check-ins
-                  </h3>
-                  <p className="text-[10px] text-slate-500">Log joint comfort, energy, ketone levels, or refeed notes</p>
-                </div>
-              </div>
-
-              <form onSubmit={handleAddJournalNote} className="space-y-2">
-                <textarea
-                  value={newJournalText}
-                  onChange={(e) => setNewJournalText(e.target.value)}
-                  placeholder="Record today's notes (e.g., Felt sharp during 20m burpees, joints felt pain-free, broken fast with bone broth)..."
-                  className="w-full p-3 rounded-xl border border-slate-200 bg-[#fafafa] text-xs text-slate-900 font-medium focus:outline-none focus:border-slate-400 min-h-[70px]"
-                />
-                <button
-                  type="submit"
-                  className="w-full py-2.5 text-white font-black text-xs rounded-xl shadow-xs transition-all"
-                  style={{ backgroundColor: '#82bc41' }}
-                >
-                  Save Journal Entry
-                </button>
-              </form>
-
-              <div className="space-y-2 pt-2 max-h-48 overflow-y-auto pr-1">
-                {journalNotes.length === 0 ? (
-                  <p className="text-xs text-slate-400 italic text-center py-2">No journal entries logged yet.</p>
-                ) : (
-                  journalNotes.map(item => (
-                    <div key={item.id} className="p-3 bg-[#fafafa] rounded-2xl border border-[#eaeaea] space-y-1">
-                      <div className="flex justify-between items-center text-[10px] font-black text-slate-500">
-                        <span>{item.date} • {item.time}</span>
-                        <button
-                          onClick={() => {
-                            const updated = journalNotes.filter(j => j.id !== item.id);
-                            setJournalNotes(updated);
-                            syncToCloudAndLocal({ journalNotes: updated });
-                          }}
-                          className="text-slate-400 hover:text-red-500"
-                        >
-                          <Icons.Trash size={12} />
-                        </button>
-                      </div>
-                      <p className="text-xs text-slate-800 font-medium leading-relaxed">
-                        {item.text}
-                      </p>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-
-          </div>
-        )}
-
       </main>
 
       {/* --- MODALS --- */}
@@ -2679,11 +2446,11 @@ export default function App() {
       {/* Add Recipe to Next Week Planner Modal */}
       {modalType === 'addPlanMeal' && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-xs z-50 flex items-end sm:items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-5 w-full max-w-sm border border-[#eaeaea] shadow-xl">
+          <div className="bg-white rounded-3xl p-5 w-full max-w-sm border border-[#eaeaea] shadow-xl">
             <div className="flex justify-between items-center mb-3">
               <h3 className="text-xs font-black text-slate-900">Add to {selectedPlanDay}'s Plan</h3>
               <button onClick={() => setModalType(null)} className="text-slate-400 hover:text-slate-900">
-                <Icons.X size={15} />
+                <Icons.X size={16} />
               </button>
             </div>
             <div className="space-y-3">
@@ -2802,7 +2569,7 @@ export default function App() {
                 <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 block mb-1">Ingredients</span>
                 <ul className="list-disc pl-4 text-xs text-slate-800 space-y-1 font-medium bg-slate-50 p-3 rounded-2xl border border-slate-200">
                   {activeRecipeModal.ingredients?.map((ing, idx) => (
-                    <li key={idx}>{cleanFoodItem(ing)}</li>
+                    <li key={idx}>{ing}</li>
                   ))}
                 </ul>
               </div>
