@@ -1407,6 +1407,7 @@ export default function App() {
 
   return (
     <div className="max-w-md mx-auto min-h-screen text-slate-800 flex flex-col font-sans pb-12 shadow-xl border-x border-[#e2e2e2] bg-white">
+      {/* BUILD_VERSION: keto-shred-v3.2-2026-09-07 */}
       
       {/* Toast Notification */}
       {toastMessage && (
@@ -1943,7 +1944,7 @@ export default function App() {
                         <span>• {recipe.carbs}g CARB</span>
                       </div>
 
-                      <p className="text-xs text-slate-600 bg-[#fafafa] p-2.5 rounded-xl border border-[#eaeaea] leading-relaxed line-clamp-2">
+                      <p className="text-xs text-slate-600 bg-[#fafafa] p-2.5 rounded-xl border border-[#eaeaea] leading-relaxed">
                         {recipe.instructions}
                       </p>
                     </div>
@@ -3331,5 +3332,3 @@ export default function App() {
     </div>
   );
 }
-
-// removed cloud store button
