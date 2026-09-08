@@ -275,7 +275,7 @@ const METABOLIC_PHASES = [
 export default function App() {
   const [user, setUser] = useState(null);
 
-  const [activeTab, setActiveTab] = useState('dashboard'); // Default opening page is Dashboard
+  const [activeTab, setActiveTab] = useState('dashboard'); // Dashboard is default opening page
   const todayId = new Date().getDay();
   const [selectedDay, setSelectedDay] = useState(todayId);
 
@@ -1156,7 +1156,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* Tab Navigation: Fasting is next to Stats */}
+        {/* Tab Navigation: Dashboard is opening page, Fasting is next to Stats */}
         <div className="grid grid-cols-5 border-b border-[#eaeaea] -mx-5 px-2">
           {[
             { id: 'dashboard', icon: Icons.Activity, label: 'Dash' },
@@ -1429,7 +1429,7 @@ export default function App() {
           </div>
         )}
 
-        {/* DASHBOARD TAB */}
+        {/* DASHBOARD TAB (Default Opening Page) */}
         {activeTab === 'dashboard' && (
           <div className="space-y-3">
             <div className="bg-white rounded-2xl border border-[#eaeaea] p-4 shadow-xs flex items-center justify-between">
@@ -2049,7 +2049,7 @@ export default function App() {
           </div>
         )}
 
-        {/* FASTING TAB (Now next to Stats) */}
+        {/* FASTING TAB */}
         {activeTab === 'fasting' && (
           <div className="space-y-4">
             
