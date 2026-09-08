@@ -1,4 +1,3 @@
-// Ver
 import React, { useState, useEffect } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth';
@@ -3304,3 +3303,4 @@ export default function App() {
     </div>
   );
 }
+// Update App.jsx
