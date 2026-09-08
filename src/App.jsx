@@ -272,313 +272,10 @@ const METABOLIC_PHASES = [
   }
 ];
 
-const WEEK_1_MEAL_PLAN = [
-  { dayId: 1, dayName: 'Monday', meals: [
-    { id: 'm-mon-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 },
-    { id: 'm-mon-2', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }
-  ]},
-  { dayId: 2, dayName: 'Tuesday', meals: [] },
-  { dayId: 3, dayName: 'Wednesday', meals: [
-    { id: 'm-wed-1', name: 'Anti-Inflammatory Turmeric Eggs', cals: 480, protein: 38, carbs: 3, fat: 34 },
-    { id: 'm-wed-2', name: 'Ginger Salmon & Avo Bowl', cals: 620, protein: 46, carbs: 5, fat: 42 }
-  ]},
-  { dayId: 4, dayName: 'Thursday', meals: [] },
-  { dayId: 5, dayName: 'Friday', meals: [
-    { id: 'm-fri-1', name: 'Crispy Chicken & Avocado Wrap', cals: 590, protein: 48, carbs: 4, fat: 40 },
-    { id: 'm-fri-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }
-  ]},
-  { dayId: 6, dayName: 'Saturday', meals: [
-    { id: 'm-sat-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 },
-    { id: 'm-sat-2', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }
-  ]},
-  { dayId: 0, dayName: 'Sunday', meals: [
-    { id: 'm-sun-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 },
-    { id: 'm-sun-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }
-  ]}
-];
-
-const EMPTY_PLAN = { Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: [], Saturday: [], Sunday: [] };
-
-// Hoisted Function Declaration: Guarantees module-level availability across Vite/Rollup bundling
-function createInitialImportedPlan() {
-  const plan = { Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: [], Saturday: [], Sunday: [] };
-  if (typeof WEEK_1_MEAL_PLAN === 'undefined' || typeof INITIAL_RECIPES === 'undefined') {
-    return plan;
-  }
-  WEEK_1_MEAL_PLAN.forEach(day => {
-    plan[day.dayName] = day.meals.map(m => {
-      const matchRecipe = INITIAL_RECIPES.find(r => r.name.toLowerCase() === m.name.toLowerCase());
-      return {
-        id: `plan-init-${day.dayName}-${m.id}`,
-        recipeId: matchRecipe?.id || m.id,
-        name: m.name,
-        category: matchRecipe?.category || 'Keto',
-        cals: m.cals,
-        protein: m.protein,
-        carbs: m.carbs,
-        fat: m.fat,
-        ingredients: matchRecipe?.ingredients || []
-      };
-    });
-  });
-  return plan;
-}
-
-const PROTOCOLS = {
-  adf: {
-    id: 'adf',
-    name: 'ADF Protocol',
-    shortName: 'ADF (36h)',
-    tagline: 'Alternate Day Fasting • 36h Fasting / Feast Cycle',
-    defaultPreset: 36,
-    schedule: [
-      { id: 1, dayName: 'Monday', dayType: 'standard', cals: 1650, protein: 155, carbs: 20, fat: 120, workouts: [{ id: 'w-mon-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[0].meals },
-      { id: 2, dayName: 'Tuesday', dayType: 'fasting', cals: 0, protein: 0, carbs: 0, fat: 0, workouts: [{ id: 'w-tue-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-tue-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
-      { id: 3, dayName: 'Wednesday', dayType: 'adf-eat', cals: 2000, protein: 175, carbs: 25, fat: 140, workouts: [{ id: 'w-wed-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[2].meals },
-      { id: 4, dayName: 'Thursday', dayType: 'fasting', cals: 0, protein: 0, carbs: 0, fat: 0, workouts: [{ id: 'w-thu-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-thu-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
-      { id: 5, dayName: 'Friday', dayType: 'adf-eat', cals: 2000, protein: 175, carbs: 25, fat: 140, workouts: [{ id: 'w-fri-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[4].meals },
-      { id: 6, dayName: 'Saturday', dayType: 'standard', cals: 1650, protein: 155, carbs: 20, fat: 120, workouts: [{ id: 'w-sat-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[5].meals },
-      { id: 0, dayName: 'Sunday', dayType: 'standard', cals: 1650, protein: 155, carbs: 20, fat: 120, workouts: [{ id: 'w-sun-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[6].meals }
-    ]
-  },
-  '16_8': {
-    id: '16_8',
-    name: '16:8 Protocol',
-    shortName: '16:8 Daily',
-    tagline: 'Daily Time-Restricted Eating • 16h Fast / 8h Eating Window',
-    defaultPreset: 16,
-    schedule: [
-      { id: 1, dayName: 'Monday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-mon-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[0].meals },
-      { id: 2, dayName: 'Tuesday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-tue-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-tue-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
-      { id: 3, dayName: 'Wednesday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-wed-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[2].meals },
-      { id: 4, dayName: 'Thursday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-thu-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-thu-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
-      { id: 5, dayName: 'Friday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-fri-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[4].meals },
-      { id: 6, dayName: 'Saturday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-sat-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[5].meals },
-      { id: 0, dayName: 'Sunday', dayType: '16:8', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-sun-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[6].meals }
-    ]
-  },
-  omad: {
-    id: 'omad',
-    name: 'OMAD Protocol',
-    shortName: 'OMAD (23h)',
-    tagline: 'One Meal A Day • 23h Fast / High-Density Keto Feast',
-    defaultPreset: 23,
-    schedule: [
-      { id: 1, dayName: 'Monday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-mon-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[0].meals },
-      { id: 2, dayName: 'Tuesday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-tue-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-tue-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
-      { id: 3, dayName: 'Wednesday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-wed-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[2].meals },
-      { id: 4, dayName: 'Thursday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-thu-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-thu-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
-      { id: 5, dayName: 'Friday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-fri-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[4].meals },
-      { id: 6, dayName: 'Saturday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-sat-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[5].meals },
-      { id: 0, dayName: 'Sunday', dayType: 'omad', cals: 1750, protein: 165, carbs: 18, fat: 130, workouts: [{ id: 'w-sun-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[6].meals }
-    ]
-  },
-  '2day_fast': {
-    id: '2day_fast',
-    name: '2-Day Extended Fast',
-    shortName: '2-Day (48h)',
-    tagline: '48h Autophagy Fast • Tue-Wed Complete Fast',
-    defaultPreset: 48,
-    schedule: [
-      { id: 1, dayName: 'Monday', dayType: 'pre-fast load', cals: 1800, protein: 165, carbs: 20, fat: 130, workouts: [{ id: 'w-mon-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[0].meals },
-      { id: 2, dayName: 'Tuesday', dayType: 'fasting (48h)', cals: 0, protein: 0, carbs: 0, fat: 0, workouts: [{ id: 'w-tue-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-tue-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
-      { id: 3, dayName: 'Wednesday', dayType: 'fasting (48h)', cals: 0, protein: 0, carbs: 0, fat: 0, workouts: [{ id: 'w-wed-1', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
-      { id: 4, dayName: 'Thursday', dayType: 'bone broth refeed', cals: 1900, protein: 170, carbs: 22, fat: 135, workouts: [{ id: 'w-thu-1', name: '30-45m Jog', minutes: 35, url: '' }], meals: [] },
-      { id: 5, dayName: 'Friday', dayType: 'standard', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-fri-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[4].meals },
-      { id: 6, dayName: 'Saturday', dayType: 'standard', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-sat-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[5].meals },
-      { id: 0, dayName: 'Sunday', dayType: 'standard', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-sun-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[6].meals }
-    ]
-  },
-  '3day_fast': {
-    id: '3day_fast',
-    name: '3-Day Extended Fast',
-    shortName: '3-Day (72h)',
-    tagline: '72h Deep Fast • Tue-Thu Autophagy & Stem Cell Renewal',
-    defaultPreset: 72,
-    schedule: [
-      { id: 1, dayName: 'Monday', dayType: 'pre-fast load', cals: 1850, protein: 170, carbs: 20, fat: 135, workouts: [{ id: 'w-mon-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[0].meals },
-      { id: 2, dayName: 'Tuesday', dayType: 'fasting (day 1)', cals: 0, protein: 0, carbs: 0, fat: 0, workouts: [{ id: 'w-tue-1', name: '30-45m Jog', minutes: 35, url: '' }, { id: 'w-tue-2', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
-      { id: 3, dayName: 'Wednesday', dayType: 'fasting (day 2)', cals: 0, protein: 0, carbs: 0, fat: 0, workouts: [{ id: 'w-wed-1', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
-      { id: 4, dayName: 'Thursday', dayType: 'fasting (day 3)', cals: 0, protein: 0, carbs: 0, fat: 0, workouts: [{ id: 'w-thu-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: [] },
-      { id: 5, dayName: 'Friday', dayType: 'gentle refeed', cals: 1500, protein: 140, carbs: 15, fat: 100, workouts: [{ id: 'w-fri-1', name: '15m Leo Mobility Routine', minutes: 15, url: 'https://youtube.com/watch?v=dZ5PgW5RD7A' }], meals: [] },
-      { id: 6, dayName: 'Saturday', dayType: 'refeed build', cals: 1850, protein: 170, carbs: 20, fat: 135, workouts: [{ id: 'w-sat-1', name: '20-Min Busy Dad Burpees (AMRAP)', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[5].meals },
-      { id: 0, dayName: 'Sunday', dayType: 'standard', cals: 1700, protein: 160, carbs: 20, fat: 125, workouts: [{ id: 'w-sun-1', name: 'Rest Day / Gentle Walk', minutes: 20, url: '' }], meals: WEEK_1_MEAL_PLAN[6].meals }
-    ]
-  }
-};
-
-const PLANNER_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
-// Hoisted Function Declarations
-function cleanFoodItem(raw) {
-  if (!raw) return '';
-  const str = raw.toLowerCase().trim();
-
-  if (str.includes('ribeye')) return 'Ribeye Steak';
-  if (str.includes('sirloin')) return 'Sirloin Steak';
-  if (str.includes('flank steak')) return 'Flank Steak';
-  if (str.includes('ny strip')) return 'NY Strip Steak';
-  if (str.includes('steak') || str.includes('chuck roast')) return 'Steak / Beef';
-  if (str.includes('ground beef')) return 'Ground Beef';
-  if (str.includes('egg') && !str.includes('plant')) return 'Eggs';
-  if (str.includes('bacon')) return 'Bacon';
-  if (str.includes('chicken breast')) return 'Chicken Breast';
-  if (str.includes('chicken thigh')) return 'Chicken Thighs';
-  if (str.includes('chicken wing')) return 'Chicken Wings';
-  if (str.includes('chicken')) return 'Chicken';
-  if (str.includes('turkey thigh')) return 'Turkey Thigh';
-  if (str.includes('turkey')) return 'Turkey';
-  if (str.includes('salmon')) return 'Salmon';
-  if (str.includes('tuna')) return 'Canned Tuna';
-  if (str.includes('shrimp')) return 'Shrimp';
-  if (str.includes('scallop')) return 'Scallops';
-  if (str.includes('mahi mahi')) return 'Mahi Mahi';
-  if (str.includes('trout')) return 'Trout';
-  if (str.includes('cod') || str.includes('halibut') || str.includes('white fish')) return 'White Fish (Cod/Halibut)';
-  if (str.includes('sardine')) return 'Sardines';
-  if (str.includes('ham')) return 'Deli Ham';
-  if (str.includes('prosciutto')) return 'Prosciutto';
-
-  if (str.includes('spinach')) return 'Spinach';
-  if (str.includes('cabbage')) return 'Green Cabbage';
-  if (str.includes('asparagus')) return 'Asparagus';
-  if (str.includes('avocado') && !str.includes('oil')) return 'Avocado';
-  if (str.includes('mushroom')) return 'Mushrooms';
-  if (str.includes('celery')) return 'Celery';
-  if (str.includes('lettuce')) return 'Romaine Lettuce';
-  if (str.includes('bell pepper') || str.includes('peppers & onion')) return 'Bell Peppers';
-  if (str.includes('garlic')) return 'Garlic';
-  if (str.includes('chive')) return 'Chives';
-  if (str.includes('scallion')) return 'Scallions';
-  if (str.includes('basil')) return 'Fresh Basil';
-  if (str.includes('rosemary')) return 'Fresh Rosemary';
-  if (str.includes('dill')) return 'Fresh Dill';
-  if (str.includes('parsley')) return 'Fresh Parsley';
-  if (str.includes('ginger')) return 'Fresh Ginger';
-  if (str.includes('lemon')) return 'Lemon';
-  if (str.includes('lime')) return 'Lime';
-  if (str.includes('greens') || str.includes('baby greens')) return 'Mixed Greens';
-  if (str.includes('tomato')) return 'Crushed Tomatoes';
-  if (str.includes('zucchini')) return 'Zucchini';
-  if (str.includes('broccoli')) return 'Broccoli';
-  if (str.includes('cauliflower')) return 'Cauliflower';
-
-  if (str.includes('cheddar')) return 'Cheddar Cheese';
-  if (str.includes('cream cheese')) return 'Cream Cheese';
-  if (str.includes('feta')) return 'Feta Cheese';
-  if (str.includes('swiss')) return 'Swiss Cheese';
-  if (str.includes('mozzarella')) return 'Mozzarella Cheese';
-  if (str.includes('parmesan')) return 'Parmesan Cheese';
-  if (str.includes('goat cheese')) return 'Goat Cheese';
-  if (str.includes('blue cheese')) return 'Blue Cheese';
-  if (str.includes('heavy cream')) return 'Heavy Cream';
-  if (str.includes('sour cream')) return 'Sour Cream';
-
-  if (str.includes('butter') && !str.includes('garlic butter steak')) return 'Grass-Fed Butter';
-  if (str.includes('ghee')) return 'Ghee';
-  if (str.includes('olive oil')) return 'Olive Oil';
-  if (str.includes('avocado oil') && !str.includes('mayo')) return 'Avocado Oil';
-  if (str.includes('mct oil')) return 'MCT Oil';
-  if (str.includes('coconut oil')) return 'Coconut Oil';
-  if (str.includes('mayo')) return 'Avocado Oil Mayo';
-  if (str.includes('pesto')) return 'Basil Pesto';
-
-  if (str.includes('bone broth')) return 'Bone Broth';
-  if (str.includes('sea salt') || str.includes('salt & pepper') || str.includes('salt')) return 'Sea Salt';
-  if (str.includes('black pepper') || str.includes('pepper flakes')) return 'Black Pepper';
-  if (str.includes('turmeric')) return 'Turmeric';
-  if (str.includes('mustard') || str.includes('dijon')) return 'Dijon Mustard';
-  if (str.includes('tamari')) return 'Tamari Soy Sauce';
-  if (str.includes('almond flour')) return 'Almond Flour';
-  if (str.includes('sesame')) return 'Sesame Seeds';
-  if (str.includes('ranch seasoning')) return 'Ranch Seasoning';
-  if (str.includes('taco seasoning')) return 'Taco Seasoning';
-  if (str.includes('cajun')) return 'Cajun Seasoning';
-  if (str.includes('fajita')) return 'Fajita Seasoning';
-  if (str.includes('hot sauce') || str.includes('buffalo')) return 'Buffalo Hot Sauce';
-  if (str.includes('pickle')) return 'Pickles';
-
-  let cleaned = raw.replace(/\([^)]*\)/g, '');
-  cleaned = cleaned.replace(/^(a\s+|pinch of\s+|dash of\s+)/i, '');
-  cleaned = cleaned.replace(/^[\d\s\/\.\-\–]+/g, '');
-  cleaned = cleaned.replace(/^(oz|tbsp|tsp|tablespoon|teaspoon|cup|cups|spears|spear|cloves|clove|cans|can|strips|strip|slices|slice|pieces|piece|sprigs|sprig|heads|head|stalks|stalk|fillets|fillet|crowns|crown|spears)\s+(of\s+)?/i, '');
-  cleaned = cleaned.replace(/\b(large|small|medium|sliced|diced|chopped|shredded|cooked|minced|crushed|peeled|torn)\b/gi, '');
-  cleaned = cleaned.replace(/\s+/g, ' ').trim();
-  if (!cleaned) return raw;
-  return cleaned.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
-}
-
-function getFoodCategory(itemName) {
-  const l = (itemName || '').toLowerCase();
-  
-  if (
-    l.includes('beef') || l.includes('steak') || l.includes('salmon') || 
-    l.includes('chicken') || l.includes('turkey') || l.includes('bacon') || 
-    l.includes('egg') || l.includes('tuna') || l.includes('shrimp') || 
-    l.includes('pork') || l.includes('ham') || l.includes('prosciutto') || 
-    l.includes('sardine') || l.includes('cod') || l.includes('halibut') || 
-    l.includes('scallop') || l.includes('meat') || l.includes('wings')
-  ) {
-    return 'Proteins & Meats';
-  }
-
-  if (
-    l.includes('spinach') || l.includes('cabbage') || l.includes('asparagus') || 
-    l.includes('avocado') || l.includes('mushroom') || l.includes('celery') || 
-    l.includes('tomato') || l.includes('lettuce') || l.includes('bell pepper') || 
-    l.includes('onion') || l.includes('garlic') || l.includes('chive') || 
-    l.includes('scallion') || l.includes('parsley') || l.includes('dill') || 
-    l.includes('basil') || l.includes('ginger') || l.includes('lemon') || 
-    l.includes('lime') || l.includes('greens') || l.includes('zucchini') || 
-    l.includes('broccoli') || l.includes('cauliflower') || l.includes('romaine') ||
-    l.includes('sage')
-  ) {
-    return 'Produce & Veggies';
-  }
-
-  if (
-    l.includes('cheese') || l.includes('cheddar') || l.includes('feta') || 
-    l.includes('swiss') || l.includes('mozzarella') || l.includes('parmesan') || 
-    l.includes('heavy cream') || l.includes('cream cheese') || l.includes('sour cream') ||
-    l.includes('goat') || l.includes('blue')
-  ) {
-    return 'Dairy & Cheeses';
-  }
-
-  if (
-    l.includes('butter') || l.includes('ghee') || l.includes('oil') || 
-    l.includes('mct') || l.includes('mayo') || l.includes('pesto')
-  ) {
-    return 'Fats & Oils';
-  }
-
-  if (
-    l.includes('broth') || l.includes('salt') || l.includes('pepper') || 
-    l.includes('seasoning') || l.includes('rub') || l.includes('mustard') || 
-    l.includes('tamari') || l.includes('vinegar') || l.includes('almond flour') || 
-    l.includes('sesame') || l.includes('electrolyte') || l.includes('coffee') || 
-    l.includes('turmeric') || l.includes('chipotle') || l.includes('dijon') ||
-    l.includes('pickle') || l.includes('sauce')
-  ) {
-    return 'Pantry & Seasonings';
-  }
-
-  return 'Other Items';
-}
-
-const FOOD_CATEGORY_ORDER = [
-  'Proteins & Meats',
-  'Produce & Veggies',
-  'Dairy & Cheeses',
-  'Fats & Oils',
-  'Pantry & Seasonings',
-  'Other Items'
-];
-
 export default function App() {
   const [user, setUser] = useState(null);
 
-  const [activeTab, setActiveTab] = useState('schedule');
+  const [activeTab, setActiveTab] = useState('dashboard'); // Default opening page is Dashboard
   const todayId = new Date().getDay();
   const [selectedDay, setSelectedDay] = useState(todayId);
 
@@ -641,7 +338,7 @@ export default function App() {
       const saved = localStorage.getItem('ks_next_week_plan');
       return saved ? JSON.parse(saved) : createInitialImportedPlan();
     } catch {
-      return EMPTY_PLAN;
+      return createInitialImportedPlan();
     }
   });
 
@@ -1578,6 +1275,7 @@ export default function App() {
                   </div>
                 </div>
 
+                {/* Training Routine Subsection */}
                 <div>
                   <div className="flex justify-between items-center mb-3">
                     <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Training Routine</span>
@@ -1646,6 +1344,7 @@ export default function App() {
                   </div>
                 </div>
 
+                {/* Nutrition Subsection */}
                 <div>
                   <div className="flex justify-between items-center mb-3">
                     <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Nutrition & Meals</span>
@@ -2350,7 +2049,7 @@ export default function App() {
           </div>
         )}
 
-        {/* FASTING TAB */}
+        {/* FASTING TAB (Now next to Stats) */}
         {activeTab === 'fasting' && (
           <div className="space-y-4">
             
@@ -2876,7 +2575,7 @@ export default function App() {
       {/* Add Recipe to Next Week Planner Modal */}
       {modalType === 'addPlanMeal' && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-xs z-50 flex items-end sm:items-center justify-center p-4">
-          <div className="bg-white rounded-3xl p-5 w-full max-w-sm border border-[#eaeaea] shadow-xl">
+          <div className="bg-white rounded-2xl p-5 w-full max-w-sm border border-[#eaeaea] shadow-xl">
             <div className="flex justify-between items-center mb-3">
               <h3 className="text-xs font-black text-slate-900">Add to {selectedPlanDay}'s Plan</h3>
               <button onClick={() => setModalType(null)} className="text-slate-400 hover:text-slate-900">
