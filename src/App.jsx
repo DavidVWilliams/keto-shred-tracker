@@ -3331,3 +3331,5 @@ export default function App() {
     </div>
   );
 }
+
+// removed cloud store button
