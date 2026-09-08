@@ -1,4 +1,4 @@
-// test
+// Ver
 import React, { useState, useEffect } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth';
@@ -237,6 +237,7 @@ const METABOLIC_PHASES = [
   }
 ];
 
+// Defined FIRST so PROTOCOLS can reference it without reference errors
 const WEEK_1_MEAL_PLAN = [
   { dayId: 1, dayName: 'Monday', meals: [
     { id: 'm-mon-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 },
@@ -256,7 +257,7 @@ const WEEK_1_MEAL_PLAN = [
     { id: 'm-sat-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 },
     { id: 'm-sat-2', name: 'Beef & Cabbage Skillet', cals: 650, protein: 55, carbs: 7, fat: 44 }
   ]},
-  { id: 0, dayName: 'Sunday', meals: [
+  { dayId: 0, dayName: 'Sunday', meals: [
     { id: 'm-sun-1', name: 'Cheesy Keto Scramble', cals: 520, protein: 45, carbs: 4, fat: 36 },
     { id: 'm-sun-2', name: 'Weekly Steak Feast (Ribeye)', cals: 680, protein: 58, carbs: 1, fat: 48 }
   ]}
@@ -538,7 +539,7 @@ function getFoodCategory(itemName) {
 }
 
 // ==========================================
-// 3. MAIN COMPONENT
+// 4. MAIN COMPONENT
 // ==========================================
 
 export default function App() {
@@ -1544,7 +1545,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Training Routine Subsection */}
                 <div>
                   <div className="flex justify-between items-center mb-3">
                     <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Training Routine</span>
@@ -1613,7 +1613,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Nutrition Subsection */}
                 <div>
                   <div className="flex justify-between items-center mb-3">
                     <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Nutrition & Meals</span>
