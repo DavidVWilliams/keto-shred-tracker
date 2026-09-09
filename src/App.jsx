@@ -647,9 +647,9 @@ export default function App() {
   const [activeShoppingWeek, setActiveShoppingWeek] = useState('upcoming');
   const [customGroceries, setCustomGroceries] = useState(() => {
     try {
-      return JSON.parse(localStorage.getItem('ks_custom_groceries') || '{"current":[],"upcoming":[]}');
+      return JSON.parse(localStorage.getItem('ks_custom_groceries') || '{"current":[],"upcoming":[],"general":[]}');
     } catch {
-      return { current: [], upcoming: [] };
+      return { current: [], upcoming: [], general: [] };
     }
   });
   const [checkedGroceries, setCheckedGroceries] = useState(() => {
@@ -1103,6 +1103,57 @@ export default function App() {
     syncToCloudAndLocal({ nextWeekPlan: updatedPlan });
   };
 
+  // --- Promote Upcoming to Current Week ---
+  const handlePromoteUpcomingToCurrent = () => {
+    const confirmed = window.confirm("Promote Upcoming Week's meal plan to Current Week schedule?");
+    if (!confirmed) return;
+
+    const updatedCustom = { ...customDays };
+    const dayIdMap = { Monday: 1, Tuesday: 2, Wednesday: 3, Thursday: 4, Friday: 5, Saturday: 6, Sunday: 0 };
+    
+    PLANNER_DAYS.forEach((dayName) => {
+      const dId = dayIdMap[dayName];
+      const targetDayObj = activeSchedule.find(d => d.id === dId) || activeSchedule[0];
+      const dayMeals = (nextWeekPlan[dayName] || []).map(m => ({
+        id: `m-promoted-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+        name: m.name,
+        cals: m.cals,
+        protein: m.protein,
+        carbs: m.carbs,
+        fat: m.fat
+      }));
+      updatedCustom[dId] = {
+        ...targetDayObj,
+        meals: dayMeals
+      };
+    });
+
+    const upcomingGrocs = customGroceries['upcoming'] || [];
+    const currentGrocs = customGroceries['current'] || [];
+    const mergedGrocs = [...upcomingGrocs, ...currentGrocs];
+
+    const updatedGroceries = {
+      ...customGroceries,
+      current: mergedGrocs,
+      upcoming: []
+    };
+
+    const resetPlan = createInitialImportedPlan();
+
+    setCustomDays(updatedCustom);
+    setCustomGroceries(updatedGroceries);
+    setNextWeekPlan(resetPlan);
+
+    syncToCloudAndLocal({
+      customDays: updatedCustom,
+      customGroceries: updatedGroceries,
+      nextWeekPlan: resetPlan
+    });
+
+    setToastMessage("Successfully promoted Upcoming week to Current!");
+    setTimeout(() => setToastMessage(null), 3500);
+  };
+
   // --- Direct "Plan This Recipe" Action Handler ---
   const handleConfirmPlanRecipeDirect = () => {
     if (!selectedRecipeForPlan) return;
@@ -1184,7 +1235,7 @@ export default function App() {
     
     const alreadyExists = currentList.some(item => cleanFoodItem(item.name).toLowerCase() === cleanFoodItem(foodName).toLowerCase());
     if (alreadyExists) {
-      setToastMessage(`${cleanFoodItem(foodName)} is already on your ${targetWeek === 'current' ? 'Current' : 'Upcoming'} list!`);
+      setToastMessage(`${cleanFoodItem(foodName)} is already on your ${targetWeek.toUpperCase()} list!`);
       setTimeout(() => setToastMessage(null), 2500);
       return;
     }
@@ -1200,7 +1251,7 @@ export default function App() {
     };
     setCustomGroceries(updated);
     syncToCloudAndLocal({ customGroceries: updated });
-    setToastMessage(`Added ${cleanFoodItem(foodName)} to ${targetWeek === 'current' ? 'Current' : 'Upcoming'} list!`);
+    setToastMessage(`Added ${cleanFoodItem(foodName)} to ${targetWeek.toUpperCase()} list!`);
     setTimeout(() => setToastMessage(null), 2500);
   };
 
@@ -1260,6 +1311,30 @@ export default function App() {
     setTimeout(() => setToastMessage(null), 3000);
   };
 
+  const handleClearEntireList = () => {
+    const weekLabel = activeShoppingWeek.charAt(0).toUpperCase() + activeShoppingWeek.slice(1);
+    const confirmed = window.confirm(`Clear all items in the ${weekLabel} list?`);
+    if (!confirmed) return;
+
+    const updatedGroceries = {
+      ...customGroceries,
+      [activeShoppingWeek]: []
+    };
+    setCustomGroceries(updatedGroceries);
+
+    const updatedChecked = { ...checkedGroceries };
+    Object.keys(updatedChecked).forEach(key => {
+      if (key.startsWith(`${activeShoppingWeek}-`)) {
+        delete updatedChecked[key];
+      }
+    });
+    setCheckedGroceries(updatedChecked);
+
+    syncToCloudAndLocal({ customGroceries: updatedGroceries, checkedGroceries: updatedChecked });
+    setToastMessage(`${weekLabel} list cleared.`);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
   // --- Compute Aggregated, Cleaned, & Quantified Food Items for Shopping List ---
   const getAggregatedShoppingList = () => {
     const itemMap = {};
@@ -1301,7 +1376,7 @@ export default function App() {
           });
         });
       });
-    } else {
+    } else if (activeShoppingWeek === 'upcoming') {
       PLANNER_DAYS.forEach(dayName => {
         const dayMeals = nextWeekPlan[dayName] || [];
         dayMeals.forEach(m => {
@@ -1311,10 +1386,12 @@ export default function App() {
           });
         });
       });
+    } else {
+      // 'general' list - only contains custom/staple items added directly
     }
 
     (customGroceries[activeShoppingWeek] || []).forEach(item => {
-      addOrIncrement(item.name, 'Custom Item', true);
+      addOrIncrement(item.name, activeShoppingWeek === 'general' ? 'Pantry Item' : 'Custom Item', true);
     });
 
     return Object.values(itemMap).map(item => ({
@@ -1407,7 +1484,7 @@ export default function App() {
 
   return (
     <div className="max-w-md mx-auto min-h-screen text-slate-800 flex flex-col font-sans pb-12 shadow-xl border-x border-[#e2e2e2] bg-white">
-      {/* BUILD_VERSION: keto-shred-v3.2-2026-09-07 */}
+      {/* BUILD_VERSION: keto-shred-v3.3-2026-09-07 */}
       
       {/* Toast Notification */}
       {toastMessage && (
@@ -1969,28 +2046,39 @@ export default function App() {
                       </div>
                     </div>
 
-                    <div className="bg-[#fafafa] p-1 rounded-2xl border border-[#eaeaea] grid grid-cols-2 gap-1 w-full">
+                    <div className="bg-[#fafafa] p-1 rounded-2xl border border-[#eaeaea] grid grid-cols-3 gap-1 w-full">
                       <button
                         type="button"
                         onClick={() => setActiveShoppingWeek('current')}
-                        className={`py-1.5 text-center rounded-xl text-[11px] font-black transition-all ${
+                        className={`py-1.5 text-center rounded-xl text-[10px] sm:text-[11px] font-black transition-all ${
                           activeShoppingWeek === 'current'
                             ? 'bg-slate-900 text-white shadow-xs'
                             : 'text-slate-600 hover:text-slate-900'
                         }`}
                       >
-                        Adding to: Current Week
+                        Current
                       </button>
                       <button
                         type="button"
                         onClick={() => setActiveShoppingWeek('upcoming')}
-                        className={`py-1.5 text-center rounded-xl text-[11px] font-black transition-all ${
+                        className={`py-1.5 text-center rounded-xl text-[10px] sm:text-[11px] font-black transition-all ${
                           activeShoppingWeek === 'upcoming'
                             ? 'bg-slate-900 text-white shadow-xs'
                             : 'text-slate-600 hover:text-slate-900'
                         }`}
                       >
-                        Adding to: Upcoming Week
+                        Upcoming
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setActiveShoppingWeek('general')}
+                        className={`py-1.5 text-center rounded-xl text-[10px] sm:text-[11px] font-black transition-all ${
+                          activeShoppingWeek === 'general'
+                            ? 'bg-slate-900 text-white shadow-xs'
+                            : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        General
                       </button>
                     </div>
                   </div>
@@ -2076,7 +2164,7 @@ export default function App() {
             {recipeSubTab === 'planner' && (
               <div className="space-y-3">
                 <div className="bg-white rounded-3xl border border-[#eaeaea] p-5 shadow-xs space-y-3">
-                  <div className="flex justify-between items-center pb-2 border-b border-[#eaeaea]">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-[#eaeaea] gap-2">
                     <div>
                       <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
                         <Icons.Calendar size={14} style={{ color: '#82bc41' }} />
@@ -2084,11 +2172,18 @@ export default function App() {
                       </h3>
                       <p className="text-[10px] text-slate-500">Planned recipes automatically populate your shopping list</p>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <button
+                        onClick={handlePromoteUpcomingToCurrent}
+                        className="px-2.5 py-1.5 text-[10px] font-black text-white bg-slate-900 hover:bg-slate-800 rounded-xl transition-all flex items-center gap-1 shadow-xs"
+                        title="Promote Upcoming Week's plan to Current Week schedule"
+                      >
+                        🚀 Promote to Current
+                      </button>
                       <button
                         onClick={handleOneTimeImportCurrentWeekToShopping}
                         className="px-2.5 py-1.5 text-[10px] font-black text-emerald-800 bg-emerald-100 hover:bg-emerald-200 border border-emerald-300 rounded-xl transition-all flex items-center gap-1"
-                        title="Import all recipes from the current week's schedule"
+                        title="Import all recipes from current week's schedule"
                       >
                         <Icons.Zap size={11} /> Import Current Plan
                       </button>
@@ -2097,7 +2192,7 @@ export default function App() {
                         className="px-3 py-1.5 text-[10px] font-black text-white rounded-xl shadow-xs flex items-center gap-1"
                         style={{ backgroundColor: '#82bc41' }}
                       >
-                        <Icons.Plus size={12} /> Add Recipe
+                        <Icons.Plus size={12} /> Add
                       </button>
                     </div>
                   </div>
@@ -2139,7 +2234,7 @@ export default function App() {
 
                     {(nextWeekPlan[selectedPlanDay] || []).length === 0 ? (
                       <div className="p-6 text-center text-xs text-slate-400 bg-[#fafafa] rounded-2xl border border-dashed border-[#eaeaea]">
-                        No recipes planned for {selectedPlanDay} yet. Tap <strong>"+ Add Recipe"</strong> above.
+                        No recipes planned for {selectedPlanDay} yet. Tap <strong>"+ Add"</strong> above.
                       </div>
                     ) : (
                       (nextWeekPlan[selectedPlanDay] || []).map(meal => (
@@ -2180,28 +2275,39 @@ export default function App() {
                       <p className="text-[10px] text-slate-500">Clean food items and serving counts consolidated across your meals</p>
                     </div>
 
-                    <div className="bg-[#fafafa] p-1 rounded-2xl border border-[#eaeaea] grid grid-cols-2 gap-1 w-full">
+                    <div className="bg-[#fafafa] p-1 rounded-2xl border border-[#eaeaea] grid grid-cols-3 gap-1 w-full">
                       <button
                         type="button"
                         onClick={() => setActiveShoppingWeek('current')}
-                        className={`py-2 text-center rounded-xl text-xs font-black transition-all ${
+                        className={`py-2 text-center rounded-xl text-[10px] sm:text-[11px] font-black transition-all ${
                           activeShoppingWeek === 'current'
                             ? 'bg-slate-900 text-white shadow-xs'
                             : 'text-slate-600 hover:text-slate-900'
                         }`}
                       >
-                        Current Week
+                        Current
                       </button>
                       <button
                         type="button"
                         onClick={() => setActiveShoppingWeek('upcoming')}
-                        className={`py-2 text-center rounded-xl text-xs font-black transition-all ${
+                        className={`py-2 text-center rounded-xl text-[10px] sm:text-[11px] font-black transition-all ${
                           activeShoppingWeek === 'upcoming'
                             ? 'bg-slate-900 text-white shadow-xs'
                             : 'text-slate-600 hover:text-slate-900'
                         }`}
                       >
-                        Upcoming Week
+                        Upcoming
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setActiveShoppingWeek('general')}
+                        className={`py-2 text-center rounded-xl text-[10px] sm:text-[11px] font-black transition-all ${
+                          activeShoppingWeek === 'general'
+                            ? 'bg-slate-900 text-white shadow-xs'
+                            : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        General
                       </button>
                     </div>
                   </div>
@@ -2209,7 +2315,7 @@ export default function App() {
                   <form onSubmit={handleAddCustomGrocery} className="flex gap-2">
                     <input
                       type="text"
-                      placeholder={`Add food item to ${activeShoppingWeek === 'current' ? 'current' : 'upcoming'} list...`}
+                      placeholder={`Add food item to ${activeShoppingWeek} list...`}
                       value={newCustomGroceryText}
                       onChange={(e) => setNewCustomGroceryText(e.target.value)}
                       className="flex-1 min-w-0 p-2.5 rounded-xl border border-slate-200 bg-[#fafafa] text-xs text-slate-900 font-bold focus:outline-none"
@@ -2227,14 +2333,14 @@ export default function App() {
                     <span className="text-[10px] font-black text-slate-500 uppercase tracking-wider">
                       {currentShoppingItems.length} Total Items ({checkedShoppingCount} in basket)
                     </span>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <button
                         type="button"
-                        onClick={handleOneTimeImportCurrentWeekToShopping}
-                        className="text-[10px] font-black px-2.5 py-1 rounded-lg text-emerald-800 bg-emerald-100 hover:bg-emerald-200 border border-emerald-300 transition-all flex items-center gap-1 shadow-2xs"
-                        title="Import all ingredients from Current Week's meal plan into this shopping list"
+                        onClick={handleClearEntireList}
+                        className="text-[10px] font-black px-2.5 py-1 rounded-lg text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 transition-all flex items-center gap-1 shadow-2xs"
+                        title="Clear the entire shopping list for this view"
                       >
-                        <Icons.Zap size={11} /> Re-Import Week 1 Plan
+                        Clear List
                       </button>
                       {checkedShoppingCount > 0 && (
                         <button
@@ -2251,15 +2357,17 @@ export default function App() {
                   <div className="space-y-4 max-h-96 overflow-y-auto pr-1">
                     {currentShoppingItems.length === 0 ? (
                       <div className="p-8 text-center text-xs text-slate-400 bg-[#fafafa] rounded-2xl border border-dashed border-[#eaeaea] space-y-2">
-                        <p>No items in this list yet.</p>
-                        <button
-                          type="button"
-                          onClick={handleOneTimeImportCurrentWeekToShopping}
-                          className="px-3 py-1.5 rounded-xl text-xs font-black text-white shadow-xs"
-                          style={{ backgroundColor: '#82bc41' }}
-                        >
-                          ⚡ One-Time Import Current Week Plan
-                        </button>
+                        <p>No items in this {activeShoppingWeek} list yet.</p>
+                        {activeShoppingWeek !== 'general' && (
+                          <button
+                            type="button"
+                            onClick={handleOneTimeImportCurrentWeekToShopping}
+                            className="px-3 py-1.5 rounded-xl text-xs font-black text-white shadow-xs"
+                            style={{ backgroundColor: '#82bc41' }}
+                          >
+                            ⚡ Import Week 1 Plan
+                          </button>
+                        )}
                       </div>
                     ) : (
                       Object.keys(groupedShoppingItems).map((categoryName) => {
